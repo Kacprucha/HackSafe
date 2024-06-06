@@ -7,8 +7,7 @@ public class LoadigTerminal : MonoBehaviour
 {
     [SerializeField] GameObject terminalResponsePrefab;
 
-    int stage = 0;
-    float waitingTime = 0f;
+    bool buttingFinished = false;
 
     List<string> baner = new List<string> () { " _    _            _     _____        __  _       ", "| |  | |          | |   / ____|      / _|| |      ", "| |__| | __ _  ___| | _| (___  __ _ | |_ | |_   _ ",
                                                 @"|  __  |/ _` |/ __| |/ /\___ \/ _` ||  _|| | | | |", "| |  | | (_| | (__|   < ____) |(_| || |  | | |_| |", @"|_|  |_|\__,_|\___|_|\_\_____/\__,_||_|  |_|\__, |",
@@ -35,7 +34,7 @@ public class LoadigTerminal : MonoBehaviour
 
     List<string> network = new List<string> () { "[INFO] Performing network tests...", "[ OK ] Latency test: 20ms.", "[ OK ] Bandwidth test: 100Mbps.", "[ OK ] Packet loss test: 0%.", "[ OK ] DNS resolution: Successful.", " " };
 
-    List<string> interface1 = new List<string> () { "[INFO] Launching HackSafe user interface...", "[INFO] Starting GUI services...", "[OK] GUI services initialized." };
+    List<string> interface1 = new List<string> () { "[INFO] Launching HackSafe user interface...", "[INFO] Starting GUI services...", "[ OK ] GUI services initialized." };
     List<string> interface2 = new List<string> () { "[ OK ] User session manager started.", "[ OK ] Dashboard is loading..." };
 
     // Start is called before the first frame update
@@ -58,18 +57,15 @@ public class LoadigTerminal : MonoBehaviour
             tr.transform.localScale = new Vector3 (1, 1, 1);
         }
 
-        StartDelay (0.5f);
+        StartingSystem (0.5f);
     }
 
     // Update is called once per frame
     void Update ()
     {
-        float randomNumber = Random.Range (0.5f, 2f);
-        waitingTime += randomNumber;
-        StartDelay (waitingTime);
     }
 
-    public void StartDelay (float delayInSeconds)
+    public void StartingSystem (float delayInSeconds)
     {
         StartCoroutine (DelayCoroutine (delayInSeconds));
     }
@@ -78,136 +74,104 @@ public class LoadigTerminal : MonoBehaviour
     {
         yield return new WaitForSeconds (delayInSeconds);
 
-        switch (stage)
+        foreach (string line in inicialize)
         {
-            case 0:
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
+        }
 
-                foreach (string line in inicialize)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
+        yield return new WaitForSeconds (Random.Range (0.5f, 2f));
 
-                stage++;
+        foreach (string line in butap)
+        {
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
+        }
 
-                break;
+        yield return new WaitForSeconds (Random.Range (0.5f, 2f));
 
-            case 1:
+        foreach (string line in diagnostic)
+        {
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
+        }
 
-                foreach (string line in butap)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
+        yield return new WaitForSeconds (Random.Range (0.5f, 2f));
 
-                stage++;
+        foreach (string line in seciurity)
+        {
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
+        }
 
-                break;
+        yield return new WaitForSeconds (Random.Range (0.5f, 2f));
 
-            case 2:
+        foreach (string line in auxiliary)
+        {
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
+        }
 
-                foreach (string line in diagnostic)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
+        yield return new WaitForSeconds (Random.Range (0.5f, 2f));
 
-                stage++;
+        foreach (string line in checks)
+        {
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
+        }
 
-                break;
+        yield return new WaitForSeconds (Random.Range (0.5f, 2f));
 
-            case 3:
+        foreach (string line in network)
+        {
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
+        }
 
-                foreach (string line in seciurity)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
+        yield return new WaitForSeconds (Random.Range (0.5f, 2f));
 
-                stage++;
+        foreach (string line in interface1)
+        {
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
+        }
 
-                break;
+        yield return new WaitForSeconds (Random.Range (0.5f, 2f));
+        buttingFinished = true;
+        StartCoroutine (PrepareScene ());
 
-            case 4:
-
-                foreach (string line in auxiliary)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
-
-                stage++;
-
-                break;
-
-            case 5:
-
-                foreach (string line in checks)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
-
-                stage++;
-
-                break;
-
-            case 6:
-
-                foreach (string line in network)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
-
-                StartCoroutine (PrepareScene ());
-
-                stage++;
-
-                break;
-
-            case 7:
-
-                foreach (string line in interface1)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
-
-                foreach (string line in interface2)
-                {
-                    GameObject tr = Instantiate (terminalResponsePrefab);
-                    tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
-                    tr.transform.SetParent (this.gameObject.transform);
-                    tr.transform.localScale = new Vector3 (1, 1, 1);
-                }
-
-                stage++;
-
-                break;
-
+        foreach (string line in interface2)
+        {
+            GameObject tr = Instantiate (terminalResponsePrefab);
+            tr.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            tr.transform.SetParent (this.gameObject.transform);
+            tr.transform.localScale = new Vector3 (1, 1, 1);
         }
     }
 
     IEnumerator PrepareScene ()
     {
-        yield return new WaitForSeconds (3f);
-        SceneManager.LoadScene ("Gameplay");
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync ("Gameplay");
+
+        while (!asyncLoad.isDone && buttingFinished)
+        {
+            yield return null;
+        }
     }
 }
