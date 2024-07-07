@@ -8,7 +8,7 @@ public class InputOperator : MonoBehaviour
     [SerializeField] InputField inputField;
 
     public delegate void InputHandler (string inutText);
-    public event InputHandler OnExchangeGoodsActionDone;
+    public event InputHandler OnInputEntered;
 
 
     void Start ()
@@ -18,10 +18,11 @@ public class InputOperator : MonoBehaviour
 
     void HandleInputOnEnter (string userInput)
     {
-        if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter)) && OnExchangeGoodsActionDone != null)
+        if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter)) && OnInputEntered != null)
         {
-            OnExchangeGoodsActionDone (inputField.text);
+            OnInputEntered (inputField.text);
             inputField.text = string.Empty;
+            inputField.ActivateInputField ();
         }
     }
 

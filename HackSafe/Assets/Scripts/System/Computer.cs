@@ -4,26 +4,56 @@ using UnityEngine;
 
 public class Computer 
 {
-    public string Username { get; private set; }
+    public string Username 
+    {
+        get 
+        {
+            return username;
+        } 
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                username = value;
+            }
+            else
+            {
+                Debug.LogError ("Username can't be empty or null!!");
+            }
+        } 
+    }
 
-    protected string ip = "";
-    protected FileSystem fileSystem;
-
-    protected string passwrod = "";
-    protected bool ifPasswordCracted = false;
+    public string Password
+    {
+        get
+        {
+            return passwrod;
+        }
+        set
+        {
+            if (!string.IsNullOrEmpty (value))
+            {
+                passwrod = value;
+            }
+            else
+            {
+                Debug.LogError ("Password can't be empty or null!!");
+            }
+        }
+    }
 
     public string IP
     {
         get { return ip; }
-        set 
+        set
         {
-            if (string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty (value))
             {
                 ip = SystemHelper.GenerateValidIp ();
             }
             else
             {
-                if (SystemHelper.IpIsCorrect(value))
+                if (SystemHelper.IpIsCorrect (value))
                 {
                     ip = value;
                 }
@@ -34,6 +64,19 @@ public class Computer
             }
         }
     }
+
+    public FileSystem FileSystem 
+    {
+        get { return fileSystem; }
+    } 
+
+    protected string ip = "";
+    protected FileSystem fileSystem;
+
+    protected string passwrod = "";
+    protected bool ifPasswordCracted = false;
+
+    protected string username = "";
 
     public Computer (string username, string password = null, string ip = null )
     {
