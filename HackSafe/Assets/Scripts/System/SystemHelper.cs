@@ -71,25 +71,57 @@ public static class SystemHelper
         return new string (password.ToString ().OrderBy (_ => random.Next ()).ToArray ());
     }
 
-    public static bool CheckIfPathHasCorrectSyntex (string path)
+    public static bool CheckIfPathHasCorrectSyntex (string path, bool notRootDirectory = false)
     {
         bool result = true;
 
-        if (string.IsNullOrWhiteSpace (path) || !path.StartsWith ("/"))
+        bool correctStart = notRootDirectory ? false : !path.StartsWith ("/");
+
+        if (string.IsNullOrWhiteSpace (path) || correctStart)
         {
             result = false;
         }
         else
         {
             string[] parts = path.Split ('/');
-            foreach (string part in parts)
+            for (int i = 0; i < parts.Length; i++)
             {
-                if (part == "" || part.Contains (" ") || part.Contains ("\\"))
+                if (i == 0 && parts[i] == "")
+                {
+
+                }
+                else if (parts[i] == "" || parts[i].Contains (" ") || parts[i].Contains ("\\"))
                 {
                     result = false;
                     break;
                 }
             }
+        }
+
+        return result;
+    }
+
+    public static string GetCurrentDirectoryOfPlayerFileSystem ()
+    {
+        GameState gameState = GameState.instance;
+        return gameState.GetPlayerInfo ().PlayerComputer.FileSystem.GetPathOfCurrentDirectory ();
+    }
+
+    public static string GetPathWithoutLastSegment (string path)
+    {
+        string result = "";
+
+        if (path.StartsWith ("/"))
+            result = "/";
+
+        string[] parts = path.Split (new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+        for (int i = 0; i < parts.Length - 1; i++)
+        {
+            if (i != parts.Length - 2)
+                result += parts[i] + "/";
+            else
+                result += parts[i];
         }
 
         return result;

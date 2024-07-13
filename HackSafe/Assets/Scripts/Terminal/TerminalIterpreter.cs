@@ -29,8 +29,6 @@ public class TerminalIterpreter : MonoBehaviour
 
     static int MaxCapasityOfTermianl = 19;
 
-    public Computer PlayerComputer;
-
     protected FIFOQueue<GameObject> queue = new FIFOQueue<GameObject> ();
     protected Commands currentCommand = Commands.NotFound;
 
@@ -69,14 +67,27 @@ public class TerminalIterpreter : MonoBehaviour
         newPlayerCommaned.transform.SetParent (this.gameObject.transform);
         newPlayerCommaned.transform.localScale = new Vector3 (1, 1, 1);
 
-        if (queue.Count == MaxCapasityOfTermianl)
+        queue.Push (newPlayerCommaned);
+
+        while (checkIfPopIsNeeded ())
         {
             Destroy (queue.Pop ());
         }
 
-        queue.Push (newPlayerCommaned);
-
         findCommendAndAct (inputText);
+    }
+
+    private bool checkIfPopIsNeeded ()
+    {
+        float sizeOfQueue = 0;
+        foreach (GameObject _object in queue.GetArryOfObjectsInQueue ())
+        {
+            sizeOfQueue += _object.GetComponent<RectTransform> ().sizeDelta.y;
+        }
+
+        float siezOfCointainer = this.gameObject.GetComponent<RectTransform> ().rect.height;
+
+        return siezOfCointainer < sizeOfQueue;
     }
 
     private void generateResponseForInput (string response)
@@ -86,12 +97,12 @@ public class TerminalIterpreter : MonoBehaviour
         newTerminalResponse.transform.SetParent (this.gameObject.transform);
         newTerminalResponse.transform.localScale = new Vector3 (1, 1, 1);
 
-        if (queue.Count == MaxCapasityOfTermianl)
+        queue.Push (newTerminalResponse);
+
+        while (checkIfPopIsNeeded ())
         {
             Destroy (queue.Pop ());
         }
-
-        queue.Push (newTerminalResponse);
     }
 
     private void findCommend (string input)
@@ -150,21 +161,24 @@ public class TerminalIterpreter : MonoBehaviour
     {
         string commend = input.Split (' ')[0];
 
+        string[] arguments = input.Split ();
+        int argumentsAmmount = arguments.Length - 1;
+
         switch (commend)
         {
             case "cd":
                 currentCommand = Commands.Cd;
-                continouCdAction (input);
+                continouCdAction (arguments, argumentsAmmount);
                 break;
 
             case "ls":
                 currentCommand = Commands.Ls;
-                continouLsAction ();
+                continouLsAction (arguments, argumentsAmmount);
                 break;
 
             case "pwd":
                 currentCommand = Commands.Pwd;
-                generateResponseForInput (gameState.GetPlayerInfo ().PlayerComputer.FileSystem.GetPathOfCurrentDirectory ());
+                generateResponseForInput (SystemHelper.GetCurrentDirectoryOfPlayerFileSystem ());
                 break;
 
             case "cp":
@@ -181,10 +195,12 @@ public class TerminalIterpreter : MonoBehaviour
 
             case "mkdir":
                 currentCommand = Commands.Mkdir;
+                continouMkdirAction (arguments, argumentsAmmount);
                 break;
 
             case "touch":
                 currentCommand = Commands.Touch;
+                continouTouchAction (arguments, argumentsAmmount);
                 break;
 
             case "cat":
@@ -201,11 +217,8 @@ public class TerminalIterpreter : MonoBehaviour
         }
     }
 
-    void continouCdAction (string input)
+    void continouCdAction (string[] arguments, int argumentsAmmount)
     {
-        string[] arguments = input.Split ();
-        int argumentsAmmount = arguments.Length - 1;
-
         if (argumentsAmmount > 1)
         {
             generateResponseForInput ("cd: too many arguments!");
@@ -226,21 +239,147 @@ public class TerminalIterpreter : MonoBehaviour
         }
     }
 
-    void continouLsAction ()
+    void continouLsAction (string[] arguments, int argumentsAmmount)
     {
-        List<string> childs = gameState.GetPlayerInfo ().PlayerComputer.FileSystem.ListChildOfCurrentDirectory ();
+        List<string> childs = new List<string> ();
+        FileSystem playerFilesystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
 
-        if (childs.Count > 0)
+        if (argumentsAmmount < 2)
         {
-
-            string response = "";
-
-            foreach (string child in childs)
+            if (argumentsAmmount == 0)
+                childs = playerFilesystem.ListChildOfCurrentDirectory ();
+            else
             {
-                response += child + " ";
+                if (SystemHelper.CheckIfPathHasCorrectSyntex (arguments[1], !arguments[1].StartsWith ("/"))) 
+                {
+                    if (arguments[1].StartsWith ("/"))
+                    {
+                        if (playerFilesystem.FindNode (arguments[1]) != null)
+                            childs = playerFilesystem.ListChildOfGivenPath (arguments[1]);
+                        else
+                            generateResponseForInput ("ls: cannot show elements of ‘" + arguments[1] + "’: No such direcotry");
+                    }
+                    else
+                    {
+                        string fullPath = "";
+                        if (SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () != "/")
+                            fullPath = SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () + "/" + arguments[1];
+                        else
+                            fullPath = "/" + arguments[1];
+
+                        if (playerFilesystem.FindNode (fullPath) != null)
+                            childs = playerFilesystem.ListChildOfGivenPath (fullPath);
+                        else
+                            generateResponseForInput ("ls: cannot show elements of ‘" + arguments[1] + "’: No such direcotry");
+                    }
+                }
+                else
+                {
+                    generateResponseForInput ("ls: cannot show elements of ‘" + arguments[1] + "’: Incorrect syntex");
+                }
             }
 
-            generateResponseForInput (response);
+            if (childs.Count > 0)
+            {
+                string response = "";
+
+                foreach (string child in childs)
+                {
+                    response += child + " ";
+                }
+
+                generateResponseForInput (response);
+            }
+        }
+        else
+        {
+            generateResponseForInput ("ls: too many arguments!");
+        }
+    }
+
+    void continouMkdirAction (string[] arguments, int argumentsAmmount)
+    {
+        if (argumentsAmmount != 1)
+        {
+            generateResponseForInput ("mkdir: number of arguments has to be one!");
+        }
+        else
+        {
+            string newFilePath = arguments[1];
+            FileSystem playerFilesystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
+
+            if (SystemHelper.CheckIfPathHasCorrectSyntex (newFilePath, !newFilePath.StartsWith ("/")))
+            {
+                if (newFilePath.StartsWith ("/"))
+                {
+                    if (playerFilesystem.FindNode (newFilePath) == null)
+                        playerFilesystem.CreateNode (newFilePath, true);
+                    else
+                        generateResponseForInput ("mkdir: cannot create directory ‘" + newFilePath + "’: File exists");
+                }
+                else
+                {
+                    if (playerFilesystem.FindNode (SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () + "/" + newFilePath) == null)
+                        playerFilesystem.CreateNode (newFilePath, true, true);
+                    else
+                        generateResponseForInput ("mkdir: cannot create directory ‘" + newFilePath + "’: File exists");
+                }
+            }
+            else
+            {
+                generateResponseForInput ("mkdir: cannot create directory ‘" + newFilePath + "’: Incorrect syntex");
+            }
+        }
+    }
+
+    void continouTouchAction (string[] arguments, int argumentsAmmount)
+    {
+        if (argumentsAmmount != 1)
+        {
+            generateResponseForInput ("touch: number of arguments has to be one!");
+        }
+        else
+        {
+            string newFilePath = arguments[1];
+            FileSystem playerFilesystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
+
+            if (SystemHelper.CheckIfPathHasCorrectSyntex (newFilePath, !newFilePath.StartsWith ("/")))
+            {
+                if (newFilePath.StartsWith ("/"))
+                {
+                    if (playerFilesystem.FindNode (newFilePath) == null)
+                    {
+                        if (playerFilesystem.FindNode(SystemHelper.GetPathWithoutLastSegment(newFilePath)) != null)
+                            playerFilesystem.CreateNode (newFilePath, false);
+                        else
+                            generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: No such directory");
+                    }
+                    else
+                        generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: File exists");
+                }
+                else
+                {
+                    string fullPath = "";
+                    if (SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () != "/")
+                        fullPath = SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () + "/" + newFilePath;
+                    else
+                        fullPath = "/" + newFilePath;
+
+                    if (playerFilesystem.FindNode (fullPath) == null)
+                    {
+                        if (playerFilesystem.FindNode (SystemHelper.GetPathWithoutLastSegment (fullPath)) != null)
+                            playerFilesystem.CreateNode (newFilePath, false, true);
+                        else
+                            generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: No such directory");
+                    }
+                    else
+                        generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: File exists");
+                }
+            }
+            else
+            {
+                generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: Incorrect syntex");
+            }
         }
     }
 }
