@@ -36,7 +36,7 @@ public class GamePlayController : MonoBehaviour, IDataPersistance
     {
         if (!string.IsNullOrEmpty (gameData.PlayerName) && !string.IsNullOrEmpty (gameData.PlayerPasswored) && !string.IsNullOrEmpty (gameData.PlayerIP))
         {
-            gameState = new GameState (gameData.PlayerName, gameData.PlayerPasswored, gameData.PlayerIP);
+            gameState = new GameState (gameData);
             terminalIterpreter.UpdatePrefix (gameData.PlayerIP);
         }
         else
@@ -49,9 +49,7 @@ public class GamePlayController : MonoBehaviour, IDataPersistance
     {
         if (gameState != null)
         {
-            gameData.PlayerName = gameState.GetPlayerInfo ().PlayerComputer.Username;
-            gameData.PlayerPasswored = gameState.GetPlayerInfo ().PlayerComputer.Password;
-            gameData.PlayerIP = gameState.GetPlayerInfo ().PlayerComputer.IP;
+            gameState.SaveData (ref gameData);
         }
     }
 

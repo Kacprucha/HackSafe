@@ -13,6 +13,53 @@ public class FileSystem
         CurrentDirectory = Root;
     }
 
+    public void LoadData (GameData data, bool playerData)
+    {
+        Root = new TreeNode ("/", true);
+        CurrentDirectory = Root;
+
+        if (playerData)
+        {
+            foreach (SerializedNode serializedNode in data.PlayerNodes)
+            {
+                TreeNode parentNode = FindNode (serializedNode.ParentPath);
+                if (parentNode != null)
+                {
+                    var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, parentNode);
+                    parentNode.AddChild (newNode);
+                }
+            }
+        }
+    }
+
+    public void SaveData (ref GameData data, bool playerData)
+    {
+        if (playerData)
+        {
+            data.PlayerNodes.Clear ();
+            SavePlayerNode (Root, data, "/");
+        }
+    }
+
+    private void SavePlayerNode (TreeNode node, GameData data, string parentPath)
+    {
+        if (node != Root)
+        {
+            var serializedNode = new SerializedNode
+            {
+                Name = node.Name,
+                IsDirectory = node.IsDirectory,
+                ParentPath = parentPath
+            };
+            data.PlayerNodes.Add (serializedNode);
+        }
+
+        foreach (var child in node.Children)
+        {
+            SavePlayerNode (child, data, GetPath (node));
+        }
+    }
+
     public TreeNode CreateNode (string path, bool isDirectory, bool fromCurrentDirectory = false)
     {
         var parts = path.Split (new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -113,6 +160,11 @@ public class FileSystem
     public List<string> ListChildOfCurrentDirectory ()
     {
         return CurrentDirectory.Children.Select (child => child.Name).ToList ();
+    }
+
+    internal List<string> ListChildOfGivenPath (string path)
+    {
+        return FindNode(path).Children.Select (child => child.Name).ToList ();
     }
 }
 

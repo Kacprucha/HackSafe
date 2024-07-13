@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Computer 
 {
     public string Username 
@@ -78,6 +80,11 @@ public class Computer
 
     protected string username = "";
 
+    public Computer (GameData data, bool playerData)
+    {
+        LoadData (data, playerData);
+    }
+
     public Computer (string username, string password = null, string ip = null )
     {
         Username = username;
@@ -96,6 +103,31 @@ public class Computer
 
         fileSystem.CreateNode ("/home/" + Username + "/documents", true);
         fileSystem.CreateNode ("/home/" + Username + "/desktop", true);
+    }
+
+    public void LoadData (GameData data, bool playerData)
+    {
+        if (playerData)
+        {
+            Username = data.PlayerName;
+            Password = data.PlayerPasswored;
+            IP = data.PlayerIP;
+
+            fileSystem = new FileSystem ();
+            fileSystem.LoadData (data, playerData);
+        }
+    }
+
+    public void SaveData (ref GameData data, bool playerData)
+    {
+        if (playerData)
+        {
+            data.PlayerName = Username;
+            data.PlayerPasswored = Password;
+            data.PlayerIP = IP;
+
+            fileSystem.SaveData (ref data, playerData);
+        }
     }
 
     public bool CheckIfGivenPasswordIsCorrect (string givenPassword)
