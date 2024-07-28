@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GamePlayController : MonoBehaviour, IDataPersistance
+public class GameplayController : MonoBehaviour, IDataPersistance
 {
+    [SerializeField] TopPanel topPanel;
+
     [SerializeField] RegisterUserOverlay registerUserOverlay;
+    [SerializeField] EmialOverlay emailOverlay;
 
     [SerializeField] TerminalIterpreter terminalIterpreter;
 
@@ -18,11 +21,15 @@ public class GamePlayController : MonoBehaviour, IDataPersistance
 
     void OnEnable ()
     {
+        topPanel.OnMailButtonClicked += ChangeVisibilityOfEmailOverlay;
+
         registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
     }
 
     void OnDisable ()
     {
+        topPanel.OnMailButtonClicked -= ChangeVisibilityOfEmailOverlay;
+
         registerUserOverlay.OnSaveButtonClicked -= InicializaPlayer;
     }
 
@@ -60,5 +67,10 @@ public class GamePlayController : MonoBehaviour, IDataPersistance
         terminalIterpreter.UpdatePrefix (gameState.GetPlayerInfo ().PlayerComputer.IP);
 
         registerUserOverlay.gameObject.SetActive (false);
+    }
+
+    void ChangeVisibilityOfEmailOverlay ()
+    {
+        emailOverlay.gameObject.SetActive (!emailOverlay.gameObject.activeSelf);
     }
 }
