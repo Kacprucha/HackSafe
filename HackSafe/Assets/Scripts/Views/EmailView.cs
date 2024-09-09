@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Email : MonoBehaviour
+public class EmailView : MonoBehaviour
 {
     [SerializeField] Button mainCommponentButton;
 
@@ -14,7 +14,7 @@ public class Email : MonoBehaviour
     [SerializeField] Text emial;
     [SerializeField] Text time;
 
-    protected bool emialRead;
+    protected Email email;
 
     void Start()
     {
@@ -27,15 +27,14 @@ public class Email : MonoBehaviour
         
     }
 
-    public void Inicialize (string title, string emial, string time, bool read)
+    public void Inicialize (Email email)
     {
-        this.title.text = title;
-        this.emial.text = emial;
-        this.time.text = time;
+        this.email = email;
+        this.title.text = email.Title;
+        this.emial.text = email.EmailAdress;
+        this.time.text = email.Time;
 
-        emialRead = read;
-
-        if (emialRead)
+        if (email.EmailRead)
         {
             emailNotRead.gameObject.SetActive (false);
             emailRead.gameObject.SetActive (true);
@@ -54,9 +53,9 @@ public class Email : MonoBehaviour
 
     public void ChangeIfEmialWadRead (bool wasReaded)
     {
-        emialRead = wasReaded;
+        email.SetEmialRead (wasReaded);
 
-        if (emialRead)
+        if (email.EmailRead)
         {
             emailNotRead.gameObject.SetActive (false);
             emailRead.gameObject.SetActive (true);

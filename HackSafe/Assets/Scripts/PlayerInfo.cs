@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerInfo 
 {
     public Computer PlayerComputer { get; private set; }
+    public List<EmailData> RecivedEmails { get; private set; }
 
     public PlayerInfo (GameData data)
     {
@@ -22,10 +23,16 @@ public class PlayerInfo
     public void LoadData (GameData data)
     {
         PlayerComputer = new Computer (data, true);
+        RecivedEmails = data.RecivedEmails;
     }
 
     public void SaveData (ref GameData data)
     {
         PlayerComputer.SaveData (ref data, true);
+
+        if (RecivedEmails.Count > 0)
+        {
+            data.RecivedEmails = RecivedEmails;
+        }
     }
 }
