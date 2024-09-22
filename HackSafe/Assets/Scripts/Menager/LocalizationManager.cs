@@ -40,7 +40,7 @@ public class LocalizationManager : MonoBehaviour
 
             for (int i = 1; i < data.Length; i++)
             {
-                string[] lineData = data[i].Split (',');
+                string[] lineData = data[i].Split (';');
 
                 string key = lineData[0];
                 localizedText.Add (key, lineData[languageIndex]);
