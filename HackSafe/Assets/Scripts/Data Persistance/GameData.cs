@@ -34,4 +34,5 @@ public class EmailData
     public int ID;
     public string Day;
     public string Time;
+    public bool Read;
 }

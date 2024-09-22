@@ -1034,7 +1034,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: example.emial@emial.com
+  m_Text: 
 --- !u!222 &239759334
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2250,7 +2250,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Title of an emial
+  m_Text: 
 --- !u!222 &505220731
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2448,11 +2448,11 @@ MonoBehaviour:
     m_MaxSize: 20
     m_Alignment: 0
     m_AlignByGeometry: 0
-    m_RichText: 0
+    m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Example of an emial
+  m_Text: 
 --- !u!222 &542202163
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6034,6 +6034,13 @@ MonoBehaviour:
   rectTransform: {fileID: 1429707229}
   canvasGroup: {fileID: 1429707231}
   closeButton: {fileID: 584803979}
+  atachmentButton: {fileID: 408670606}
+  sentButton: {fileID: 255611875}
+  emailViewPrefab: {fileID: 867088457445065538, guid: 519229697d84d5748be3cc6732b72087, type: 3}
+  scrollViewContent: {fileID: 2120042202}
+  emailContentSubject: {fileID: 505220730}
+  emailContentAdress: {fileID: 239759333}
+  emailContentLetter: {fileID: 542202162}
 --- !u!1 &1469309857
 GameObject:
   m_ObjectHideFlags: 0
@@ -6217,7 +6224,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1691884029}
   m_Father: {fileID: 1648587790}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7424,6 +7432,7 @@ MonoBehaviour:
   saveButton: {fileID: 0}
   mailButton: {fileID: 1486635248}
   exitButton: {fileID: 0}
+  mailNotification: {fileID: 1691884028}
 --- !u!1 &1667338208
 GameObject:
   m_ObjectHideFlags: 0
@@ -7577,6 +7586,81 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1679149709}
+  m_CullTransparentMesh: 1
+--- !u!1 &1691884028
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1691884029}
+  - component: {fileID: 1691884031}
+  - component: {fileID: 1691884030}
+  m_Layer: 5
+  m_Name: NotoficationIndicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1691884029
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691884028}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1486635245}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 11.1, y: 8.7382}
+  m_SizeDelta: {x: 13, y: 13}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1691884030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691884028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.8113208, g: 0.095674604, b: 0.095674604, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 63780a62108b60c4d9d7cb41932f0272, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1691884031
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691884028}
   m_CullTransparentMesh: 1
 --- !u!1 &1693242121
 GameObject:
@@ -9496,6 +9580,10 @@ PrefabInstance:
     - target: {fileID: 867088457445065538, guid: 519229697d84d5748be3cc6732b72087, type: 3}
       propertyPath: m_Name
       value: Email
+      objectReference: {fileID: 0}
+    - target: {fileID: 867088457445065538, guid: 519229697d84d5748be3cc6732b72087, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 891833301875915741, guid: 519229697d84d5748be3cc6732b72087, type: 3}
       propertyPath: m_Pivot.x

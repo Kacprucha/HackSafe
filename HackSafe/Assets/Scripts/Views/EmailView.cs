@@ -10,15 +10,26 @@ public class EmailView : MonoBehaviour
     [SerializeField] Image emailRead;
     [SerializeField] Image emailNotRead;
 
-    [SerializeField] Text title;
+    [SerializeField] Text subject;
     [SerializeField] Text emial;
     [SerializeField] Text time;
 
     protected Email email;
 
+    public delegate void MainComponentButtonHandler (string subject, string adres, string letter, bool atachment, bool sent);
+    public event MainComponentButtonHandler OnMainComponentButtonClicked;
+
     void Start()
     {
         
+    }
+
+    private void Awake ()
+    {
+        if (mainCommponentButton != null)
+        {
+            mainCommponentButton.onClick.AddListener (() => mainComponentButtonClicked ());
+        }
     }
 
     // Update is called once per frame
@@ -30,9 +41,9 @@ public class EmailView : MonoBehaviour
     public void Inicialize (Email email)
     {
         this.email = email;
-        this.title.text = email.Title;
+        this.subject.text = email.Subject;
         this.emial.text = email.EmailAdress;
-        this.time.text = email.Time;
+        this.time.text = email.Day + " " + email.Time;
 
         if (email.EmailRead)
         {
@@ -64,6 +75,15 @@ public class EmailView : MonoBehaviour
         {
             emailNotRead.gameObject.SetActive (true);
             emailRead.gameObject.SetActive (false);
+        }
+    }
+
+    protected void mainComponentButtonClicked ()
+    {
+        if (OnMainComponentButtonClicked != null)
+        {
+            OnMainComponentButtonClicked (email.Subject, email.EmailAdress, email.Content, email.OpenAttachemntButtonNecesery, email.SentButtonNecesery);
+            ChangeIfEmialWadRead (true);
         }
     }
 }

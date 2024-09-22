@@ -8,8 +8,10 @@ public class Email
 {
     public int Id { get; private set; }
 
-    public string Title { get; private set; }
+    public string Subject { get; private set; }
     public string EmailAdress { get; private set; }
+
+    public string Content { get; private set; }
     public string Day { get; private set; }
     public string Time { get; private set; }
 
@@ -23,16 +25,17 @@ public class Email
         EmailRead = value;
     }
 
-    public void Inicialize (string title, string email, string day, string time, bool atachment, bool sent, bool read = false)
+    public void Inicialize (string title, string email, string content, string day, string time, bool sentButton, bool atachmentButton = false, bool read = false)
     {
-        this.Title = title;
+        this.Subject = title;
         this.EmailAdress = email;
+        this.Content = content;
         this.Day = day;
         this.Time = time;
 
         this.EmailRead = read;
 
-        this.OpenAttachemntButtonNecesery = atachment;
-        this.SentButtonNecesery = sent;
+        this.OpenAttachemntButtonNecesery = atachmentButton;
+        this.SentButtonNecesery = sentButton;
     }
 }

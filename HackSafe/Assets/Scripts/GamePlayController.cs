@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     // Update is called once per frame
     void Update ()
     {
-
+        
     }
 
     public void LoadData (GameData gameData)
@@ -45,6 +46,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         {
             gameState = new GameState (gameData);
             terminalIterpreter.UpdatePrefix (gameData.PlayerIP);
+            checkIfEmailIsNeededToBeSent ();
         }
         else
         {
@@ -67,10 +69,42 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         terminalIterpreter.UpdatePrefix (gameState.GetPlayerInfo ().PlayerComputer.IP);
 
         registerUserOverlay.gameObject.SetActive (false);
+
+        checkIfEmailIsNeededToBeSent ();
     }
 
     void ChangeVisibilityOfEmailOverlay ()
     {
         emailOverlay.gameObject.SetActive (!emailOverlay.gameObject.activeSelf);
+        topPanel.SetMailNotification (false);
+    }
+
+    protected void checkIfEmailIsNeededToBeSent ()
+    {
+        if (gameState != null && gameState.GetPlayerInfo () != null)
+        {
+            PlayerInfo player = gameState.GetPlayerInfo ();
+
+            if (player.RecivedEmails != null && player.RecivedEmails.Count == 0)
+            {
+                StartCoroutine (sentFirstEmial ());
+            }
+        }
+    }
+
+    protected IEnumerator sentFirstEmial ()
+    {
+        yield return new WaitForSeconds (5);
+
+        DateTime currentTime = DateTime.Now;
+
+        int hour = currentTime.Hour;
+        int minute = currentTime.Minute;
+        string formattedDate = currentTime.ToString ("dd.MM.yyyy");
+
+        gameState.GetPlayerInfo ().RecivedEmails.Add (EmailMenager.GetEmailOfId (0, formattedDate, hour.ToString ("00") + ":" + minute.ToString ("00"), false));
+        topPanel.SetMailNotification (true);
+
+        yield return new WaitForEndOfFrame ();
     }
 }

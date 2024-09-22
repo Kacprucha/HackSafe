@@ -11,6 +11,8 @@ public class TopPanel : MonoBehaviour
     [SerializeField] Button mailButton;
     [SerializeField] Button exitButton;
 
+    [SerializeField] GameObject mailNotification;
+
     public delegate void MailButtonTopPanelOverlayHandler ();
     public event MailButtonTopPanelOverlayHandler OnMailButtonClicked;
 
@@ -20,6 +22,14 @@ public class TopPanel : MonoBehaviour
         if (mailButton != null)
         {
             mailButton.onClick.AddListener (() => mailButtonClicked ());
+        }
+    }
+
+    public void SetMailNotification (bool state)
+    {
+        if (mailNotification != null)
+        {
+            mailNotification.SetActive (state);
         }
     }
 
