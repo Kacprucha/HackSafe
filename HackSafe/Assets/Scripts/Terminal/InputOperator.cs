@@ -16,6 +16,22 @@ public class InputOperator : MonoBehaviour
         inputField.onEndEdit.AddListener (HandleInputOnEnter);
     }
 
+    void Update ()
+    {
+
+    }
+
+    public void ChangeIteractibilityOfInputField (bool value)
+    {
+        inputField.interactable = value;
+    }
+
+    public void ChangeColourOfText (bool black)
+    {
+        Color color = black ? new Color (0,0,0) : new Color (0.2588235f, 1, 0);
+        inputField.textComponent.color = color;
+    }
+
     void HandleInputOnEnter (string userInput)
     {
         if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter)) && OnInputEntered != null)
@@ -33,10 +49,5 @@ public class InputOperator : MonoBehaviour
         Debug.Log ("User input: " + userInput);
 
         inputField.text = string.Empty;
-    }
-
-    void Update()
-    {
-        
     }
 }

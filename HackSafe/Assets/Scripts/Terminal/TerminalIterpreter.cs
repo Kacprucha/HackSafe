@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +17,17 @@ public enum Commands
     Touch,
     Cat,
     Scp,
-    Ssh
+    Ssh,
+    Update,
+    Install
+}
+
+public enum TerminalState
+{
+    Normal,
+    WaitingForInput,
+    WaitingForSudoPassword,
+    WaitingForConfirmation
 }
 
 public class TerminalIterpreter : MonoBehaviour
@@ -31,8 +42,14 @@ public class TerminalIterpreter : MonoBehaviour
 
     protected FIFOQueue<GameObject> queue = new FIFOQueue<GameObject> ();
     protected Commands currentCommand = Commands.NotFound;
+    protected TerminalState terminalState = TerminalState.Normal;
 
     protected GameState gameState;
+
+    public InputOperator PlayerInputHandler
+    {
+        get { return playerInputHandler; }
+    }
 
     void Start()
     {
@@ -55,6 +72,16 @@ public class TerminalIterpreter : MonoBehaviour
         }
     }
 
+    public void GneratePassiveTermialResponse (string response)
+    {
+        generateResponseForInput (response);
+    }
+
+    public PassiveTerminalElement GneratePassiveTermialResponseWithPossibleUpdate (string response)
+    {
+        return generateResponseForInputWithPossibleUpdate (response);
+    }
+
     void HandleInput (string inputText)
     {
         if (gameState == null && GameState.instance != null)
@@ -63,7 +90,7 @@ public class TerminalIterpreter : MonoBehaviour
         Debug.Log ("User input: " + inputText);
 
         GameObject newPlayerCommaned = Instantiate (playerCommandPrefab);
-        newPlayerCommaned.GetComponent<PassiveTerminalElement> ().UpdateText (inputText);
+        newPlayerCommaned.GetComponent<PassiveTerminalElement> ().UpdateText (inputText, terminalState == TerminalState.WaitingForSudoPassword);
         newPlayerCommaned.transform.SetParent (this.gameObject.transform);
         newPlayerCommaned.transform.localScale = new Vector3 (1, 1, 1);
 
@@ -103,6 +130,24 @@ public class TerminalIterpreter : MonoBehaviour
         {
             Destroy (queue.Pop ());
         }
+    }
+
+    private PassiveTerminalElement generateResponseForInputWithPossibleUpdate (string response)
+    {
+        GameObject newTerminalResponse = Instantiate (terminalResponsePrefab);
+        newTerminalResponse.GetComponent<PassiveTerminalElement> ().UpdateText (response);
+        PassiveTerminalElement passiveTerminalElement = newTerminalResponse.GetComponent<PassiveTerminalElement> ();
+        newTerminalResponse.transform.SetParent (this.gameObject.transform);
+        newTerminalResponse.transform.localScale = new Vector3 (1, 1, 1);
+
+        queue.Push (newTerminalResponse);
+
+        while (checkIfPopIsNeeded ())
+        {
+            Destroy (queue.Pop ());
+        }
+
+        return passiveTerminalElement;
     }
 
     private void findCommend (string input)
@@ -160,9 +205,31 @@ public class TerminalIterpreter : MonoBehaviour
     private void findCommendAndAct (string input)
     {
         string commend = input.Split (' ')[0];
-
         string[] arguments = input.Split ();
+        bool sudoUsed = false;
+
+        if (commend == "sudo")
+        {
+            commend = input.Split (' ')[1];
+            int firstSpaceIndex = input.IndexOf (' ');
+
+            if (firstSpaceIndex != -1)
+                arguments = input.Substring (firstSpaceIndex + 1).Split (' ');
+
+            sudoUsed = true;
+        }
+
         int argumentsAmmount = arguments.Length - 1;
+
+        if (checkIfContinuNeededForCommand (currentCommand))
+        {
+            switch (currentCommand)
+            {
+                case Commands.Update:
+                    commend = "update";
+                    break;
+            }
+        }
 
         switch (commend)
         {
@@ -214,7 +281,85 @@ public class TerminalIterpreter : MonoBehaviour
             case "ssh":
                 currentCommand = Commands.Ssh;
                 break;
+
+            case "apt":
+                if (argumentsAmmount > 0)
+                {
+                    if (arguments[1] == "install")
+                    {
+                        
+                    }
+                    else if (arguments[1] == "update")
+                    {
+                        if (argumentsAmmount - 1 == 0)
+                        {
+                            currentCommand = Commands.Update;
+                            continoueOnUpdateAction (sudoUsed);
+                        }
+                        else
+                        {
+                            generateResponseForInput ("apt update: too many arguments!");
+                        }
+                    }
+                    else
+                    {
+                        generateResponseForInput ("apt: " + arguments[1] + " not found");
+                    }
+                }
+                else
+                {
+                    generateResponseForInput ("apt: too few arguments!");
+                }
+
+                break;
+
+            case "update":
+                if (arguments.Length == 1 && gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
+                {
+                    continoueOnUpdateAction (true, true);
+                }
+                else if (terminalState == TerminalState.WaitingForSudoPassword)
+                {
+                    generateResponseForInput ("update: permission denied");
+                    playerInputHandler.ChangeColourOfText (false);
+                    terminalState = TerminalState.Normal;
+                    currentCommand = Commands.NotFound;
+                }
+                else
+                {
+                    generateResponseForInput ("Command 'update' not found, did you mean command 'apt update'");
+                }
+
+                break;
+
+            default:
+                generateResponseForInput ("Command '" + commend + "' not found");
+                break;
         }
+
+        sudoUsed = false;
+    }
+
+    bool checkIfContinuNeededForCommand (Commands command)
+    {
+        bool result = false;
+
+        if (terminalState != TerminalState.Normal)
+        {
+            switch (command)
+            {
+                case Commands.Update:
+                    result = terminalState == TerminalState.WaitingForSudoPassword;
+                    break;
+
+                case Commands.Install:
+                    result = terminalState == TerminalState.WaitingForConfirmation;
+                    break;
+
+            }
+        }
+
+        return result;
     }
 
     void continouCdAction (string[] arguments, int argumentsAmmount)
@@ -237,6 +382,8 @@ public class TerminalIterpreter : MonoBehaviour
                 }
             }
         }
+
+        currentCommand = Commands.NotFound;
     }
 
     void continouLsAction (string[] arguments, int argumentsAmmount)
@@ -295,6 +442,8 @@ public class TerminalIterpreter : MonoBehaviour
         {
             generateResponseForInput ("ls: too many arguments!");
         }
+
+        currentCommand = Commands.NotFound;
     }
 
     void continouMkdirAction (string[] arguments, int argumentsAmmount)
@@ -330,6 +479,8 @@ public class TerminalIterpreter : MonoBehaviour
                 generateResponseForInput ("mkdir: cannot create directory ‘" + newFilePath + "’: Incorrect syntex");
             }
         }
+
+        currentCommand = Commands.NotFound;
     }
 
     void continouTouchAction (string[] arguments, int argumentsAmmount)
@@ -380,6 +531,34 @@ public class TerminalIterpreter : MonoBehaviour
             {
                 generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: Incorrect syntex");
             }
+        }
+
+        currentCommand = Commands.NotFound;
+    }
+
+    void continoueOnUpdateAction (bool ifSudoUsed, bool correctPassword = false)
+    {
+        if (ifSudoUsed)
+        {
+            if (!correctPassword)
+            {
+                generateResponseForInput ("[sudo] password for " + gameState.GetPlayerInfo ().PlayerComputer.Username + ":");
+                terminalState = TerminalState.WaitingForSudoPassword;
+            }
+            else
+            {
+                playerInputHandler.ChangeIteractibilityOfInputField (false);
+                StartCoroutine (TerminalMenager.GenerateTerminalResponseForUpdate (this));
+                terminalState = TerminalState.Normal;
+                currentCommand = Commands.NotFound;
+            }
+
+            playerInputHandler.ChangeColourOfText (true);
+        }
+        else
+        {
+            generateResponseForInput ("apt update: permission denied");
+            currentCommand = Commands.NotFound;
         }
     }
 }

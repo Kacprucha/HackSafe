@@ -12,8 +12,13 @@ public class PassiveTerminalElement : MonoBehaviour
 
     protected float basicHight = 0;
 
-    public void UpdateText(string newtext)
+    public void UpdateText(string newtext, bool black = false)
     {
+        if (black)
+        {
+            Color color = Color.black;
+            textToShow.color = color;
+        }
         textToShow.text = newtext;
 
         if (parentRectTransform != null)
