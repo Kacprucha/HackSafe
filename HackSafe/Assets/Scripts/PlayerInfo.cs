@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class PlayerInfo 
 {
     public Computer PlayerComputer { get; private set; }
     public List<Email> RecivedEmails { get; private set; }
+    public Dictionary <TypeOfPrpgram, bool> ProgramesAllowedToDownload { get; private set; }
+    public Dictionary<TypeOfPrpgram, bool> ProgramesDownloaded { get; private set; }
 
     public PlayerInfo (GameData data)
     {
@@ -20,6 +24,7 @@ public class PlayerInfo
             PlayerComputer = new Computer (username, password);
 
         RecivedEmails = new List<Email> ();
+        inicializeProgramesAllowedToDownload ();
     }
 
     public void LoadData (GameData data)
@@ -38,6 +43,16 @@ public class PlayerInfo
         else
         {
             RecivedEmails = new List<Email> ();
+        }
+
+        if ((data.AllowedProgrames != null && data.AllowedProgrames.keys.Count > 0) && (data.ProgramesDownloaded != null && data.ProgramesDownloaded.keys.Count >= 0))
+        {
+            ProgramesAllowedToDownload = data.AllowedProgrames.keys.Zip (data.AllowedProgrames.values, (k, v) => new { k, v }).ToDictionary (x => x.k, x => x.v);
+            ProgramesDownloaded = data.ProgramesDownloaded.keys.Zip (data.ProgramesDownloaded.values, (k, v) => new { k, v }).ToDictionary (x => x.k, x => x.v);
+        }
+        else
+        {
+            inicializeProgramesAllowedToDownload ();
         }
     }
 
@@ -59,6 +74,30 @@ public class PlayerInfo
 
                 data.RecivedEmails.Add (emailData);
             }
+        }
+
+        if (ProgramesAllowedToDownload != null)
+        {
+            data.AllowedProgrames.keys = ProgramesAllowedToDownload.Keys.ToList ();
+            data.AllowedProgrames.values = ProgramesAllowedToDownload.Values.ToList ();
+        }
+
+        if (ProgramesDownloaded != null)
+        {
+            data.ProgramesDownloaded.keys = ProgramesDownloaded.Keys.ToList ();
+            data.ProgramesDownloaded.values = ProgramesDownloaded.Values.ToList ();
+        }
+    }
+
+    protected void inicializeProgramesAllowedToDownload ()
+    {
+        ProgramesAllowedToDownload = new Dictionary<TypeOfPrpgram, bool> ();
+        ProgramesDownloaded = new Dictionary<TypeOfPrpgram, bool> ();
+
+        foreach (TypeOfPrpgram programe in Enum.GetValues (typeof (TypeOfPrpgram)))
+        {
+            ProgramesAllowedToDownload.Add (programe, false);
+            ProgramesDownloaded.Add (programe, false);
         }
     }
 }

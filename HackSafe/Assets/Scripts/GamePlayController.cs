@@ -103,6 +103,8 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         string formattedDate = currentTime.ToString ("dd.MM.yyyy");
 
         gameState.GetPlayerInfo ().RecivedEmails.Add (EmailMenager.GetEmailOfId (0, formattedDate, hour.ToString ("00") + ":" + minute.ToString ("00"), false));
+        EmailMenager.CheckIfEmailNeedAnyAction (0);
+
         topPanel.SetMailNotification (true);
 
         yield return new WaitForEndOfFrame ();

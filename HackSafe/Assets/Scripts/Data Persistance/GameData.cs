@@ -11,6 +11,8 @@ public class GameData
     public string PlayerIP;
     public List<SerializedNode> PlayerNodes = new List<SerializedNode> ();
     public List<EmailData> RecivedEmails = new List<EmailData> ();
+    public _Dictionary<TypeOfPrpgram, bool> AllowedProgrames = new _Dictionary<TypeOfPrpgram, bool> ();
+    public _Dictionary<TypeOfPrpgram, bool> ProgramesDownloaded = new _Dictionary<TypeOfPrpgram, bool> ();
 
     public GameData ()
     {
@@ -35,4 +37,11 @@ public class EmailData
     public string Day;
     public string Time;
     public bool Read;
+}
+
+[Serializable]
+public class _Dictionary <K, V>
+{
+    public List<K> keys = new List<K> ();
+    public List<V> values = new List<V> ();
 }

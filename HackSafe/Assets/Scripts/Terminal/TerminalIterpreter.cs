@@ -43,6 +43,8 @@ public class TerminalIterpreter : MonoBehaviour
     protected FIFOQueue<GameObject> queue = new FIFOQueue<GameObject> ();
     protected Commands currentCommand = Commands.NotFound;
     protected TerminalState terminalState = TerminalState.Normal;
+    
+    protected List<TypeOfPrpgram> programsToInstall = new List<TypeOfPrpgram> ();
 
     protected GameState gameState;
 
@@ -51,7 +53,7 @@ public class TerminalIterpreter : MonoBehaviour
         get { return playerInputHandler; }
     }
 
-    void Start()
+    void Start ()
     {
         if (playerInputHandler != null)
         {
@@ -228,6 +230,13 @@ public class TerminalIterpreter : MonoBehaviour
                 case Commands.Update:
                     commend = "update";
                     break;
+
+                case Commands.Install:
+                    if (terminalState == TerminalState.WaitingForSudoPassword)
+                        commend = "install";
+                    else if (terminalState == TerminalState.WaitingForConfirmation)
+                        commend = "install confirm";
+                    break;
             }
         }
 
@@ -287,14 +296,43 @@ public class TerminalIterpreter : MonoBehaviour
                 {
                     if (arguments[1] == "install")
                     {
-                        
+                        if (argumentsAmmount - 1 > 0)
+                        {
+                            currentCommand = Commands.Install;
+                            continoueOnProtectedAction (sudoUsed, "apt install");
+
+                            for (int i = 2; i < arguments.Length; i++)
+                            {
+                                switch (arguments[i])
+                                {
+                                    case "bruteForce":
+                                        programsToInstall.Add (TypeOfPrpgram.brutForse);
+
+                                        break;
+
+                                    case "rainbowTables":
+                                        programsToInstall.Add (TypeOfPrpgram.rainbowTables);
+
+                                        break;
+
+                                    case "dictionaryAttack":
+                                        programsToInstall.Add (TypeOfPrpgram.dictionaryAttack);
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            generateResponseForInput ("apt install: too few arguments!");
+                        }
                     }
                     else if (arguments[1] == "update")
                     {
                         if (argumentsAmmount - 1 == 0)
                         {
                             currentCommand = Commands.Update;
-                            continoueOnUpdateAction (sudoUsed);
+                            continoueOnProtectedAction (sudoUsed, "apt update");
                         }
                         else
                         {
@@ -316,7 +354,7 @@ public class TerminalIterpreter : MonoBehaviour
             case "update":
                 if (arguments.Length == 1 && gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
                 {
-                    continoueOnUpdateAction (true, true);
+                    updateAction ();
                 }
                 else if (terminalState == TerminalState.WaitingForSudoPassword)
                 {
@@ -328,6 +366,72 @@ public class TerminalIterpreter : MonoBehaviour
                 else
                 {
                     generateResponseForInput ("Command 'update' not found, did you mean command 'apt update'");
+                }
+
+                break;
+
+            case "install":
+                if (gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
+                {
+                    bool allProgramsAllowed = false;
+
+                    foreach (TypeOfPrpgram program in programsToInstall)
+                    {
+                        if (TerminalMenager.CheckIfPlayerCanDownloadProgram (program))
+                        {
+                            allProgramsAllowed = true;
+                        }
+                        else
+                        {
+                            generateResponseForInput ("apt install: you don't have access to install " + program + "or this programm does not exist");
+                            programsToInstall = new List<TypeOfPrpgram> ();
+                            allProgramsAllowed = false;
+                            break;
+                        }
+                    }
+
+                    if (allProgramsAllowed)
+                    {
+                        List<TypeOfPrpgram> tempPrograms = new List<TypeOfPrpgram> (programsToInstall);
+                        foreach (TypeOfPrpgram program in tempPrograms)
+                        {
+                            if (TerminalMenager.CheckIfPlayerDownloadedProgram (program))
+                            {
+                                generateResponseForInput ("apt install: " + program + " is already installed");
+                                programsToInstall.Remove (program);
+                            }
+                        }
+
+                        if (programsToInstall.Count > 0)
+                        {
+                            installAction (programsToInstall, true);
+                        }
+                        else
+                        {
+                            PlayerInputHandler.ChangeColourOfText (false);
+                            terminalState = TerminalState.Normal;
+                            currentCommand = Commands.NotFound;
+                        }
+                    }
+                }
+                else
+                {
+                    generateResponseForInput ("Command 'install' not found, did you mean command 'apt install'");
+                }
+
+                break;
+
+            case "install confirm":
+                if (arguments.Length == 1 && TerminalMenager.CheckIfResponseIsYes (arguments[0]))
+                {
+                    installAction (programsToInstall, false);
+                    programsToInstall = new List<TypeOfPrpgram> ();
+                }
+                else
+                {
+                    generateResponseForInput ("apt install: instalation aborted");
+                    terminalState = TerminalState.Normal;
+                    currentCommand = Commands.NotFound;
                 }
 
                 break;
@@ -353,7 +457,7 @@ public class TerminalIterpreter : MonoBehaviour
                     break;
 
                 case Commands.Install:
-                    result = terminalState == TerminalState.WaitingForConfirmation;
+                    result = terminalState == TerminalState.WaitingForConfirmation || terminalState == TerminalState.WaitingForSudoPassword;
                     break;
 
             }
@@ -397,7 +501,7 @@ public class TerminalIterpreter : MonoBehaviour
                 childs = playerFilesystem.ListChildOfCurrentDirectory ();
             else
             {
-                if (SystemHelper.CheckIfPathHasCorrectSyntex (arguments[1], !arguments[1].StartsWith ("/"))) 
+                if (SystemHelper.CheckIfPathHasCorrectSyntex (arguments[1], !arguments[1].StartsWith ("/")))
                 {
                     if (arguments[1].StartsWith ("/"))
                     {
@@ -500,7 +604,7 @@ public class TerminalIterpreter : MonoBehaviour
                 {
                     if (playerFilesystem.FindNode (newFilePath) == null)
                     {
-                        if (playerFilesystem.FindNode(SystemHelper.GetPathWithoutLastSegment(newFilePath)) != null)
+                        if (playerFilesystem.FindNode (SystemHelper.GetPathWithoutLastSegment (newFilePath)) != null)
                             playerFilesystem.CreateNode (newFilePath, false);
                         else
                             generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: No such directory");
@@ -536,28 +640,49 @@ public class TerminalIterpreter : MonoBehaviour
         currentCommand = Commands.NotFound;
     }
 
-    void continoueOnUpdateAction (bool ifSudoUsed, bool correctPassword = false)
+    void continoueOnProtectedAction (bool ifSudoUsed, string nameOfAction)
     {
         if (ifSudoUsed)
         {
-            if (!correctPassword)
-            {
-                generateResponseForInput ("[sudo] password for " + gameState.GetPlayerInfo ().PlayerComputer.Username + ":");
-                terminalState = TerminalState.WaitingForSudoPassword;
-            }
-            else
-            {
-                playerInputHandler.ChangeIteractibilityOfInputField (false);
-                StartCoroutine (TerminalMenager.GenerateTerminalResponseForUpdate (this));
-                terminalState = TerminalState.Normal;
-                currentCommand = Commands.NotFound;
-            }
+            generateResponseForInput ("[sudo] password for " + gameState.GetPlayerInfo ().PlayerComputer.Username + ":");
+            terminalState = TerminalState.WaitingForSudoPassword;
 
             playerInputHandler.ChangeColourOfText (true);
         }
         else
         {
-            generateResponseForInput ("apt update: permission denied");
+            generateResponseForInput (nameOfAction + ": permission denied");
+            currentCommand = Commands.NotFound;
+        }
+    }
+
+    private void updateAction ()
+    {
+        playerInputHandler.ChangeIteractibilityOfInputField (false);
+        StartCoroutine (TerminalMenager.GenerateTerminalResponseForUpdate (this));
+        terminalState = TerminalState.Normal;
+        currentCommand = Commands.NotFound;
+    }
+
+    void installAction (List<TypeOfPrpgram> programsToInstall, bool beforeAproveFaze)
+    {
+        if (beforeAproveFaze)
+        {
+            playerInputHandler.ChangeIteractibilityOfInputField (false);
+            StartCoroutine (TerminalMenager.GenerateTermianlResponseForInstall (this, programsToInstall, beforeAproveFaze));
+            terminalState = TerminalState.WaitingForConfirmation;
+        }
+        else
+        {
+            playerInputHandler.ChangeIteractibilityOfInputField (false);
+            StartCoroutine (TerminalMenager.GenerateTermianlResponseForInstall (this, programsToInstall, beforeAproveFaze));
+
+            foreach (TypeOfPrpgram program in programsToInstall)
+            {
+                gameState.GetPlayerInfo ().ProgramesDownloaded[program] = true;
+            }
+
+            terminalState = TerminalState.Normal;
             currentCommand = Commands.NotFound;
         }
     }

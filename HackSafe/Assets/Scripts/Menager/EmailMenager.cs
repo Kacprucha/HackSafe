@@ -58,4 +58,23 @@ public static class EmailMenager
 
         return result;
     }
+
+    public static void CheckIfEmailNeedAnyAction (int id)
+    {
+        GameState gameState = GameState.instance;
+        PlayerInfo player = gameState.GetPlayerInfo ();
+
+        switch (id)
+        {
+            case 0:
+                if (player != null)
+                {
+                    player.ProgramesAllowedToDownload[TypeOfPrpgram.brutForse] = true;
+                    player.ProgramesAllowedToDownload[TypeOfPrpgram.rainbowTables] = true;
+                    player.ProgramesAllowedToDownload[TypeOfPrpgram.dictionaryAttack] = true;
+                }
+
+                break;
+        }
+    }
 }

@@ -32,6 +32,11 @@ public class InputOperator : MonoBehaviour
         inputField.textComponent.color = color;
     }
 
+    public void ActiveInputField ()
+    {
+        inputField.ActivateInputField ();
+    }
+
     void HandleInputOnEnter (string userInput)
     {
         if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter)) && OnInputEntered != null)
