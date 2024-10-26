@@ -138,5 +138,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textToShow: {fileID: 4003955831382303397}
-  textRectTransform: {fileID: 9156886559744100197}
   parentRectTransform: {fileID: 3605417431068855196}

@@ -12,7 +12,7 @@ public class PassiveTerminalElement : MonoBehaviour
 
     protected float basicHight = 0;
 
-    public void UpdateText(string newtext, bool black = false)
+    public void UpdateText(string newtext, bool black = false, bool ajustTextSize = true)
     {
         if (black)
         {
@@ -21,7 +21,7 @@ public class PassiveTerminalElement : MonoBehaviour
         }
         textToShow.text = newtext;
 
-        if (parentRectTransform != null)
+        if (parentRectTransform != null && ajustTextSize)
             StartCoroutine (ajustSize ());
     }
 
@@ -56,7 +56,7 @@ public class PassiveTerminalElement : MonoBehaviour
             if (basicHight == 0)
                 basicHight = parentRectTransform.sizeDelta.y;
 
-            parentRectTransform.sizeDelta = new Vector2 (parentRectTransform.sizeDelta.x, parentRectTransform.sizeDelta.y + basicHight);
+            parentRectTransform.sizeDelta = new Vector2 (parentRectTransform.sizeDelta.x, parentRectTransform.sizeDelta.y + (basicHight / 2) + 5);
 
             lengthOfResponse -= MaxCharactersInResponse;
         }
