@@ -19,9 +19,9 @@ public class PlayerInfo
     public PlayerInfo (string username, string password, string ip)
     {
         if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty (password) && !string.IsNullOrEmpty (ip))
-            PlayerComputer = new Computer (username, true, password, ip);
+            PlayerComputer = new Computer (username, 0, true, password, ip);
         else
-            PlayerComputer = new Computer (username, true ,password);
+            PlayerComputer = new Computer (username, 0, true ,password);
 
         RecivedEmails = new List<Email> ();
         inicializeProgramesAllowedToDownload ();

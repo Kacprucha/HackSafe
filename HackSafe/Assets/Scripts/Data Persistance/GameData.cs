@@ -56,6 +56,7 @@ public class ComputerData
     public string IP = null;
     public bool IsPlayer = false;
     public bool IsPasswordCracted = false;
+    public int LevelOfSecurity = 0;
     public bool IsMainComputer = false;
 
     public List<SerializedNode> SystemNodes = new List<SerializedNode> ();

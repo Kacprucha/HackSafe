@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum LevelOfSecurity
+{
+    None = 0,
+    Low,
+    Medium,
+    High
+}
+
 [Serializable]
 public class Computer 
 {
@@ -84,6 +92,11 @@ public class Computer
         get { return isPasswordCracted; }
     }
 
+    public LevelOfSecurity SecurityLevel
+    {
+        get { return securityLevel; }
+    }
+
     public bool IsMainComputer
     {
         get { return isMainComputer; }
@@ -94,6 +107,7 @@ public class Computer
 
     protected string passwrod = "";
     protected bool isPasswordCracted = false;
+    public LevelOfSecurity securityLevel = LevelOfSecurity.Low;
 
     protected string username = "";
 
@@ -105,7 +119,7 @@ public class Computer
         LoadData (data, computerID);
     }
 
-    public Computer (string username, bool isPlayer, string password = null, string ip = null, bool isMain = false)
+    public Computer (string username, int levelOfSeciurity, bool isPlayer, string password = null, string ip = null, bool isMain = false)
     {
         Username = username;
         this.isPlayer = isPlayer;
@@ -119,6 +133,8 @@ public class Computer
         {
             this.passwrod = password;
         }
+
+        this.securityLevel = (LevelOfSecurity) levelOfSeciurity;
 
         IP = ip;
         fileSystem = new FileSystem ();
@@ -135,6 +151,7 @@ public class Computer
             Password = data.PlayerPasswored;
             IP = data.PlayerIP;
             isPlayer = true;
+            isMainComputer = false;
 
             fileSystem = new FileSystem ();
             fileSystem.LoadData (data);
@@ -143,10 +160,12 @@ public class Computer
         {
             ComputerData computerData = data.CompanyComputers[computerID];
             Username = computerData.Username;
-            this.passwrod = computerData.Password;
+            passwrod = computerData.Password;
             IP = computerData.IP;
             isPlayer = computerData.IsPlayer;
+            isMainComputer = computerData.IsMainComputer;
             isPasswordCracted = computerData.IsPasswordCracted;
+            securityLevel = (LevelOfSecurity)computerData.LevelOfSecurity;
 
             fileSystem = new FileSystem ();
             fileSystem.LoadData (data, computerID);
@@ -170,7 +189,9 @@ public class Computer
             computerData.Password = Password;
             computerData.IP = IP;
             computerData.IsPlayer = isPlayer;
+            computerData.IsMainComputer = isMainComputer;
             computerData.IsPasswordCracted = isPasswordCracted;
+            computerData.LevelOfSecurity = (int)securityLevel;
 
             data.CompanyComputers.Add (computerData);
             fileSystem.SaveData (ref data, data.CompanyComputers.Count - 1);
