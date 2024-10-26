@@ -10,6 +10,8 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     [SerializeField] RegisterUserOverlay registerUserOverlay;
     [SerializeField] EmialOverlay emailOverlay;
 
+    [SerializeField] NetworkSymulatorView networkSymulatorView;
+
     [SerializeField] TerminalIterpreter terminalIterpreter;
 
     protected GameState gameState;
@@ -25,6 +27,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         topPanel.OnMailButtonClicked += ChangeVisibilityOfEmailOverlay;
 
         registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
+        emailOverlay.OnSetEmailViewButtonClicked += actionOnReadingEmail;
     }
 
     void OnDisable ()
@@ -32,6 +35,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         topPanel.OnMailButtonClicked -= ChangeVisibilityOfEmailOverlay;
 
         registerUserOverlay.OnSaveButtonClicked -= InicializaPlayer;
+        emailOverlay.OnSetEmailViewButtonClicked -= actionOnReadingEmail;
     }
 
     // Update is called once per frame
@@ -89,6 +93,10 @@ public class GameplayController : MonoBehaviour, IDataPersistance
             {
                 StartCoroutine (sentFirstEmial ());
             }
+            else
+            {
+                networkSymulatorView.GenerateCommpanyLayOut ();
+            }
         }
     }
 
@@ -103,10 +111,21 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         string formattedDate = currentTime.ToString ("dd.MM.yyyy");
 
         gameState.GetPlayerInfo ().RecivedEmails.Add (EmailMenager.GetEmailOfId (0, formattedDate, hour.ToString ("00") + ":" + minute.ToString ("00"), false));
-        EmailMenager.CheckIfEmailNeedAnyAction (0);
 
         topPanel.SetMailNotification (true);
 
         yield return new WaitForEndOfFrame ();
+    }
+
+    protected void actionOnReadingEmail (int emailId)
+    {
+        EmailMenager.CheckIfEmailNeedAnyAction (emailId);
+
+        switch (emailId)
+        {
+            case 0:
+                networkSymulatorView.GenerateCommpanyLayOut ();
+                break;
+        }
     }
 }

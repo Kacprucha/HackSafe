@@ -43,7 +43,7 @@ public class LoadigTerminal : MonoBehaviour
         foreach(string line in baner)
         {
             GameObject baner = Instantiate (terminalResponsePrefab);
-            baner.GetComponent<PassiveTerminalElement> ().UpdateText (line);
+            baner.GetComponent<PassiveTerminalElement> ().UpdateText (line, false, false);
             baner.GetComponent<PassiveTerminalElement> ().SetTextToBestFit ();
             baner.transform.SetParent (this.gameObject.transform);
             baner.transform.localScale = new Vector3 (1, 1, 1);

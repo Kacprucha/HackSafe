@@ -74,6 +74,8 @@ public static class EmailMenager
                     player.ProgramesAllowedToDownload[TypeOfPrpgram.dictionaryAttack] = true;
                 }
 
+                Debug.Log ("Programs anabled: bruteForce, rainbow, dicionary");
+
                 break;
         }
     }
