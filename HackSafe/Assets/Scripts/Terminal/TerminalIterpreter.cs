@@ -336,222 +336,27 @@ public class TerminalIterpreter : MonoBehaviour
                 break;
 
             case "apt":
-                if (argumentsAmmount > 0)
-                {
-                    if (arguments[1] == "install")
-                    {
-                        if (argumentsAmmount - 1 > 0)
-                        {
-                            currentCommand = Commands.Install;
-                            continoueOnProtectedAction (sudoUsed, "apt install");
-
-                            for (int i = 2; i < arguments.Length; i++)
-                            {
-                                switch (arguments[i])
-                                {
-                                    case "bruteForce":
-                                        programsToInstall.Add (TypeOfPrpgram.brutForse);
-
-                                        break;
-
-                                    case "rainbowTables":
-                                        programsToInstall.Add (TypeOfPrpgram.rainbowTables);
-
-                                        break;
-
-                                    case "dictionaryAttack":
-                                        programsToInstall.Add (TypeOfPrpgram.dictionaryAttack);
-
-                                        break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            generateResponseForInput ("apt install: too few arguments!");
-                        }
-                    }
-                    else if (arguments[1] == "update")
-                    {
-                        if (argumentsAmmount - 1 == 0)
-                        {
-                            currentCommand = Commands.Update;
-                            continoueOnProtectedAction (sudoUsed, "apt update");
-                        }
-                        else
-                        {
-                            generateResponseForInput ("apt update: too many arguments!");
-                        }
-                    }
-                    else
-                    {
-                        generateResponseForInput ("apt: " + arguments[1] + " not found");
-                    }
-                }
-                else
-                {
-                    generateResponseForInput ("apt: too few arguments!");
-                }
+                continoueOnAptAction (sudoUsed, arguments);
 
                 break;
 
             case "update":
-                if (arguments.Length == 1 && gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
-                {
-                    updateAction ();
-                }
-                else if (terminalState == TerminalState.WaitingForSudoPassword)
-                {
-                    generateResponseForInput ("update: permission denied");
-                    playerInputHandler.ChangeColourOfText (false);
-                    terminalState = TerminalState.Normal;
-                    currentCommand = Commands.NotFound;
-                }
-                else
-                {
-                    generateResponseForInput ("Command 'update' not found, did you mean command 'apt update'");
-                }
+                continoueOnUpdateAction (arguments);
 
                 break;
 
             case "install":
-                if (gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
-                {
-                    bool allProgramsAllowed = false;
-
-                    foreach (TypeOfPrpgram program in programsToInstall)
-                    {
-                        if (TerminalMenager.CheckIfPlayerCanDownloadProgram (program))
-                        {
-                            allProgramsAllowed = true;
-                        }
-                        else
-                        {
-                            generateResponseForInput ("apt install: you don't have access to install " + program + "or this programm does not exist");
-                            programsToInstall = new List<TypeOfPrpgram> ();
-                            allProgramsAllowed = false;
-                            break;
-                        }
-                    }
-
-                    if (allProgramsAllowed)
-                    {
-                        List<TypeOfPrpgram> tempPrograms = new List<TypeOfPrpgram> (programsToInstall);
-                        foreach (TypeOfPrpgram program in tempPrograms)
-                        {
-                            if (TerminalMenager.CheckIfPlayerDownloadedProgram (program))
-                            {
-                                generateResponseForInput ("apt install: " + program + " is already installed");
-                                programsToInstall.Remove (program);
-                            }
-                        }
-
-                        if (programsToInstall.Count > 0)
-                        {
-                            installAction (programsToInstall, true);
-                        }
-                        else
-                        {
-                            PlayerInputHandler.ChangeColourOfText (false);
-                            terminalState = TerminalState.Normal;
-                            currentCommand = Commands.NotFound;
-                        }
-                    }
-                }
-                else
-                {
-                    generateResponseForInput ("Command 'install' not found, did you mean command 'apt install'");
-                }
+                continoueOnInstallAction (arguments);
 
                 break;
 
             case "install confirm":
-                if (arguments.Length == 1 && TerminalMenager.CheckIfResponseIsYes (arguments[0]))
-                {
-                    installAction (programsToInstall, false);
-                    programsToInstall = new List<TypeOfPrpgram> ();
-                }
-                else
-                {
-                    generateResponseForInput ("apt install: instalation aborted");
-                    terminalState = TerminalState.Normal;
-                    currentCommand = Commands.NotFound;
-                }
+                continoueOnInstallConfirmAction (arguments);
 
                 break;
 
             case "bruteForce":
-                if (gameState.GetPlayerInfo ().ProgramesDownloaded[TypeOfPrpgram.brutForse])
-                {
-                    if (argumentsAmmount == 0)
-                    {
-                        generateResponseForInput ("bruteForce: too few arguments!");
-                    }
-                    else if (arguments[1] == "-h" || arguments[1] == "--help")
-                    {
-                        generateResponseForInput ("Usage: bruteforce [OPTIONS] <TARGET_IP>");
-                        generateResponseForInput ("Brute force attack tool for penetration testing. Use this tool responsibly and only on systems you have permission to test.");
-                        generateResponseForInput ("Options:");
-                        generateResponseForInput ("-h, --help            Show this help message and exit");
-                        generateResponseForInput ("-m, --multiplier      Set the multiplier for the attack");
-                        generateResponseForInput ("Example:");
-                        generateResponseForInput ("bruteforce 192.168.1.5");
-                        generateResponseForInput ("bruteforce 192.168.1.100 -m 5");
-                        generateResponseForInput (" Notes:");
-                        generateResponseForInput ("  - Ensure the wordlist file exists and contains potential passwords.");
-                        generateResponseForInput ("  - Brute force attacks can take significant time, especially with complex passwords.");
-                        generateResponseForInput ("  - The multiplier option is used to increase the number of attempts per second. The default is 1. It can't be more then 300");
-                        generateResponseForInput ("  - Use at your own risk. Unauthorized use is illegal.");
-
-                        StartCoroutine (refreshLayout ());
-                    }
-                    else
-                    {
-                        bool allGood = true;
-                        float multiplayer = 1;
-
-                        if (argumentsAmmount >= 2)
-                        {
-                            if (arguments[2] == "-m" || arguments[2] == "--multiplier")
-                            {
-                                if (argumentsAmmount >= 3)
-                                {
-                                    multiplayer = float.Parse (arguments[3]);
-                                    if (multiplayer > 300)
-                                    {
-                                        generateResponseForInput ("bruteForce: multiplier is to big!");
-                                        allGood = false;
-                                    }
-                                    else if (multiplayer < 1)
-                                    {
-                                        generateResponseForInput ("bruteForce: multiplier has to be at least 1!");
-                                        allGood = false;
-                                    }
-                                }
-                                else
-                                {
-                                    generateResponseForInput ("bruteForce: too few arguments!");
-                                    allGood = false;
-                                }
-                            }
-                            else
-                            {
-                                generateResponseForInput ("bruteForce: " + arguments[2] + " not found");
-                                allGood = false;
-                            }
-                        }
-
-                        if (allGood)
-                        {
-                            currentCommand = Commands.BruteForce;
-                            continouBruteForceAction (arguments[1], multiplayer);
-                        }
-                    }
-                }
-                else
-                {
-                    generateResponseForInput ("Command 'bruteForce' not found");
-                }
+                continoueOnBruteForceAction (arguments);
 
                 break;
 
@@ -563,7 +368,7 @@ public class TerminalIterpreter : MonoBehaviour
         sudoUsed = false;
     }
 
-    bool checkIfContinuNeededForCommand (Commands command)
+    protected bool checkIfContinuNeededForCommand (Commands command)
     {
         bool result = false;
 
@@ -585,7 +390,7 @@ public class TerminalIterpreter : MonoBehaviour
         return result;
     }
 
-    void continouCdAction (string[] arguments, int argumentsAmmount)
+    protected void continouCdAction (string[] arguments, int argumentsAmmount)
     {
         if (argumentsAmmount > 1)
         {
@@ -609,7 +414,7 @@ public class TerminalIterpreter : MonoBehaviour
         currentCommand = Commands.NotFound;
     }
 
-    void continouLsAction (string[] arguments, int argumentsAmmount)
+    protected void continouLsAction (string[] arguments, int argumentsAmmount)
     {
         List<string> childs = new List<string> ();
         FileSystem playerFilesystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
@@ -669,7 +474,7 @@ public class TerminalIterpreter : MonoBehaviour
         currentCommand = Commands.NotFound;
     }
 
-    void continouMkdirAction (string[] arguments, int argumentsAmmount)
+    protected void continouMkdirAction (string[] arguments, int argumentsAmmount)
     {
         if (argumentsAmmount != 1)
         {
@@ -706,7 +511,7 @@ public class TerminalIterpreter : MonoBehaviour
         currentCommand = Commands.NotFound;
     }
 
-    void continouTouchAction (string[] arguments, int argumentsAmmount)
+    protected void continouTouchAction (string[] arguments, int argumentsAmmount)
     {
         if (argumentsAmmount != 1)
         {
@@ -759,7 +564,69 @@ public class TerminalIterpreter : MonoBehaviour
         currentCommand = Commands.NotFound;
     }
 
-    void continoueOnProtectedAction (bool ifSudoUsed, string nameOfAction)
+    protected void continoueOnAptAction (bool sudoUsed, string[] arguments)
+    {
+        int argumentsAmmount = arguments.Length -1;
+
+        if (argumentsAmmount > 0)
+        {
+            if (arguments[1] == "install")
+            {
+                if (argumentsAmmount - 1 > 0)
+                {
+                    currentCommand = Commands.Install;
+                    continoueOnProtectedAction (sudoUsed, "apt install");
+
+                    for (int i = 2; i < arguments.Length; i++)
+                    {
+                        switch (arguments[i])
+                        {
+                            case "bruteForce":
+                                programsToInstall.Add (TypeOfPrpgram.brutForse);
+
+                                break;
+
+                            case "rainbowTables":
+                                programsToInstall.Add (TypeOfPrpgram.rainbowTables);
+
+                                break;
+
+                            case "dictionaryAttack":
+                                programsToInstall.Add (TypeOfPrpgram.dictionaryAttack);
+
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    generateResponseForInput ("apt install: too few arguments!");
+                }
+            }
+            else if (arguments[1] == "update")
+            {
+                if (argumentsAmmount - 1 == 0)
+                {
+                    currentCommand = Commands.Update;
+                    continoueOnProtectedAction (sudoUsed, "apt update");
+                }
+                else
+                {
+                    generateResponseForInput ("apt update: too many arguments!");
+                }
+            }
+            else
+            {
+                generateResponseForInput ("apt: " + arguments[1] + " not found");
+            }
+        }
+        else
+        {
+            generateResponseForInput ("apt: too few arguments!");
+        }
+    }
+
+    protected void continoueOnProtectedAction (bool ifSudoUsed, string nameOfAction)
     {
         if (ifSudoUsed)
         {
@@ -775,7 +642,26 @@ public class TerminalIterpreter : MonoBehaviour
         }
     }
 
-    private void updateAction ()
+    protected void continoueOnUpdateAction (string[] arguments)
+    {
+        if (arguments.Length == 1 && gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
+        {
+            updateAction ();
+        }
+        else if (terminalState == TerminalState.WaitingForSudoPassword)
+        {
+            generateResponseForInput ("update: permission denied");
+            playerInputHandler.ChangeColourOfText (false);
+            terminalState = TerminalState.Normal;
+            currentCommand = Commands.NotFound;
+        }
+        else
+        {
+            generateResponseForInput ("Command 'update' not found, did you mean command 'apt update'");
+        }
+    }
+
+    protected void updateAction ()
     {
         playerInputHandler.ChangeIteractibilityOfInputField (false);
         StartCoroutine (TerminalMenager.GenerateTerminalResponseForUpdate (this));
@@ -783,7 +669,73 @@ public class TerminalIterpreter : MonoBehaviour
         currentCommand = Commands.NotFound;
     }
 
-    void installAction (List<TypeOfPrpgram> programsToInstall, bool beforeAproveFaze)
+    protected void continoueOnInstallAction (string[] arguments)
+    {
+        if (gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
+        {
+            bool allProgramsAllowed = false;
+
+            foreach (TypeOfPrpgram program in programsToInstall)
+            {
+                if (TerminalMenager.CheckIfPlayerCanDownloadProgram (program))
+                {
+                    allProgramsAllowed = true;
+                }
+                else
+                {
+                    generateResponseForInput ("apt install: you don't have access to install " + program + "or this programm does not exist");
+                    programsToInstall = new List<TypeOfPrpgram> ();
+                    allProgramsAllowed = false;
+                    break;
+                }
+            }
+
+            if (allProgramsAllowed)
+            {
+                List<TypeOfPrpgram> tempPrograms = new List<TypeOfPrpgram> (programsToInstall);
+                foreach (TypeOfPrpgram program in tempPrograms)
+                {
+                    if (TerminalMenager.CheckIfPlayerDownloadedProgram (program))
+                    {
+                        generateResponseForInput ("apt install: " + program + " is already installed");
+                        programsToInstall.Remove (program);
+                    }
+                }
+
+                if (programsToInstall.Count > 0)
+                {
+                    installAction (programsToInstall, true);
+                }
+                else
+                {
+                    PlayerInputHandler.ChangeColourOfText (false);
+                    terminalState = TerminalState.Normal;
+                    currentCommand = Commands.NotFound;
+                }
+            }
+        }
+        else
+        {
+            generateResponseForInput ("Command 'install' not found, did you mean command 'apt install'");
+        }
+    }
+
+    protected void continoueOnInstallConfirmAction (string[] arguments)
+    {
+        if (arguments.Length == 1 && TerminalMenager.CheckIfResponseIsYes (arguments[0]))
+        {
+            installAction (programsToInstall, false);
+            programsToInstall = new List<TypeOfPrpgram> ();
+        }
+        else
+        {
+            generateResponseForInput ("apt install: instalation aborted");
+            terminalState = TerminalState.Normal;
+            currentCommand = Commands.NotFound;
+        }
+    }
+
+    protected void installAction (List<TypeOfPrpgram> programsToInstall, bool beforeAproveFaze)
     {
         if (beforeAproveFaze)
         {
@@ -806,7 +758,84 @@ public class TerminalIterpreter : MonoBehaviour
         }
     }
 
-    void continouBruteForceAction (string targetIP, float multiplayer)
+    protected void continoueOnBruteForceAction (string[] arguments)
+    {
+        int argumentsAmmount = arguments.Length - 1;
+
+        if (gameState.GetPlayerInfo ().ProgramesDownloaded[TypeOfPrpgram.brutForse])
+        {
+            if (argumentsAmmount == 0)
+            {
+                generateResponseForInput ("bruteForce: too few arguments!");
+            }
+            else if (arguments[1] == "-h" || arguments[1] == "--help")
+            {
+                generateResponseForInput ("Usage: bruteforce [OPTIONS] <TARGET_IP>");
+                generateResponseForInput ("Brute force attack tool for penetration testing. Use this tool responsibly and only on systems you have permission to test.");
+                generateResponseForInput ("Options:");
+                generateResponseForInput ("-h, --help            Show this help message and exit");
+                generateResponseForInput ("-m, --multiplier      Set the multiplier for the attack");
+                generateResponseForInput ("Example:");
+                generateResponseForInput ("bruteforce 192.168.1.5");
+                generateResponseForInput ("bruteforce 192.168.1.100 -m 5");
+                generateResponseForInput (" Notes:");
+                generateResponseForInput ("  - Ensure the wordlist file exists and contains potential passwords.");
+                generateResponseForInput ("  - Brute force attacks can take significant time, especially with complex passwords.");
+                generateResponseForInput ("  - The multiplier option is used to increase the number of attempts per second. The default is 1. It can't be more then 300");
+                generateResponseForInput ("  - Use at your own risk. Unauthorized use is illegal.");
+
+                StartCoroutine (refreshLayout ());
+            }
+            else
+            {
+                bool allGood = true;
+                float multiplayer = 1;
+
+                if (argumentsAmmount >= 2)
+                {
+                    if (arguments[2] == "-m" || arguments[2] == "--multiplier")
+                    {
+                        if (argumentsAmmount >= 3)
+                        {
+                            multiplayer = float.Parse (arguments[3]);
+                            if (multiplayer > 300)
+                            {
+                                generateResponseForInput ("bruteForce: multiplier is to big!");
+                                allGood = false;
+                            }
+                            else if (multiplayer < 1)
+                            {
+                                generateResponseForInput ("bruteForce: multiplier has to be at least 1!");
+                                allGood = false;
+                            }
+                        }
+                        else
+                        {
+                            generateResponseForInput ("bruteForce: too few arguments!");
+                            allGood = false;
+                        }
+                    }
+                    else
+                    {
+                        generateResponseForInput ("bruteForce: " + arguments[2] + " not found");
+                        allGood = false;
+                    }
+                }
+
+                if (allGood)
+                {
+                    currentCommand = Commands.BruteForce;
+                    bruteForceAction (arguments[1], multiplayer);
+                }
+            }
+        }
+        else
+        {
+            generateResponseForInput ("Command 'bruteForce' not found");
+        }
+    }
+
+    protected void bruteForceAction (string targetIP, float multiplayer)
     {
         Computer computer = gameState.FindComputerOfIP (targetIP);
 
@@ -847,7 +876,7 @@ public class TerminalIterpreter : MonoBehaviour
         currentCommand = Commands.NotFound;
     }
 
-    IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer)
+    protected IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer)
     {
         programIsRunning = true;
         playerInputHandler.ChangeIteractibilityOfInputField (false);
