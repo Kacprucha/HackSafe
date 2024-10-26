@@ -11,6 +11,7 @@ public static class SystemHelper
     static string special = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
     static string NetworkIPPart = "192.168.1";
+
     public static bool IpIsCorrect (string ip)
     {
         bool result = false;
@@ -42,7 +43,19 @@ public static class SystemHelper
     public static string GenerateValidIp ()
     {
         Random rand = new Random ();
-        return $"{rand.Next (0, 256)}.{rand.Next (0, 256)}.{rand.Next (0, 256)}.{rand.Next (0, 256)}";
+        string ipAddresses;
+
+        int[] address = new int[4];
+
+        address[0] = 172;
+
+        address[1] = rand.Next (16, 31);
+        address[2] = rand.Next (0, 256);
+        address[3] = rand.Next (0, 256);
+
+        ipAddresses = $"{address[0]}.{address[1]}.{address[2]}.{address[3]}";
+
+        return ipAddresses;
     }
 
     public static string GenerateValidIpInNetwork (string networkPart)
