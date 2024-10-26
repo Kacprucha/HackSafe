@@ -90,4 +90,24 @@ public class SystemVariablesView : MonoBehaviour
             programs.RemoveAt (position);
         }
     }
+
+    public void UpdateProgramInpact (string name, int CPU, int RAM, int Storage)
+    {
+        int position = -1;
+        for (int i = 0; i < programs.Count; i++)
+        {
+            if (programs[i] == name)
+            {
+                position = i;
+                break;
+            }
+        }
+
+        if (position >= 0)
+        {
+            programsUsage[position][0] = CPU;
+            programsUsage[position][1] = RAM;
+            programsUsage[position][2] = Storage;
+        }
+    }
 }

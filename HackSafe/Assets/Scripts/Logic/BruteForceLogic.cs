@@ -97,6 +97,8 @@ public class BruteForceLogic : ProgramLogic
                 int minutes = ((int)(timeToCrack % 3600) / 60) < 0 ? -1 * ((int)(timeToCrack % 3600)) : (int)(timeToCrack % 3600);
                 int seconds = ((int)timeToCrack % 60) < 0 ? -1 * ((int)timeToCrack % 60) : (int)timeToCrack % 60;
 
+                startProgram (TypeOfProgram.brutForse.ToString (), 60, 40, 0);
+
                 terminalIterpreter.GneratePassiveTermialResponse ("bruteForce: attacking ‘" + targetIP + "‘ with multiplayer: " + multiplayer);
                 terminalIterpreter.GneratePassiveTermialResponse ("Combinations to try: " + totalCombinations);
                 terminalIterpreter.GneratePassiveTermialResponse ($"Estimation time: {hours}h {minutes}min {seconds}s");
@@ -123,7 +125,9 @@ public class BruteForceLogic : ProgramLogic
 
     protected IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer, LevelOfSecurity levelOfSecurity)
     {
-        startProgram ("bruteForce", 80, 20, 0);
+        yield return new WaitForSeconds (1f);
+        updateProgram (TypeOfProgram.brutForse.ToString (), 80, 20, 0);
+
         terminalIterpreter.ProgramIsRunning = true;
         playerInputHandler.ChangeIteractibilityOfInputField (false);
         float testesCombination = 0;
@@ -171,7 +175,7 @@ public class BruteForceLogic : ProgramLogic
             }
         }
 
-        stopProgram ("bruteForce");
+        stopProgram (TypeOfProgram.brutForse.ToString ());
 
         playerInputHandler.ChangeIteractibilityOfInputField (true);
         playerInputHandler.ActiveInputField ();

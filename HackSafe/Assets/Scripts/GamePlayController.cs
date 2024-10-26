@@ -50,6 +50,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
             {
                 pL.OnRunProgram -= addSystemVariables;
                 pL.OnStopPorgram -= dealateSystemVariables;
+                pL.OnUpdateProgram -= updateSystemVariables;
             }
         }
     }
@@ -155,9 +156,17 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         systemVariablesView.DelateProgram (programName);
     }
 
+    protected void updateSystemVariables (string programName, int cpu, int ram, int storage)
+    {
+        systemVariablesView.UpdateProgramInpact (programName, cpu, ram, storage);
+    }
+
     protected void injectMethodsToProgramLogic (ProgramLogic programLogic)
     {
         programLogic.OnRunProgram += addSystemVariables;
         programLogic.OnStopPorgram += dealateSystemVariables;
+        programLogic.OnUpdateProgram += updateSystemVariables;
+
+        programLogicList.Add (programLogic);
     }
 }

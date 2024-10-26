@@ -87,21 +87,23 @@ public class TerminalIterpreter : MonoBehaviour
 
     void Update ()
     {
-        if (programIsRunning) 
+        if (programIsRunning)
         {
             if ((Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) && Input.GetKeyDown (KeyCode.C))
             {
                 programIsRunning = false;
             }
         }
-
-        if ((Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) && Input.GetKeyDown (KeyCode.L))
+        else
         {
-            int ammountOfLinesInTermianl = queue.Count;
-
-            for (int i = 0; i < ammountOfLinesInTermianl; i++)
+            if ((Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) && Input.GetKeyDown (KeyCode.L))
             {
-                Destroy (queue.Pop ());
+                int ammountOfLinesInTermianl = queue.Count;
+
+                for (int i = 0; i < ammountOfLinesInTermianl; i++)
+                {
+                    Destroy (queue.Pop ());
+                }
             }
         }
     }

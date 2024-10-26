@@ -15,6 +15,9 @@ public class ProgramLogic : MonoBehaviour
     public delegate void StopPorgramHandler (string name);
     public event StopPorgramHandler OnStopPorgram;
 
+    public delegate void UpdateProgramHandler (string name, int cpu, int ram, int storage);
+    public event UpdateProgramHandler OnUpdateProgram;
+
     public void Inicialize (TerminalIterpreter terminalIterpreter, InputOperator playerInputHandler)
     {
         gameState = GameState.instance;
@@ -30,5 +33,10 @@ public class ProgramLogic : MonoBehaviour
     protected void stopProgram (string name)
     {
         OnStopPorgram (name);
+    }
+
+    protected void updateProgram (string name, int cpu, int ram, int storage)
+    {
+        OnUpdateProgram (name, cpu, ram, storage);
     }
 }
