@@ -17,7 +17,7 @@ public class EmialOverlay : DraggableOverlay
 
     protected List<EmailView> emailViews = new List<EmailView>();
 
-    public delegate void SetEmailViewButtonHandler (int emialID);
+    public delegate void SetEmailViewButtonHandler (int emialID, bool emailRead);
     public event SetEmailViewButtonHandler OnSetEmailViewButtonClicked;
 
     // Start is called before the first frame update
@@ -73,28 +73,28 @@ public class EmialOverlay : DraggableOverlay
         
     }
 
-    protected void emailViewButtonClicked (int emailid, string subject, string emailAdress, string content, bool atachment, bool sent)
+    protected void emailViewButtonClicked (Email email)
     {
         if (emailContentSubject != null && emailContentAdress != null && emailContentLetter != null)
         {
-            emailContentSubject.text = subject;
-            emailContentAdress.text = emailAdress;
-            emailContentLetter.text = content;
+            emailContentSubject.text = email.Subject;
+            emailContentAdress.text = email.EmailAdress;
+            emailContentLetter.text = email.Content;
         }
 
         if (atachmentButton != null)
         {
-            atachmentButton.gameObject.SetActive (atachment);
+            atachmentButton.gameObject.SetActive (email.OpenAttachemntButtonNecesery);
         }
 
         if (sentButton != null)
         {
-            sentButton.gameObject.SetActive (sent);
+            sentButton.gameObject.SetActive (email.SentButtonNecesery);
         }
 
         if (OnSetEmailViewButtonClicked != null)
         {
-            OnSetEmailViewButtonClicked (emailid);
+            OnSetEmailViewButtonClicked (email.Id, email.EmailRead);
         }
     }
 }

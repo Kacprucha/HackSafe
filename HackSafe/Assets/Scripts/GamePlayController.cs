@@ -117,9 +117,9 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         yield return new WaitForEndOfFrame ();
     }
 
-    protected void actionOnReadingEmail (int emailId)
+    protected void actionOnReadingEmail (int emailId, bool emailRead)
     {
-        EmailMenager.CheckIfEmailNeedAnyAction (emailId);
+        EmailMenager.CheckIfEmailNeedAnyAction (emailId, emailRead);
 
         switch (emailId)
         {

@@ -59,7 +59,7 @@ public static class EmailMenager
         return result;
     }
 
-    public static void CheckIfEmailNeedAnyAction (int id)
+    public static void CheckIfEmailNeedAnyAction (int id, bool emailRead)
     {
         GameState gameState = GameState.instance;
         PlayerInfo player = gameState.GetPlayerInfo ();
@@ -67,14 +67,14 @@ public static class EmailMenager
         switch (id)
         {
             case 0:
-                if (player != null)
+                if (player != null && !emailRead)
                 {
                     player.ProgramesAllowedToDownload[TypeOfPrpgram.brutForse] = true;
                     player.ProgramesAllowedToDownload[TypeOfPrpgram.rainbowTables] = true;
                     player.ProgramesAllowedToDownload[TypeOfPrpgram.dictionaryAttack] = true;
-                }
 
-                Debug.Log ("Programs anabled: bruteForce, rainbow, dicionary");
+                    Debug.Log ("Programs anabled: bruteForce, rainbow, dicionary");
+                }
 
                 break;
         }

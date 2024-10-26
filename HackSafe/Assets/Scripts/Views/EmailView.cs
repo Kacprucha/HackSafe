@@ -16,7 +16,7 @@ public class EmailView : MonoBehaviour
 
     protected Email email;
 
-    public delegate void MainComponentButtonHandler (int id, string subject, string adres, string letter, bool atachment, bool sent);
+    public delegate void MainComponentButtonHandler (Email email);
     public event MainComponentButtonHandler OnMainComponentButtonClicked;
 
     void Start()
@@ -82,7 +82,7 @@ public class EmailView : MonoBehaviour
     {
         if (OnMainComponentButtonClicked != null)
         {
-            OnMainComponentButtonClicked (email.Id, email.Subject, email.EmailAdress, email.Content, email.OpenAttachemntButtonNecesery, email.SentButtonNecesery);
+            OnMainComponentButtonClicked (email);
             ChangeIfEmialWadRead (true);
         }
     }
