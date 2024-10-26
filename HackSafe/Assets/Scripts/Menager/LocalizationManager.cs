@@ -58,7 +58,7 @@ public class LocalizationManager : MonoBehaviour
     {
         if (localizedText.ContainsKey (key))
         {
-            if (getIndexOfLanguage (currentLanguage) < 0)
+            if (getIndexOfLanguage (currentLanguage) > 0)
             {
                 return localizedText[key];
             }
