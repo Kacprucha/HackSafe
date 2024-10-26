@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 
 public static class SystemHelper
 {
+    static string NetworkIPPart = "192.168.1";
     public static bool IpIsCorrect (string ip)
     {
         bool result = false;
@@ -42,9 +43,17 @@ public static class SystemHelper
     public static string GenerateValidIpInNetwork (string networkPart)
     {
         Random rand = new Random ();
-        string hostPart = $"{rand.Next (0, 256)}.{rand.Next (0, 256)}";
+        string hostPart = $"{rand.Next (0, 256)}";
 
         return networkPart + "." + hostPart;
+    }
+
+    public static string GenerateValidIpInNetwork ()
+    {
+        Random rand = new Random ();
+        string hostPart = $"{rand.Next (0, 256)}";
+
+        return NetworkIPPart + "." + hostPart;
     }
 
     public static string GeneratePassword (int length)
