@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,21 +39,43 @@ public class TerminalIterpreter : MonoBehaviour
 
     [SerializeField] Text prefix;
 
+    public InputOperator PlayerInputHandler
+    {
+        get { return playerInputHandler; }
+    }
+
+    public TerminalState TerminalState
+    {
+        get { return terminalState; }
+        set { terminalState = value; }
+    }
+
+    public Commands CurrentCommand
+    {
+        get { return currentCommand; }
+        set { currentCommand = value; }
+    }
+
+    public bool ProgramIsRunning
+    {
+        get { return programIsRunning; }
+        set { programIsRunning = value; }
+    }
+
     static int MaxCapasityOfTermianl = 19;
+
+    protected GameState gameState;
 
     protected FIFOQueue<GameObject> queue = new FIFOQueue<GameObject> ();
     protected Commands currentCommand = Commands.NotFound;
     protected TerminalState terminalState = TerminalState.Normal;
     protected bool programIsRunning = false;
 
-    protected List<TypeOfProgram> programsToInstall = new List<TypeOfProgram> ();
+    protected BruteForceLogic bruteForceLogic;
+    protected AptLogic aptLogic;
 
-    protected GameState gameState;
-
-    public InputOperator PlayerInputHandler
-    {
-        get { return playerInputHandler; }
-    }
+    public delegate void InjectProgramLogicHandler (ProgramLogic programLogic);
+    public event InjectProgramLogicHandler OnInjectPorgramLogic;
 
     void Start ()
     {
@@ -106,7 +127,28 @@ public class TerminalIterpreter : MonoBehaviour
     void HandleInput (string inputText)
     {
         if (gameState == null && GameState.instance != null)
+        {
             gameState = GameState.instance;
+
+            if (bruteForceLogic == null)
+            {
+                GameObject gameObject = new GameObject ("BruteForceElement");
+                gameObject.AddComponent<BruteForceLogic> ();
+                gameObject.GetComponent<BruteForceLogic> ().Inicialize (this, playerInputHandler);
+                bruteForceLogic = gameObject.GetComponent<BruteForceLogic> ();
+                OnInjectPorgramLogic (bruteForceLogic);
+            }
+
+            if (aptLogic == null)
+            {
+                GameObject gameObject = new GameObject ("ProgramLogicElement");
+                gameObject.AddComponent<AptLogic> ();
+                gameObject.GetComponent<AptLogic> ().Inicialize (this, playerInputHandler);
+                aptLogic = gameObject.GetComponent<AptLogic> ();
+                OnInjectPorgramLogic (aptLogic);
+            }
+
+        }
 
         Debug.Log ("User input: " + inputText);
 
@@ -123,6 +165,17 @@ public class TerminalIterpreter : MonoBehaviour
         }
 
         findCommendAndAct (inputText);
+    }
+
+    public IEnumerator RefreshLayout ()
+    {
+        yield return new WaitForEndOfFrame ();
+        LayoutRebuilder.ForceRebuildLayoutImmediate (this.gameObject.GetComponent<RectTransform> ());
+
+        while (checkIfPopIsNeeded ())
+        {
+            Destroy (queue.Pop ());
+        }
     }
 
     private bool checkIfPopIsNeeded ()
@@ -171,17 +224,6 @@ public class TerminalIterpreter : MonoBehaviour
         }
 
         return passiveTerminalElement;
-    }
-
-    IEnumerator refreshLayout ()
-    {
-        yield return new WaitForEndOfFrame ();
-        LayoutRebuilder.ForceRebuildLayoutImmediate (this.gameObject.GetComponent<RectTransform> ());
-
-        while (checkIfPopIsNeeded ())
-        {
-            Destroy (queue.Pop ());
-        }
     }
 
     private void findCommend (string input)
@@ -336,27 +378,27 @@ public class TerminalIterpreter : MonoBehaviour
                 break;
 
             case "apt":
-                continoueOnAptAction (sudoUsed, arguments);
+                aptLogic.ContinoueOnAptAction (sudoUsed, arguments);
 
                 break;
 
             case "update":
-                continoueOnUpdateAction (arguments);
+                aptLogic.ContinoueOnUpdateAction (arguments);
 
                 break;
 
             case "install":
-                continoueOnInstallAction (arguments);
+                aptLogic.ContinoueOnInstallAction (arguments);
 
                 break;
 
             case "install confirm":
-                continoueOnInstallConfirmAction (arguments);
+                aptLogic.ContinoueOnInstallConfirmAction (arguments);
 
                 break;
 
             case "bruteForce":
-                continoueOnBruteForceAction (arguments);
+                bruteForceLogic.ContinoueOnBruteForceAction (arguments);
 
                 break;
 
@@ -562,370 +604,5 @@ public class TerminalIterpreter : MonoBehaviour
         }
 
         currentCommand = Commands.NotFound;
-    }
-
-    protected void continoueOnAptAction (bool sudoUsed, string[] arguments)
-    {
-        int argumentsAmmount = arguments.Length -1;
-
-        if (argumentsAmmount > 0)
-        {
-            if (arguments[1] == "install")
-            {
-                if (argumentsAmmount - 1 > 0)
-                {
-                    currentCommand = Commands.Install;
-                    continoueOnProtectedAction (sudoUsed, "apt install");
-
-                    for (int i = 2; i < arguments.Length; i++)
-                    {
-                        switch (arguments[i])
-                        {
-                            case "bruteForce":
-                                programsToInstall.Add (TypeOfProgram.brutForse);
-
-                                break;
-
-                            case "rainbowTables":
-                                programsToInstall.Add (TypeOfProgram.rainbowTables);
-
-                                break;
-
-                            case "dictionaryAttack":
-                                programsToInstall.Add (TypeOfProgram.dictionaryAttack);
-
-                                break;
-                        }
-                    }
-                }
-                else
-                {
-                    generateResponseForInput ("apt install: too few arguments!");
-                }
-            }
-            else if (arguments[1] == "update")
-            {
-                if (argumentsAmmount - 1 == 0)
-                {
-                    currentCommand = Commands.Update;
-                    continoueOnProtectedAction (sudoUsed, "apt update");
-                }
-                else
-                {
-                    generateResponseForInput ("apt update: too many arguments!");
-                }
-            }
-            else
-            {
-                generateResponseForInput ("apt: " + arguments[1] + " not found");
-            }
-        }
-        else
-        {
-            generateResponseForInput ("apt: too few arguments!");
-        }
-    }
-
-    protected void continoueOnProtectedAction (bool ifSudoUsed, string nameOfAction)
-    {
-        if (ifSudoUsed)
-        {
-            generateResponseForInput ("[sudo] password for " + gameState.GetPlayerInfo ().PlayerComputer.Username + ":");
-            terminalState = TerminalState.WaitingForSudoPassword;
-
-            playerInputHandler.ChangeColourOfText (true);
-        }
-        else
-        {
-            generateResponseForInput (nameOfAction + ": permission denied");
-            currentCommand = Commands.NotFound;
-        }
-    }
-
-    protected void continoueOnUpdateAction (string[] arguments)
-    {
-        if (arguments.Length == 1 && gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
-        {
-            updateAction ();
-        }
-        else if (terminalState == TerminalState.WaitingForSudoPassword)
-        {
-            generateResponseForInput ("update: permission denied");
-            playerInputHandler.ChangeColourOfText (false);
-            terminalState = TerminalState.Normal;
-            currentCommand = Commands.NotFound;
-        }
-        else
-        {
-            generateResponseForInput ("Command 'update' not found, did you mean command 'apt update'");
-        }
-    }
-
-    protected void updateAction ()
-    {
-        playerInputHandler.ChangeIteractibilityOfInputField (false);
-        StartCoroutine (TerminalMenager.GenerateTerminalResponseForUpdate (this));
-        terminalState = TerminalState.Normal;
-        currentCommand = Commands.NotFound;
-    }
-
-    protected void continoueOnInstallAction (string[] arguments)
-    {
-        if (gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
-        {
-            bool allProgramsAllowed = false;
-
-            foreach (TypeOfProgram program in programsToInstall)
-            {
-                if (TerminalMenager.CheckIfPlayerCanDownloadProgram (program))
-                {
-                    allProgramsAllowed = true;
-                }
-                else
-                {
-                    generateResponseForInput ("apt install: you don't have access to install " + program + "or this programm does not exist");
-                    programsToInstall = new List<TypeOfProgram> ();
-                    allProgramsAllowed = false;
-                    break;
-                }
-            }
-
-            if (allProgramsAllowed)
-            {
-                List<TypeOfProgram> tempPrograms = new List<TypeOfProgram> (programsToInstall);
-                foreach (TypeOfProgram program in tempPrograms)
-                {
-                    if (TerminalMenager.CheckIfPlayerDownloadedProgram (program))
-                    {
-                        generateResponseForInput ("apt install: " + program + " is already installed");
-                        programsToInstall.Remove (program);
-                    }
-                }
-
-                if (programsToInstall.Count > 0)
-                {
-                    installAction (programsToInstall, true);
-                }
-                else
-                {
-                    PlayerInputHandler.ChangeColourOfText (false);
-                    terminalState = TerminalState.Normal;
-                    currentCommand = Commands.NotFound;
-                }
-            }
-        }
-        else
-        {
-            generateResponseForInput ("Command 'install' not found, did you mean command 'apt install'");
-        }
-    }
-
-    protected void continoueOnInstallConfirmAction (string[] arguments)
-    {
-        if (arguments.Length == 1 && TerminalMenager.CheckIfResponseIsYes (arguments[0]))
-        {
-            installAction (programsToInstall, false);
-            programsToInstall = new List<TypeOfProgram> ();
-        }
-        else
-        {
-            generateResponseForInput ("apt install: instalation aborted");
-            terminalState = TerminalState.Normal;
-            currentCommand = Commands.NotFound;
-        }
-    }
-
-    protected void installAction (List<TypeOfProgram> programsToInstall, bool beforeAproveFaze)
-    {
-        if (beforeAproveFaze)
-        {
-            playerInputHandler.ChangeIteractibilityOfInputField (false);
-            StartCoroutine (TerminalMenager.GenerateTermianlResponseForInstall (this, programsToInstall, beforeAproveFaze));
-            terminalState = TerminalState.WaitingForConfirmation;
-        }
-        else
-        {
-            playerInputHandler.ChangeIteractibilityOfInputField (false);
-            StartCoroutine (TerminalMenager.GenerateTermianlResponseForInstall (this, programsToInstall, beforeAproveFaze));
-
-            foreach (TypeOfProgram program in programsToInstall)
-            {
-                gameState.GetPlayerInfo ().ProgramesDownloaded[program] = true;
-            }
-
-            terminalState = TerminalState.Normal;
-            currentCommand = Commands.NotFound;
-        }
-    }
-
-    protected void continoueOnBruteForceAction (string[] arguments)
-    {
-        int argumentsAmmount = arguments.Length - 1;
-
-        if (gameState.GetPlayerInfo ().ProgramesDownloaded[TypeOfProgram.brutForse])
-        {
-            if (argumentsAmmount == 0)
-            {
-                generateResponseForInput ("bruteForce: too few arguments!");
-            }
-            else if (arguments[1] == "-h" || arguments[1] == "--help")
-            {
-                generateResponseForInput ("Usage: bruteforce [OPTIONS] <TARGET_IP>");
-                generateResponseForInput ("Brute force attack tool for penetration testing. Use this tool responsibly and only on systems you have permission to test.");
-                generateResponseForInput ("Options:");
-                generateResponseForInput ("-h, --help            Show this help message and exit");
-                generateResponseForInput ("-m, --multiplier      Set the multiplier for the attack");
-                generateResponseForInput ("Example:");
-                generateResponseForInput ("bruteforce 192.168.1.5");
-                generateResponseForInput ("bruteforce 192.168.1.100 -m 5");
-                generateResponseForInput (" Notes:");
-                generateResponseForInput ("  - Ensure the wordlist file exists and contains potential passwords.");
-                generateResponseForInput ("  - Brute force attacks can take significant time, especially with complex passwords.");
-                generateResponseForInput ("  - The multiplier option is used to increase the number of attempts per second. The default is 1. It can't be more then 300");
-                generateResponseForInput ("  - Use at your own risk. Unauthorized use is illegal.");
-
-                StartCoroutine (refreshLayout ());
-            }
-            else
-            {
-                bool allGood = true;
-                float multiplayer = 1;
-
-                if (argumentsAmmount >= 2)
-                {
-                    if (arguments[2] == "-m" || arguments[2] == "--multiplier")
-                    {
-                        if (argumentsAmmount >= 3)
-                        {
-                            multiplayer = float.Parse (arguments[3]);
-                            if (multiplayer > 300)
-                            {
-                                generateResponseForInput ("bruteForce: multiplier is to big!");
-                                allGood = false;
-                            }
-                            else if (multiplayer < 1)
-                            {
-                                generateResponseForInput ("bruteForce: multiplier has to be at least 1!");
-                                allGood = false;
-                            }
-                        }
-                        else
-                        {
-                            generateResponseForInput ("bruteForce: too few arguments!");
-                            allGood = false;
-                        }
-                    }
-                    else
-                    {
-                        generateResponseForInput ("bruteForce: " + arguments[2] + " not found");
-                        allGood = false;
-                    }
-                }
-
-                if (allGood)
-                {
-                    currentCommand = Commands.BruteForce;
-                    bruteForceAction (arguments[1], multiplayer);
-                }
-            }
-        }
-        else
-        {
-            generateResponseForInput ("Command 'bruteForce' not found");
-        }
-    }
-
-    protected void bruteForceAction (string targetIP, float multiplayer)
-    {
-        Computer computer = gameState.FindComputerOfIP (targetIP);
-
-        if (computer != null)
-        {
-            if (!computer.IsPasswordCracted)
-            {
-                float totalCombinations = Mathf.Pow (SystemHelper.PasswordCharacterTypesSume (computer.Password), (float) computer.Password.Length);
-                float percent = computer.Password.Length > 0 ? Random.Range (0.5f, 0.8f) : 1.0f;
-                float actualCombinations = totalCombinations * percent;
-
-                float timeToCrack = actualCombinations / multiplayer;
-                int hours = ((int)timeToCrack / 3600) < 0 ? -1 * ((int)timeToCrack / 3600) : (int)timeToCrack / 3600;
-                int minutes = ((int)(timeToCrack % 3600) / 60) < 0 ? -1 * ((int)(timeToCrack % 3600)) : (int)(timeToCrack % 3600);
-                int seconds = ((int)timeToCrack % 60) < 0 ? -1 * ((int)timeToCrack % 60) : (int)timeToCrack % 60;
-
-                generateResponseForInput ("bruteForce: attacking ‘" + targetIP + "‘ with multiplayer: " + multiplayer);
-                generateResponseForInput ("Combinations to try: " + totalCombinations);
-                generateResponseForInput ($"Estimation time: {hours}h {minutes}min {seconds}s");
-                generateResponseForInput ("Attack started");
-                PassiveTerminalElement loadingLabel = generateResponseForInputWithPossibleUpdate ("[....................] 0%");
-                PassiveTerminalElement traiedCombinationLabel = generateResponseForInputWithPossibleUpdate ("Combination tested: 0");
-
-                StartCoroutine (refreshLayout ());
-                StartCoroutine (breakPasswordWithBruteForce (loadingLabel, traiedCombinationLabel, actualCombinations, totalCombinations, multiplayer, computer.SecurityLevel));
-            }
-            else
-            {
-                generateResponseForInput ("bruteForce: Computer ‘" + targetIP + "’ has already been hacked");
-            }
-        }
-        else
-        {
-            generateResponseForInput ("bruteForce: cannot attack ‘" + targetIP + "’: No such computer");
-        }
-
-        terminalState = TerminalState.Normal;
-        currentCommand = Commands.NotFound;
-    }
-
-    protected IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer, LevelOfSecurity levelOfSecurity)
-    {
-        programIsRunning = true;
-        playerInputHandler.ChangeIteractibilityOfInputField (false);
-        float testesCombination = 0;
-
-        bool seciurityIteraption = false;
-        float crackingTime = 0.0f;
-
-        while (programIsRunning && testesCombination < actualCombination && !seciurityIteraption)
-        {
-            yield return new WaitForSeconds (1f);
-            crackingTime += 1f;
-
-            testesCombination += multiplayer;
-            float percent = (testesCombination / totalCombinations) * 100;
-            int filledDots = Mathf.FloorToInt (percent / 5f);
-            string updatedBar = new string ('#', filledDots).PadRight (20, '.');
-            
-            loadingElement.UpdateText ($"[{updatedBar}] {percent.ToString ("F2")}%");
-            testedCombinationLabel.UpdateText ($"Combination tested: {testesCombination}");
-
-            if (levelOfSecurity == LevelOfSecurity.Medium && crackingTime >= 4f)
-            {
-                seciurityIteraption = true;
-            }
-            else if (levelOfSecurity == LevelOfSecurity.High && crackingTime >= 2f)
-            {
-                seciurityIteraption = true;
-            }
-        }
-
-        if (testesCombination >= actualCombination)
-        {
-            generateResponseForInput ("bruteForce: password cracked");
-            programIsRunning = false;
-        }
-        else
-        {
-            if (seciurityIteraption)
-            {
-                generateResponseForInput ("bruteForce: lost connection with cracking device");
-            }
-            else
-            {
-                generateResponseForInput ("bruteForce: cracking was abandoned");
-            }
-        }
-
-        playerInputHandler.ChangeIteractibilityOfInputField (true);
-        playerInputHandler.ActiveInputField ();
     }
 }
