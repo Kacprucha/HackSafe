@@ -19,7 +19,9 @@ public enum Commands
     Scp,
     Ssh,
     Update,
-    Install
+    Install,
+    BruteForce,
+    Clear
 }
 
 public enum TerminalState
@@ -43,7 +45,8 @@ public class TerminalIterpreter : MonoBehaviour
     protected FIFOQueue<GameObject> queue = new FIFOQueue<GameObject> ();
     protected Commands currentCommand = Commands.NotFound;
     protected TerminalState terminalState = TerminalState.Normal;
-    
+    protected bool programIsRunning = false;
+
     protected List<TypeOfPrpgram> programsToInstall = new List<TypeOfPrpgram> ();
 
     protected GameState gameState;
@@ -63,7 +66,23 @@ public class TerminalIterpreter : MonoBehaviour
 
     void Update ()
     {
+        if (programIsRunning) 
+        {
+            if ((Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) && Input.GetKeyDown (KeyCode.C))
+            {
+                programIsRunning = false;
+            }
+        }
 
+        if ((Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) && Input.GetKeyDown (KeyCode.L))
+        {
+            int ammountOfLinesInTermianl = queue.Count;
+
+            for (int i = 0; i < ammountOfLinesInTermianl; i++)
+            {
+                Destroy (queue.Pop ());
+            }
+        }
     }
 
     public void UpdatePrefix (string ip)
@@ -108,6 +127,8 @@ public class TerminalIterpreter : MonoBehaviour
 
     private bool checkIfPopIsNeeded ()
     {
+        LayoutRebuilder.ForceRebuildLayoutImmediate (this.gameObject.GetComponent<RectTransform> ());
+
         float sizeOfQueue = 0;
         foreach (GameObject _object in queue.GetArryOfObjectsInQueue ())
         {
@@ -150,6 +171,17 @@ public class TerminalIterpreter : MonoBehaviour
         }
 
         return passiveTerminalElement;
+    }
+
+    IEnumerator refreshLayout ()
+    {
+        yield return new WaitForEndOfFrame ();
+        LayoutRebuilder.ForceRebuildLayoutImmediate (this.gameObject.GetComponent<RectTransform> ());
+
+        while (checkIfPopIsNeeded ())
+        {
+            Destroy (queue.Pop ());
+        }
     }
 
     private void findCommend (string input)
@@ -289,6 +321,18 @@ public class TerminalIterpreter : MonoBehaviour
 
             case "ssh":
                 currentCommand = Commands.Ssh;
+                break;
+
+            case "clear":
+                currentCommand = Commands.Clear;
+
+                int ammountOfLinesInTermianl = queue.Count;
+
+                for (int i = 0; i < ammountOfLinesInTermianl; i++)
+                {
+                    Destroy (queue.Pop ());
+                }
+
                 break;
 
             case "apt":
@@ -432,6 +476,81 @@ public class TerminalIterpreter : MonoBehaviour
                     generateResponseForInput ("apt install: instalation aborted");
                     terminalState = TerminalState.Normal;
                     currentCommand = Commands.NotFound;
+                }
+
+                break;
+
+            case "bruteForce":
+                if (gameState.GetPlayerInfo ().ProgramesDownloaded[TypeOfPrpgram.brutForse])
+                {
+                    if (argumentsAmmount == 0)
+                    {
+                        generateResponseForInput ("bruteForce: too few arguments!");
+                    }
+                    else if (arguments[1] == "-h" || arguments[1] == "--help")
+                    {
+                        generateResponseForInput ("Usage: bruteforce [OPTIONS] <TARGET_IP>");
+                        generateResponseForInput ("Brute force attack tool for penetration testing. Use this tool responsibly and only on systems you have permission to test.");
+                        generateResponseForInput ("Options:");
+                        generateResponseForInput ("-h, --help            Show this help message and exit");
+                        generateResponseForInput ("-m, --multiplier      Set the multiplier for the attack");
+                        generateResponseForInput ("Example:");
+                        generateResponseForInput ("bruteforce 192.168.1.5");
+                        generateResponseForInput ("bruteforce 192.168.1.100 -m 5");
+                        generateResponseForInput (" Notes:");
+                        generateResponseForInput ("  - Ensure the wordlist file exists and contains potential passwords.");
+                        generateResponseForInput ("  - Brute force attacks can take significant time, especially with complex passwords.");
+                        generateResponseForInput ("  - The multiplier option is used to increase the number of attempts per second. The default is 1. It can't be more then 300");
+                        generateResponseForInput ("  - Use at your own risk. Unauthorized use is illegal.");
+
+                        StartCoroutine (refreshLayout ());
+                    }
+                    else
+                    {
+                        bool allGood = true;
+                        float multiplayer = 1;
+
+                        if (argumentsAmmount >= 2)
+                        {
+                            if (arguments[2] == "-m" || arguments[2] == "--multiplier")
+                            {
+                                if (argumentsAmmount >= 3)
+                                {
+                                    multiplayer = float.Parse (arguments[3]);
+                                    if (multiplayer > 300)
+                                    {
+                                        generateResponseForInput ("bruteForce: multiplier is to big!");
+                                        allGood = false;
+                                    }
+                                    else if (multiplayer < 1)
+                                    {
+                                        generateResponseForInput ("bruteForce: multiplier has to be at least 1!");
+                                        allGood = false;
+                                    }
+                                }
+                                else
+                                {
+                                    generateResponseForInput ("bruteForce: too few arguments!");
+                                    allGood = false;
+                                }
+                            }
+                            else
+                            {
+                                generateResponseForInput ("bruteForce: " + arguments[2] + " not found");
+                                allGood = false;
+                            }
+                        }
+
+                        if (allGood)
+                        {
+                            currentCommand = Commands.BruteForce;
+                            continouBruteForceAction (arguments[1], multiplayer);
+                        }
+                    }
+                }
+                else
+                {
+                    generateResponseForInput ("Command 'bruteForce' not found");
                 }
 
                 break;
@@ -685,5 +804,78 @@ public class TerminalIterpreter : MonoBehaviour
             terminalState = TerminalState.Normal;
             currentCommand = Commands.NotFound;
         }
+    }
+
+    void continouBruteForceAction (string targetIP, float multiplayer)
+    {
+        Computer computer = gameState.FindComputerOfIP (targetIP);
+
+        if (computer != null)
+        {
+            if (!computer.IsPasswordCracted)
+            {
+                float totalCombinations = Mathf.Pow (88f, (float) computer.Password.Length);
+                float percent = Random.Range (0.5f, 0.8f);
+                float actualCombinations = totalCombinations * percent;
+
+                float timeToCrack = actualCombinations / multiplayer;
+                uint hours = (uint)timeToCrack / 3600;
+                uint minutes = ((uint)timeToCrack % 3600) / 60;
+                uint seconds = (uint)timeToCrack % 60;
+
+                generateResponseForInput ("bruteForce: attacking ‘" + targetIP + "‘ with multiplayer: " + multiplayer);
+                generateResponseForInput ("Combinations to try: " + totalCombinations);
+                generateResponseForInput ($"Estimation time: {hours}h {minutes}min {seconds}s");
+                generateResponseForInput ("Attack started");
+                PassiveTerminalElement loadingLabel = generateResponseForInputWithPossibleUpdate ("[....................] 0%");
+                PassiveTerminalElement traiedCombinationLabel = generateResponseForInputWithPossibleUpdate ("Combination tested: 0");
+
+                StartCoroutine (refreshLayout ());
+                StartCoroutine (breakPasswordWithBruteForce (loadingLabel, traiedCombinationLabel, actualCombinations, totalCombinations, multiplayer));
+            }
+            else
+            {
+                generateResponseForInput ("bruteForce: Computer ‘" + targetIP + "’ has already been hacked");
+            }
+        }
+        else
+        {
+            generateResponseForInput ("bruteForce: cannot attack ‘" + targetIP + "’: No such computer");
+        }
+
+        terminalState = TerminalState.Normal;
+        currentCommand = Commands.NotFound;
+    }
+
+    IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer)
+    {
+        programIsRunning = true;
+        playerInputHandler.ChangeIteractibilityOfInputField (false);
+        float testesCombination = 0;
+
+        while (programIsRunning && testesCombination < actualCombination)
+        {
+            yield return new WaitForSeconds (1f);
+            testesCombination += multiplayer;
+            float percent = (testesCombination / totalCombinations) * 100;
+            int filledDots = Mathf.FloorToInt (percent / 5f);
+            string updatedBar = new string ('#', filledDots).PadRight (20, '.');
+            
+            loadingElement.UpdateText ($"[{updatedBar}] {percent.ToString ("F2")}%");
+            testedCombinationLabel.UpdateText ($"Combination tested: {testesCombination}");
+        }
+
+        if (testesCombination >= actualCombination)
+        {
+            generateResponseForInput ("bruteForce: password cracked");
+            programIsRunning = false;
+        }
+        else
+        {
+            generateResponseForInput ("bruteForce: cracking was abandoned");
+        }
+
+        playerInputHandler.ChangeIteractibilityOfInputField (true);
+        playerInputHandler.ActiveInputField ();
     }
 }
