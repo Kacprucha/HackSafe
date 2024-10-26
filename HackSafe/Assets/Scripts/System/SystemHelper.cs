@@ -5,6 +5,11 @@ using System.Text.RegularExpressions;
 
 public static class SystemHelper
 {
+    static string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static string lower = "abcdefghijklmnopqrstuvwxyz";
+    static string digits = "0123456789";
+    static string special = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
     static string NetworkIPPart = "192.168.1";
     public static bool IpIsCorrect (string ip)
     {
@@ -58,11 +63,6 @@ public static class SystemHelper
 
     public static string GeneratePassword (int length)
     {
-        const string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const string lower = "abcdefghijklmnopqrstuvwxyz";
-        const string digits = "0123456789";
-        const string special = "!@#$%^&*()_+-=[]{}|;:,.<>?";
-
         var allChars = upper + lower + digits + special;
         var random = new Random ();
         var password = new StringBuilder ();
@@ -106,6 +106,39 @@ public static class SystemHelper
                 }
             }
         }
+
+        return result;
+    }
+
+    public static float PasswordCharacterTypesSume (string password)
+    {
+        float result = 0;
+
+        bool hasUpperCase = false;
+        bool hasLowerCase = false;
+        bool hasDigit = false;
+        bool hasSpecialCharacter = false;
+
+        foreach (char c in password)
+        {
+            if (char.IsUpper (c))
+                hasUpperCase = true;
+            else if (char.IsLower (c))
+                hasLowerCase = true;
+            else if (char.IsDigit (c))
+                hasDigit = true;
+            else
+                hasSpecialCharacter = true;
+        }
+
+        if (hasUpperCase)
+            result += upper.Length;
+        if (hasLowerCase)
+            result += lower.Length;
+        if (hasDigit)
+            result += digits.Length;
+        if (hasSpecialCharacter)
+            result += special.Length;
 
         return result;
     }

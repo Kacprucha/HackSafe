@@ -843,14 +843,14 @@ public class TerminalIterpreter : MonoBehaviour
         {
             if (!computer.IsPasswordCracted)
             {
-                float totalCombinations = Mathf.Pow (88f, (float) computer.Password.Length);
-                float percent = Random.Range (0.5f, 0.8f);
+                float totalCombinations = Mathf.Pow (SystemHelper.PasswordCharacterTypesSume (computer.Password), (float) computer.Password.Length);
+                float percent = computer.Password.Length > 0 ? Random.Range (0.5f, 0.8f) : 1.0f;
                 float actualCombinations = totalCombinations * percent;
 
                 float timeToCrack = actualCombinations / multiplayer;
-                uint hours = (uint)timeToCrack / 3600;
-                uint minutes = ((uint)timeToCrack % 3600) / 60;
-                uint seconds = (uint)timeToCrack % 60;
+                int hours = ((int)timeToCrack / 3600) < 0 ? -1 * ((int)timeToCrack / 3600) : (int)timeToCrack / 3600;
+                int minutes = ((int)(timeToCrack % 3600) / 60) < 0 ? -1 * ((int)(timeToCrack % 3600)) : (int)(timeToCrack % 3600);
+                int seconds = ((int)timeToCrack % 60) < 0 ? -1 * ((int)timeToCrack % 60) : (int)timeToCrack % 60;
 
                 generateResponseForInput ("bruteForce: attacking ‘" + targetIP + "‘ with multiplayer: " + multiplayer);
                 generateResponseForInput ("Combinations to try: " + totalCombinations);
@@ -860,7 +860,7 @@ public class TerminalIterpreter : MonoBehaviour
                 PassiveTerminalElement traiedCombinationLabel = generateResponseForInputWithPossibleUpdate ("Combination tested: 0");
 
                 StartCoroutine (refreshLayout ());
-                StartCoroutine (breakPasswordWithBruteForce (loadingLabel, traiedCombinationLabel, actualCombinations, totalCombinations, multiplayer));
+                StartCoroutine (breakPasswordWithBruteForce (loadingLabel, traiedCombinationLabel, actualCombinations, totalCombinations, multiplayer, computer.SecurityLevel));
             }
             else
             {
@@ -876,15 +876,20 @@ public class TerminalIterpreter : MonoBehaviour
         currentCommand = Commands.NotFound;
     }
 
-    protected IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer)
+    protected IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer, LevelOfSecurity levelOfSecurity)
     {
         programIsRunning = true;
         playerInputHandler.ChangeIteractibilityOfInputField (false);
         float testesCombination = 0;
 
-        while (programIsRunning && testesCombination < actualCombination)
+        bool seciurityIteraption = false;
+        float crackingTime = 0.0f;
+
+        while (programIsRunning && testesCombination < actualCombination && !seciurityIteraption)
         {
             yield return new WaitForSeconds (1f);
+            crackingTime += 1f;
+
             testesCombination += multiplayer;
             float percent = (testesCombination / totalCombinations) * 100;
             int filledDots = Mathf.FloorToInt (percent / 5f);
@@ -892,6 +897,15 @@ public class TerminalIterpreter : MonoBehaviour
             
             loadingElement.UpdateText ($"[{updatedBar}] {percent.ToString ("F2")}%");
             testedCombinationLabel.UpdateText ($"Combination tested: {testesCombination}");
+
+            if (levelOfSecurity == LevelOfSecurity.Medium && crackingTime >= 4f)
+            {
+                seciurityIteraption = true;
+            }
+            else if (levelOfSecurity == LevelOfSecurity.High && crackingTime >= 2f)
+            {
+                seciurityIteraption = true;
+            }
         }
 
         if (testesCombination >= actualCombination)
@@ -901,7 +915,14 @@ public class TerminalIterpreter : MonoBehaviour
         }
         else
         {
-            generateResponseForInput ("bruteForce: cracking was abandoned");
+            if (seciurityIteraption)
+            {
+                generateResponseForInput ("bruteForce: lost connection with cracking device");
+            }
+            else
+            {
+                generateResponseForInput ("bruteForce: cracking was abandoned");
+            }
         }
 
         playerInputHandler.ChangeIteractibilityOfInputField (true);
