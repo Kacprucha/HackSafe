@@ -19,8 +19,8 @@ public class SystemVariablesView : MonoBehaviour
 
     private float update;
 
-    private List<string> progarmmes = new List<string> ();
-    private List<int[]> programmesUsage = new List<int[]> ();
+    private List<string> programs = new List<string> ();
+    private List<int[]> programsUsage = new List<int[]> ();
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +40,7 @@ public class SystemVariablesView : MonoBehaviour
             float RAM = RAMUsage;
             float Storage = StorageUsage;
 
-            List<int[]> tempProgrammeUsage = programmesUsage.GetRange (0, programmesUsage.Count);
+            List<int[]> tempProgrammeUsage = programsUsage.GetRange (0, programsUsage.Count);
             foreach (int[] programmeUsage in tempProgrammeUsage)
             {
                 CPU += programmeUsage[0];
@@ -66,9 +66,28 @@ public class SystemVariablesView : MonoBehaviour
         }
     }
 
-    public void AddProgramme (string name, int CPU, int RAM, int Storage)
+    public void AddProgram (string name, int CPU, int RAM, int Storage)
     {
-        progarmmes.Add (name);
-        programmesUsage.Add (new int[] { CPU, RAM, Storage });
+        programs.Add (name);
+        programsUsage.Add (new int[] { CPU, RAM, Storage });
+    }
+
+    public void DelateProgram (string name)
+    {
+        int position = -1;
+        for (int i = 0; i < programs.Count; i++)
+        {
+            if (programs[i] == name)
+            {
+                position = i;
+                break;
+            }
+        }
+
+        if (position >= 0)
+        {
+            programsUsage.RemoveAt (position);
+            programs.RemoveAt (position);
+        }
     }
 }

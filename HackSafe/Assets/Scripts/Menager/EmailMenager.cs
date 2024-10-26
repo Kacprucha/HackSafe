@@ -69,9 +69,9 @@ public static class EmailMenager
             case 0:
                 if (player != null && !emailRead)
                 {
-                    player.ProgramesAllowedToDownload[TypeOfPrpgram.brutForse] = true;
-                    player.ProgramesAllowedToDownload[TypeOfPrpgram.rainbowTables] = true;
-                    player.ProgramesAllowedToDownload[TypeOfPrpgram.dictionaryAttack] = true;
+                    player.ProgramesAllowedToDownload[TypeOfProgram.brutForse] = true;
+                    player.ProgramesAllowedToDownload[TypeOfProgram.rainbowTables] = true;
+                    player.ProgramesAllowedToDownload[TypeOfProgram.dictionaryAttack] = true;
 
                     Debug.Log ("Programs anabled: bruteForce, rainbow, dicionary");
                 }

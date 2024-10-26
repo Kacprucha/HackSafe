@@ -4,7 +4,7 @@ using System.Globalization;
 using UnityEngine;
 
 [SerializeField]
-public enum TypeOfPrpgram
+public enum TypeOfProgram
 {
     brutForse = 0,
     rainbowTables,
@@ -13,13 +13,13 @@ public enum TypeOfPrpgram
 
 public static class TerminalMenager
 {
-    public static List<string> GenerateTermialResponseForInstalingProgram (TypeOfPrpgram typeOfPrpgram)
+    public static List<string> GenerateTermialResponseForInstalingProgram (TypeOfProgram typeOfPrpgram)
     {
         List<string> result = new List<string> ();
 
         switch (typeOfPrpgram)
         {
-            case TypeOfPrpgram.brutForse:
+            case TypeOfProgram.brutForse:
                 break;
 
         }
@@ -60,7 +60,7 @@ public static class TerminalMenager
 
     }
 
-    public static IEnumerator GenerateTermianlResponseForInstall (TerminalIterpreter terminalIterpreter, List<TypeOfPrpgram> typeOfPrpgrams, bool beforeAproveFaze)
+    public static IEnumerator GenerateTermianlResponseForInstall (TerminalIterpreter terminalIterpreter, List<TypeOfProgram> typeOfPrpgrams, bool beforeAproveFaze)
     {
         PassiveTerminalElement terminalElement;
 
@@ -78,7 +78,7 @@ public static class TerminalMenager
             terminalIterpreter.GneratePassiveTermialResponse ("The following NEW packages will be installed:");
 
             string packages = "\t";
-            foreach (TypeOfPrpgram typeOfPrpgram in typeOfPrpgrams)
+            foreach (TypeOfProgram typeOfPrpgram in typeOfPrpgrams)
             {
                 packages += typeOfPrpgram.ToString ();
 
@@ -133,7 +133,7 @@ public static class TerminalMenager
         }
     }
 
-    public static bool CheckIfPlayerCanDownloadProgram (TypeOfPrpgram typeOfPrpgram)
+    public static bool CheckIfPlayerCanDownloadProgram (TypeOfProgram typeOfPrpgram)
     {
         bool result = false;
 
@@ -147,7 +147,7 @@ public static class TerminalMenager
         return result;
     }
 
-    public static bool CheckIfPlayerDownloadedProgram (TypeOfPrpgram typeOfPrpgram)
+    public static bool CheckIfPlayerDownloadedProgram (TypeOfProgram typeOfPrpgram)
     {
         bool result = false;
 
@@ -173,21 +173,21 @@ public static class TerminalMenager
         }
     }
 
-    static float GetSizeOfArchive (TypeOfPrpgram typeOfPrpgram)
+    static float GetSizeOfArchive (TypeOfProgram typeOfPrpgram)
     {
         float result = 0f;
 
         switch (typeOfPrpgram)
         {
-            case TypeOfPrpgram.brutForse:
+            case TypeOfProgram.brutForse:
                 result += 0.58f;
                 break;
 
-            case TypeOfPrpgram.rainbowTables:
+            case TypeOfProgram.rainbowTables:
                 result += 3.103f;
                 break;
 
-            case TypeOfPrpgram.dictionaryAttack:
+            case TypeOfProgram.dictionaryAttack:
                 result += 1.971f;
                 break;
         }
@@ -195,23 +195,23 @@ public static class TerminalMenager
         return result;
     }
 
-    static float GetSizeOfArchive (List<TypeOfPrpgram> typeOfPrpgrams)
+    static float GetSizeOfArchive (List<TypeOfProgram> typeOfPrpgrams)
     {
         float result = 0;
 
-        foreach (TypeOfPrpgram typeOfPrpgram in typeOfPrpgrams)
+        foreach (TypeOfProgram typeOfPrpgram in typeOfPrpgrams)
         {
             switch (typeOfPrpgram)
             {
-                case TypeOfPrpgram.brutForse:
+                case TypeOfProgram.brutForse:
                     result += 0.58f;
                     break;
 
-                case TypeOfPrpgram.rainbowTables:
+                case TypeOfProgram.rainbowTables:
                     result += 3.103f;
                     break;
 
-                case TypeOfPrpgram.dictionaryAttack:
+                case TypeOfProgram.dictionaryAttack:
                     result += 1.971f;
                     break;
             }
@@ -220,21 +220,21 @@ public static class TerminalMenager
         return result;
     }
 
-    static float GetSizeOfProgramm (TypeOfPrpgram typeOfPrpgram)
+    static float GetSizeOfProgramm (TypeOfProgram typeOfPrpgram)
     {
         float result = 0;
 
         switch (typeOfPrpgram)
         {
-            case TypeOfPrpgram.brutForse:
+            case TypeOfProgram.brutForse:
                 result += 2.135f;
                 break;
 
-            case TypeOfPrpgram.rainbowTables:
+            case TypeOfProgram.rainbowTables:
                 result += 2.413f;
                 break;
 
-            case TypeOfPrpgram.dictionaryAttack:
+            case TypeOfProgram.dictionaryAttack:
                 result += 3.027f;
                 break;
         }
@@ -242,23 +242,23 @@ public static class TerminalMenager
         return result;
     }
 
-    static float GetSizeOfProgramm (List<TypeOfPrpgram> typeOfPrpgrams)
+    static float GetSizeOfProgramm (List<TypeOfProgram> typeOfPrpgrams)
     {
         float result = 0;
 
-        foreach (TypeOfPrpgram typeOfPrpgram in typeOfPrpgrams)
+        foreach (TypeOfProgram typeOfPrpgram in typeOfPrpgrams)
         {
             switch (typeOfPrpgram)
             {
-                case TypeOfPrpgram.brutForse:
+                case TypeOfProgram.brutForse:
                     result += 2.135f;
                     break;
 
-                case TypeOfPrpgram.rainbowTables:
+                case TypeOfProgram.rainbowTables:
                     result += 2.413f;
                     break;
 
-                case TypeOfPrpgram.dictionaryAttack:
+                case TypeOfProgram.dictionaryAttack:
                     result += 3.027f;
                     break;
             }
@@ -267,21 +267,21 @@ public static class TerminalMenager
         return result;
     }
 
-    static string GetURLForProgramm (TypeOfPrpgram typeOfPrpgram)
+    static string GetURLForProgramm (TypeOfProgram typeOfPrpgram)
     {
         string result = "";
 
         switch (typeOfPrpgram)
         {
-            case TypeOfPrpgram.brutForse:
+            case TypeOfProgram.brutForse:
                 result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 bruteForce 3.0-1";
                 break;
 
-            case TypeOfPrpgram.rainbowTables:
+            case TypeOfProgram.rainbowTables:
                 result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 rainbowTables 3.0-1";
                 break;
 
-            case TypeOfPrpgram.dictionaryAttack:
+            case TypeOfProgram.dictionaryAttack:
                 result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 dictionaryAttack 3.0-1";
                 break;
         }
@@ -289,21 +289,21 @@ public static class TerminalMenager
         return result;
     }
 
-    static string GetPackageForProgramm (TypeOfPrpgram typeOfPrpgram)
+    static string GetPackageForProgramm (TypeOfProgram typeOfPrpgram)
     {
         string result = "";
 
         switch (typeOfPrpgram)
         {
-            case TypeOfPrpgram.brutForse:
+            case TypeOfProgram.brutForse:
                 result = "../3-bruteForce_3.0-1_amd64.deb";
                 break;
 
-            case TypeOfPrpgram.rainbowTables:
+            case TypeOfProgram.rainbowTables:
                 result = ".../4-rainbowTables_2.5-1_amd64.deb";
                 break;
 
-            case TypeOfPrpgram.dictionaryAttack:
+            case TypeOfProgram.dictionaryAttack:
                 result = ".../5-dictionaryAttack_1.9-2_amd64.deb";
                 break;
         }

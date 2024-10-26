@@ -47,7 +47,7 @@ public class TerminalIterpreter : MonoBehaviour
     protected TerminalState terminalState = TerminalState.Normal;
     protected bool programIsRunning = false;
 
-    protected List<TypeOfPrpgram> programsToInstall = new List<TypeOfPrpgram> ();
+    protected List<TypeOfProgram> programsToInstall = new List<TypeOfProgram> ();
 
     protected GameState gameState;
 
@@ -582,17 +582,17 @@ public class TerminalIterpreter : MonoBehaviour
                         switch (arguments[i])
                         {
                             case "bruteForce":
-                                programsToInstall.Add (TypeOfPrpgram.brutForse);
+                                programsToInstall.Add (TypeOfProgram.brutForse);
 
                                 break;
 
                             case "rainbowTables":
-                                programsToInstall.Add (TypeOfPrpgram.rainbowTables);
+                                programsToInstall.Add (TypeOfProgram.rainbowTables);
 
                                 break;
 
                             case "dictionaryAttack":
-                                programsToInstall.Add (TypeOfPrpgram.dictionaryAttack);
+                                programsToInstall.Add (TypeOfProgram.dictionaryAttack);
 
                                 break;
                         }
@@ -675,7 +675,7 @@ public class TerminalIterpreter : MonoBehaviour
         {
             bool allProgramsAllowed = false;
 
-            foreach (TypeOfPrpgram program in programsToInstall)
+            foreach (TypeOfProgram program in programsToInstall)
             {
                 if (TerminalMenager.CheckIfPlayerCanDownloadProgram (program))
                 {
@@ -684,7 +684,7 @@ public class TerminalIterpreter : MonoBehaviour
                 else
                 {
                     generateResponseForInput ("apt install: you don't have access to install " + program + "or this programm does not exist");
-                    programsToInstall = new List<TypeOfPrpgram> ();
+                    programsToInstall = new List<TypeOfProgram> ();
                     allProgramsAllowed = false;
                     break;
                 }
@@ -692,8 +692,8 @@ public class TerminalIterpreter : MonoBehaviour
 
             if (allProgramsAllowed)
             {
-                List<TypeOfPrpgram> tempPrograms = new List<TypeOfPrpgram> (programsToInstall);
-                foreach (TypeOfPrpgram program in tempPrograms)
+                List<TypeOfProgram> tempPrograms = new List<TypeOfProgram> (programsToInstall);
+                foreach (TypeOfProgram program in tempPrograms)
                 {
                     if (TerminalMenager.CheckIfPlayerDownloadedProgram (program))
                     {
@@ -725,7 +725,7 @@ public class TerminalIterpreter : MonoBehaviour
         if (arguments.Length == 1 && TerminalMenager.CheckIfResponseIsYes (arguments[0]))
         {
             installAction (programsToInstall, false);
-            programsToInstall = new List<TypeOfPrpgram> ();
+            programsToInstall = new List<TypeOfProgram> ();
         }
         else
         {
@@ -735,7 +735,7 @@ public class TerminalIterpreter : MonoBehaviour
         }
     }
 
-    protected void installAction (List<TypeOfPrpgram> programsToInstall, bool beforeAproveFaze)
+    protected void installAction (List<TypeOfProgram> programsToInstall, bool beforeAproveFaze)
     {
         if (beforeAproveFaze)
         {
@@ -748,7 +748,7 @@ public class TerminalIterpreter : MonoBehaviour
             playerInputHandler.ChangeIteractibilityOfInputField (false);
             StartCoroutine (TerminalMenager.GenerateTermianlResponseForInstall (this, programsToInstall, beforeAproveFaze));
 
-            foreach (TypeOfPrpgram program in programsToInstall)
+            foreach (TypeOfProgram program in programsToInstall)
             {
                 gameState.GetPlayerInfo ().ProgramesDownloaded[program] = true;
             }
@@ -762,7 +762,7 @@ public class TerminalIterpreter : MonoBehaviour
     {
         int argumentsAmmount = arguments.Length - 1;
 
-        if (gameState.GetPlayerInfo ().ProgramesDownloaded[TypeOfPrpgram.brutForse])
+        if (gameState.GetPlayerInfo ().ProgramesDownloaded[TypeOfProgram.brutForse])
         {
             if (argumentsAmmount == 0)
             {

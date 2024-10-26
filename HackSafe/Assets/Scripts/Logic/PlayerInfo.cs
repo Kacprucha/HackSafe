@@ -8,8 +8,8 @@ public class PlayerInfo
 {
     public Computer PlayerComputer { get; private set; }
     public List<Email> RecivedEmails { get; private set; }
-    public Dictionary <TypeOfPrpgram, bool> ProgramesAllowedToDownload { get; private set; }
-    public Dictionary<TypeOfPrpgram, bool> ProgramesDownloaded { get; private set; }
+    public Dictionary <TypeOfProgram, bool> ProgramesAllowedToDownload { get; private set; }
+    public Dictionary<TypeOfProgram, bool> ProgramesDownloaded { get; private set; }
 
     public PlayerInfo (GameData data)
     {
@@ -91,10 +91,10 @@ public class PlayerInfo
 
     protected void inicializeProgramesAllowedToDownload ()
     {
-        ProgramesAllowedToDownload = new Dictionary<TypeOfPrpgram, bool> ();
-        ProgramesDownloaded = new Dictionary<TypeOfPrpgram, bool> ();
+        ProgramesAllowedToDownload = new Dictionary<TypeOfProgram, bool> ();
+        ProgramesDownloaded = new Dictionary<TypeOfProgram, bool> ();
 
-        foreach (TypeOfPrpgram programe in Enum.GetValues (typeof (TypeOfPrpgram)))
+        foreach (TypeOfProgram programe in Enum.GetValues (typeof (TypeOfProgram)))
         {
             ProgramesAllowedToDownload.Add (programe, false);
             ProgramesDownloaded.Add (programe, false);
