@@ -14,6 +14,8 @@ public class GameData
     public _Dictionary<TypeOfPrpgram, bool> AllowedProgrames = new _Dictionary<TypeOfPrpgram, bool> ();
     public _Dictionary<TypeOfPrpgram, bool> ProgramesDownloaded = new _Dictionary<TypeOfPrpgram, bool> ();
 
+    public List<ComputerData> CompanyComputers = new List<ComputerData> ();
+
     public GameData ()
     {
         PlayerName = "";
@@ -44,4 +46,17 @@ public class _Dictionary <K, V>
 {
     public List<K> keys = new List<K> ();
     public List<V> values = new List<V> ();
+}
+
+[Serializable]
+public class ComputerData
+{
+    public string Username;
+    public string Password = null;
+    public string IP = null;
+    public bool IsPlayer = false;
+    public bool IsPasswordCracted = false;
+    public bool IsMainComputer = false;
+
+    public List<SerializedNode> SystemNodes = new List<SerializedNode> ();
 }

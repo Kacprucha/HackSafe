@@ -51,7 +51,14 @@ public class Computer
         {
             if (string.IsNullOrEmpty (value))
             {
-                ip = SystemHelper.GenerateValidIp ();
+                if (isPlayer)
+                {
+                    ip = SystemHelper.GenerateValidIp ();
+                }
+                else
+                {
+                    ip = SystemHelper.GenerateValidIpInNetwork ();
+                }
             }
             else
             {
@@ -72,22 +79,37 @@ public class Computer
         get { return fileSystem; }
     } 
 
+    public bool IsPasswordCracted
+    {
+        get { return isPasswordCracted; }
+    }
+
+    public bool IsMainComputer
+    {
+        get { return isMainComputer; }
+    }
+
     protected string ip = "";
     protected FileSystem fileSystem;
 
     protected string passwrod = "";
-    protected bool ifPasswordCracted = false;
+    protected bool isPasswordCracted = false;
 
     protected string username = "";
 
-    public Computer (GameData data, bool playerData)
+    protected bool isPlayer = false;
+    protected bool isMainComputer = false;
+
+    public Computer (GameData data, int computerID = -1)
     {
-        LoadData (data, playerData);
+        LoadData (data, computerID);
     }
 
-    public Computer (string username, string password = null, string ip = null )
+    public Computer (string username, bool isPlayer, string password = null, string ip = null, bool isMain = false)
     {
         Username = username;
+        this.isPlayer = isPlayer;
+        this.isMainComputer = isMain;
 
         if (password == null)
         {
@@ -101,32 +123,57 @@ public class Computer
         IP = ip;
         fileSystem = new FileSystem ();
 
-        fileSystem.CreateNode ("/home/" + Username + "/documents", true);
-        fileSystem.CreateNode ("/home/" + Username + "/desktop", true);
+        fileSystem.CreateNode ("/home/" + Username.Replace (" ", "") + "/documents", true);
+        fileSystem.CreateNode ("/home/" + Username.Replace (" ", "") + "/desktop", true);
     }
 
-    public void LoadData (GameData data, bool playerData)
+    public void LoadData (GameData data, int computerID = -1)
     {
-        if (playerData)
+        if (computerID == -1)
         {
             Username = data.PlayerName;
             Password = data.PlayerPasswored;
             IP = data.PlayerIP;
+            isPlayer = true;
 
             fileSystem = new FileSystem ();
-            fileSystem.LoadData (data, playerData);
+            fileSystem.LoadData (data);
+        }
+        else
+        {
+            ComputerData computerData = data.CompanyComputers[computerID];
+            Username = computerData.Username;
+            this.passwrod = computerData.Password;
+            IP = computerData.IP;
+            isPlayer = computerData.IsPlayer;
+            isPasswordCracted = computerData.IsPasswordCracted;
+
+            fileSystem = new FileSystem ();
+            fileSystem.LoadData (data, computerID);
         }
     }
 
-    public void SaveData (ref GameData data, bool playerData)
+    public void SaveData (ref GameData data)
     {
-        if (playerData)
+        if (isPlayer)
         {
             data.PlayerName = Username;
             data.PlayerPasswored = Password;
             data.PlayerIP = IP;
 
-            fileSystem.SaveData (ref data, playerData);
+            fileSystem.SaveData (ref data);
+        }
+        else
+        {
+            ComputerData computerData = new ComputerData ();
+            computerData.Username = Username;
+            computerData.Password = Password;
+            computerData.IP = IP;
+            computerData.IsPlayer = isPlayer;
+            computerData.IsPasswordCracted = isPasswordCracted;
+
+            data.CompanyComputers.Add (computerData);
+            fileSystem.SaveData (ref data, data.CompanyComputers.Count - 1);
         }
     }
 

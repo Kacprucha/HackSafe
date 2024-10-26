@@ -19,9 +19,9 @@ public class PlayerInfo
     public PlayerInfo (string username, string password, string ip)
     {
         if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty (password) && !string.IsNullOrEmpty (ip))
-            PlayerComputer = new Computer (username, password, ip);
+            PlayerComputer = new Computer (username, true, password, ip);
         else
-            PlayerComputer = new Computer (username, password);
+            PlayerComputer = new Computer (username, true ,password);
 
         RecivedEmails = new List<Email> ();
         inicializeProgramesAllowedToDownload ();
@@ -29,7 +29,7 @@ public class PlayerInfo
 
     public void LoadData (GameData data)
     {
-        PlayerComputer = new Computer (data, true);
+        PlayerComputer = new Computer (data);
 
         if (data.RecivedEmails != null && data.RecivedEmails.Count > 0)
         {
@@ -58,7 +58,7 @@ public class PlayerInfo
 
     public void SaveData (ref GameData data)
     {
-        PlayerComputer.SaveData (ref data, true);
+        PlayerComputer.SaveData (ref data);
 
         if (RecivedEmails != null && RecivedEmails.Count > 0)
         {

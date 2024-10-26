@@ -13,12 +13,12 @@ public class FileSystem
         CurrentDirectory = Root;
     }
 
-    public void LoadData (GameData data, bool playerData)
+    public void LoadData (GameData data, int computerID = -1)
     {
         Root = new TreeNode ("/", true);
         CurrentDirectory = Root;
 
-        if (playerData)
+        if (computerID == -1)
         {
             foreach (SerializedNode serializedNode in data.PlayerNodes)
             {
@@ -30,18 +30,41 @@ public class FileSystem
                 }
             }
         }
-    }
-
-    public void SaveData (ref GameData data, bool playerData)
-    {
-        if (playerData)
+        else
         {
-            data.PlayerNodes.Clear ();
-            SavePlayerNode (Root, data, "/");
+            if (data.CompanyComputers.Count > computerID)
+            {
+                foreach (SerializedNode serializedNode in data.CompanyComputers[computerID].SystemNodes)
+                {
+                    TreeNode parentNode = FindNode (serializedNode.ParentPath);
+                    if (parentNode != null)
+                    {
+                        var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, parentNode);
+                        parentNode.AddChild (newNode);
+                    }
+                }
+            }
         }
     }
 
-    private void SavePlayerNode (TreeNode node, GameData data, string parentPath)
+    public void SaveData (ref GameData data, int computerID = -1)
+    {
+        if (computerID == -1)
+        {
+            data.PlayerNodes.Clear ();
+            SaveNodes (Root, ref data.PlayerNodes, "/");
+        }
+        else
+        {
+            if (data.CompanyComputers.Count > computerID)
+            {
+                data.CompanyComputers[computerID].SystemNodes.Clear ();
+                SaveNodes (Root, ref data.CompanyComputers[computerID].SystemNodes, "/");
+            }
+        }
+    }
+
+    private void SaveNodes (TreeNode node, ref List<SerializedNode> savedNodes, string parentPath)
     {
         if (node != Root)
         {
@@ -51,12 +74,12 @@ public class FileSystem
                 IsDirectory = node.IsDirectory,
                 ParentPath = parentPath
             };
-            data.PlayerNodes.Add (serializedNode);
+            savedNodes.Add (serializedNode);
         }
 
         foreach (var child in node.Children)
         {
-            SavePlayerNode (child, data, GetPath (node));
+            SaveNodes (child, ref savedNodes, GetPath (node));
         }
     }
 
