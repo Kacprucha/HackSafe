@@ -11,8 +11,11 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     [SerializeField] EmialOverlay emailOverlay;
 
     [SerializeField] NetworkSymulatorView networkSymulatorView;
+    [SerializeField] SystemVariablesView systemVariablesView;
 
     [SerializeField] TerminalIterpreter terminalIterpreter;
+
+    List<ProgramLogic> programLogicList = new List<ProgramLogic> ();
 
     protected GameState gameState;
 
@@ -28,6 +31,8 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
         registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked += actionOnReadingEmail;
+
+        terminalIterpreter.OnInjectPorgramLogic += injectMethodsToProgramLogic;
     }
 
     void OnDisable ()
@@ -36,6 +41,17 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
         registerUserOverlay.OnSaveButtonClicked -= InicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked -= actionOnReadingEmail;
+
+        terminalIterpreter.OnInjectPorgramLogic -= injectMethodsToProgramLogic;
+
+        if (programLogicList.Count > 0)
+        {
+            foreach (ProgramLogic pL in programLogicList)
+            {
+                pL.OnRunProgram -= addSystemVariables;
+                pL.OnStopPorgram -= dealateSystemVariables;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -127,5 +143,21 @@ public class GameplayController : MonoBehaviour, IDataPersistance
                 networkSymulatorView.GenerateCommpanyLayOut ();
                 break;
         }
+    }
+
+    protected void addSystemVariables (string programName, int cpu, int ram, int storage)
+    {
+        systemVariablesView.AddProgram (programName, cpu, ram, storage);
+    }
+
+    protected void dealateSystemVariables (string programName)
+    {
+        systemVariablesView.DelateProgram (programName);
+    }
+
+    protected void injectMethodsToProgramLogic (ProgramLogic programLogic)
+    {
+        programLogic.OnRunProgram += addSystemVariables;
+        programLogic.OnStopPorgram += dealateSystemVariables;
     }
 }

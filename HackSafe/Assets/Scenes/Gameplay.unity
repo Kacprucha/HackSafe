@@ -10393,6 +10393,7 @@ MonoBehaviour:
   registerUserOverlay: {fileID: 2019328714}
   emailOverlay: {fileID: 1429707232}
   networkSymulatorView: {fileID: 1196655157}
+  systemVariablesView: {fileID: 1102808847}
   terminalIterpreter: {fileID: 908309967}
 --- !u!1 &1947169231
 GameObject:
