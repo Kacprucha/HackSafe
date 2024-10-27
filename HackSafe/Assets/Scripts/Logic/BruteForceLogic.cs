@@ -15,7 +15,7 @@ public class BruteForceLogic : ProgramLogic
             }
             else if (arguments[1] == "-h" || arguments[1] == "--help")
             {
-                terminalIterpreter.GneratePassiveTermialResponse ("Usage: bruteforce [OPTIONS] <TARGET_IP>");
+                terminalIterpreter.GneratePassiveTermialResponse ("Usage: bruteforce <TARGET_IP> [OPTIONS]");
                 terminalIterpreter.GneratePassiveTermialResponse ("Brute force attack tool for penetration testing. Use this tool responsibly and only on systems you have permission to test.");
                 terminalIterpreter.GneratePassiveTermialResponse ("Options:");
                 terminalIterpreter.GneratePassiveTermialResponse ("-h, --help            Show this help message and exit");
@@ -24,7 +24,7 @@ public class BruteForceLogic : ProgramLogic
                 terminalIterpreter.GneratePassiveTermialResponse ("bruteforce 192.168.1.5");
                 terminalIterpreter.GneratePassiveTermialResponse ("bruteforce 192.168.1.100 -m 5");
                 terminalIterpreter.GneratePassiveTermialResponse (" Notes:");
-                terminalIterpreter.GneratePassiveTermialResponse ("  - Ensure the wordlist file exists and contains potential passwords.");
+                terminalIterpreter.GneratePassiveTermialResponse ("  - Ensure the node with ip exists and contains potential passwords.");
                 terminalIterpreter.GneratePassiveTermialResponse ("  - Brute force attacks can take significant time, especially with complex passwords.");
                 terminalIterpreter.GneratePassiveTermialResponse ("  - The multiplier option is used to increase the number of attempts per second. The default is 1. It can't be more then 300");
                 terminalIterpreter.GneratePassiveTermialResponse ("  - Use at your own risk. Unauthorized use is illegal.");
@@ -94,7 +94,7 @@ public class BruteForceLogic : ProgramLogic
 
                 float timeToCrack = actualCombinations / multiplayer;
                 int hours = ((int)timeToCrack / 3600) < 0 ? -1 * ((int)timeToCrack / 3600) : (int)timeToCrack / 3600;
-                int minutes = ((int)(timeToCrack % 3600) / 60) < 0 ? -1 * ((int)(timeToCrack % 3600)) : (int)(timeToCrack % 3600);
+                int minutes = ((int)(timeToCrack % 3600) / 60) < 0 ? -1 * ((int)(timeToCrack % 3600) / 60) : (int)((timeToCrack % 3600) / 60);
                 int seconds = ((int)timeToCrack % 60) < 0 ? -1 * ((int)timeToCrack % 60) : (int)timeToCrack % 60;
 
                 startProgram (TypeOfProgram.brutForse.ToString (), 60, 40, 0);
@@ -107,7 +107,7 @@ public class BruteForceLogic : ProgramLogic
                 PassiveTerminalElement traiedCombinationLabel = terminalIterpreter.GneratePassiveTermialResponseWithPossibleUpdate ("Combination tested: 0");
 
                 StartCoroutine (terminalIterpreter.RefreshLayout ());
-                StartCoroutine (breakPasswordWithBruteForce (loadingLabel, traiedCombinationLabel, actualCombinations, totalCombinations, multiplayer, computer.SecurityLevel));
+                StartCoroutine (breakPasswordWithBruteForce (loadingLabel, traiedCombinationLabel, actualCombinations, totalCombinations, multiplayer, computer.IP, computer.SecurityLevel));
             }
             else
             {
@@ -123,7 +123,7 @@ public class BruteForceLogic : ProgramLogic
         terminalIterpreter.CurrentCommand = Commands.NotFound;
     }
 
-    protected IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer, LevelOfSecurity levelOfSecurity)
+    protected IEnumerator breakPasswordWithBruteForce (PassiveTerminalElement loadingElement, PassiveTerminalElement testedCombinationLabel, float actualCombination, float totalCombinations, float multiplayer, string ip, LevelOfSecurity levelOfSecurity)
     {
         yield return new WaitForSeconds (1f);
         updateProgram (TypeOfProgram.brutForse.ToString (), 80, 20, 0);
@@ -161,6 +161,7 @@ public class BruteForceLogic : ProgramLogic
         if (testesCombination >= actualCombination)
         {
             terminalIterpreter.GneratePassiveTermialResponse ("bruteForce: password cracked");
+            gameState.FindComputerOfIP (ip).IsPasswordCracted = true;
             terminalIterpreter.ProgramIsRunning = false;
         }
         else
