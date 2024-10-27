@@ -11,6 +11,8 @@ public class NetworkNodeView : MonoBehaviour
 
     [SerializeField] Button nodeButton;
 
+    private Computer computer;
+
     public Button NodeButton
     {
         get
@@ -30,14 +32,22 @@ public class NetworkNodeView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (computer != null)
+        {
+            if (computer.IsPasswordCracted)
+            {
+                nodeImage.color = Color.green;
+            }
+        }
     }
 
-    public void Inicialize (string nodeName, string nodeIP, bool bigNode, Color color)
+    public void Inicialize (Computer computer, Color color)
     {
-        nodeNameLabel.text = nodeName;
-        nodeIPLabel.text = nodeIP;
-        this.bigNode = bigNode;
+        this.computer = computer;
+
+        nodeNameLabel.text = computer.Username;
+        nodeIPLabel.text = "IP: " + computer.IP;
+        this.bigNode = computer.IsMainComputer;
 
         if (!bigNode)
         {

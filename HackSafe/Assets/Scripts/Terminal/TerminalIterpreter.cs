@@ -20,7 +20,8 @@ public enum Commands
     Update,
     Install,
     BruteForce,
-    Clear
+    Clear,
+    DictionaryAttack
 }
 
 public enum TerminalState
@@ -71,8 +72,9 @@ public class TerminalIterpreter : MonoBehaviour
     protected TerminalState terminalState = TerminalState.Normal;
     protected bool programIsRunning = false;
 
-    protected BruteForceLogic bruteForceLogic;
     protected AptLogic aptLogic;
+    protected BruteForceLogic bruteForceLogic;
+    protected DicionaryAttackLogic dicionaryAttackLogic;
 
     public delegate void InjectProgramLogicHandler (ProgramLogic programLogic);
     public event InjectProgramLogicHandler OnInjectPorgramLogic;
@@ -143,11 +145,20 @@ public class TerminalIterpreter : MonoBehaviour
 
             if (aptLogic == null)
             {
-                GameObject gameObject = new GameObject ("ProgramLogicElement");
+                GameObject gameObject = new GameObject ("AptElement");
                 gameObject.AddComponent<AptLogic> ();
                 gameObject.GetComponent<AptLogic> ().Inicialize (this, playerInputHandler);
                 aptLogic = gameObject.GetComponent<AptLogic> ();
                 OnInjectPorgramLogic (aptLogic);
+            }
+
+            if (dicionaryAttackLogic == null)
+            {
+                GameObject gameObject = new GameObject ("DicionaryAttackElement");
+                gameObject.AddComponent<DicionaryAttackLogic> ();
+                gameObject.GetComponent<DicionaryAttackLogic> ().Inicialize (this, playerInputHandler);
+                dicionaryAttackLogic = gameObject.GetComponent<DicionaryAttackLogic> ();
+                OnInjectPorgramLogic (dicionaryAttackLogic);
             }
 
         }
@@ -401,6 +412,11 @@ public class TerminalIterpreter : MonoBehaviour
 
             case "bruteForce":
                 bruteForceLogic.ContinoueOnBruteForceAction (arguments);
+
+                break;
+
+            case "dictionaryAttack":
+                dicionaryAttackLogic.ContinoueOnDictionaryAction (arguments);
 
                 break;
 

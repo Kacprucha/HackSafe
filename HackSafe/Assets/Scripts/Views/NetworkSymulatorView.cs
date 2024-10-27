@@ -72,7 +72,7 @@ public class NetworkSymulatorView : MonoBehaviour
             Color color = computer.IsPasswordCracted ? Color.green : Color.red;
             color = computer.Password == "" ? Color.white : color;
 
-            newNode.GetComponent<NetworkNodeView> ().Inicialize (computer.Username, "IP: " + computer.IP, computer.IsMainComputer, color);
+            newNode.GetComponent<NetworkNodeView> ().Inicialize (computer, color);
             elementsInNetworkSpace.Add (newNode);
         }
     }

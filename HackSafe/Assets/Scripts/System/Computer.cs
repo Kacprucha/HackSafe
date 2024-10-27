@@ -90,6 +90,7 @@ public class Computer
     public bool IsPasswordCracted
     {
         get { return isPasswordCracted; }
+        set { isPasswordCracted = value; }
     }
 
     public LevelOfSecurity SecurityLevel
