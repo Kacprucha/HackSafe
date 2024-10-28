@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public enum Commands
 {
@@ -29,7 +33,8 @@ public enum TerminalState
     Normal,
     WaitingForInput,
     WaitingForSudoPassword,
-    WaitingForConfirmation
+    WaitingForConfirmation,
+    WaitingForPassword
 }
 
 public class TerminalIterpreter : MonoBehaviour
@@ -40,10 +45,9 @@ public class TerminalIterpreter : MonoBehaviour
 
     [SerializeField] Text prefix;
 
-    public InputOperator PlayerInputHandler
-    {
-        get { return playerInputHandler; }
-    }
+    public InputOperator PlayerInputHandler { get { return playerInputHandler; } }
+
+    public string TerminalIP { get { return ip; } }
 
     public TerminalState TerminalState
     {
@@ -66,6 +70,8 @@ public class TerminalIterpreter : MonoBehaviour
     static int MaxCapasityOfTermianl = 19;
 
     protected GameState gameState;
+    protected FileSystem terminalFileSystem;
+    protected string ip;
 
     protected FIFOQueue<GameObject> queue = new FIFOQueue<GameObject> ();
     protected Commands currentCommand = Commands.NotFound;
@@ -100,21 +106,36 @@ public class TerminalIterpreter : MonoBehaviour
         {
             if ((Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) && Input.GetKeyDown (KeyCode.L))
             {
-                int ammountOfLinesInTermianl = queue.Count;
-
-                for (int i = 0; i < ammountOfLinesInTermianl; i++)
-                {
-                    Destroy (queue.Pop ());
-                }
+                CleanTerminal ();
             }
         }
     }
 
-    public void UpdatePrefix (string ip)
+    public void UpdateFileSystem (string ip, FileSystem fileSystem = null)
     {
         if (ip != null)
         {
             prefix.text = ">" + ip + ":~$";
+
+            this.ip = ip;
+
+            if (fileSystem != null)
+            {
+                if (gameState.GetPlayerInfo ().PlayerComputer.IP == ip)
+                {
+                    terminalFileSystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
+                }
+                else
+                {
+                    terminalFileSystem = gameState.FindComputerOfIP (ip).FileSystem;
+                }
+            }
+            else
+            {
+                terminalFileSystem = fileSystem;
+            }
+
+            CleanTerminal ();
         }
     }
 
@@ -129,6 +150,48 @@ public class TerminalIterpreter : MonoBehaviour
     }
 
     void HandleInput (string inputText)
+    {
+        inicialize ();
+
+        Debug.Log ("User input: " + inputText);
+
+        GameObject newPlayerCommaned = Instantiate (playerCommandPrefab);
+        newPlayerCommaned.GetComponent<PassiveTerminalElement> ().UpdateText (inputText, terminalState == TerminalState.WaitingForSudoPassword);
+        newPlayerCommaned.transform.SetParent (this.gameObject.transform);
+        newPlayerCommaned.transform.localScale = new Vector3 (1, 1, 1);
+
+        queue.Push (newPlayerCommaned);
+
+        while (checkIfPopIsNeeded ())
+        {
+            Destroy (queue.Pop ());
+        }
+
+        findCommendAndAct (inputText);
+    }
+
+    public IEnumerator RefreshLayout ()
+    {
+        yield return new WaitForEndOfFrame ();
+        LayoutRebuilder.ForceRebuildLayoutImmediate (this.gameObject.GetComponent<RectTransform> ());
+
+        while (checkIfPopIsNeeded ())
+        {
+            Destroy (queue.Pop ());
+        }
+    }
+
+    public void CleanTerminal ()
+    {
+        int ammountOfLinesInTermianl = queue.Count;
+
+        for (int i = 0; i < ammountOfLinesInTermianl; i++)
+        {
+            Destroy (queue.Pop ());
+        }
+    }
+
+    protected void inicialize ()
     {
         if (gameState == null && GameState.instance != null)
         {
@@ -163,31 +226,9 @@ public class TerminalIterpreter : MonoBehaviour
 
         }
 
-        Debug.Log ("User input: " + inputText);
-
-        GameObject newPlayerCommaned = Instantiate (playerCommandPrefab);
-        newPlayerCommaned.GetComponent<PassiveTerminalElement> ().UpdateText (inputText, terminalState == TerminalState.WaitingForSudoPassword);
-        newPlayerCommaned.transform.SetParent (this.gameObject.transform);
-        newPlayerCommaned.transform.localScale = new Vector3 (1, 1, 1);
-
-        queue.Push (newPlayerCommaned);
-
-        while (checkIfPopIsNeeded ())
+        if (terminalFileSystem == null)
         {
-            Destroy (queue.Pop ());
-        }
-
-        findCommendAndAct (inputText);
-    }
-
-    public IEnumerator RefreshLayout ()
-    {
-        yield return new WaitForEndOfFrame ();
-        LayoutRebuilder.ForceRebuildLayoutImmediate (this.gameObject.GetComponent<RectTransform> ());
-
-        while (checkIfPopIsNeeded ())
-        {
-            Destroy (queue.Pop ());
+            terminalFileSystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
         }
     }
 
@@ -380,13 +421,7 @@ public class TerminalIterpreter : MonoBehaviour
 
             case "clear":
                 currentCommand = Commands.Clear;
-
-                int ammountOfLinesInTermianl = queue.Count;
-
-                for (int i = 0; i < ammountOfLinesInTermianl; i++)
-                {
-                    Destroy (queue.Pop ());
-                }
+                CleanTerminal ();
 
                 break;
 
@@ -444,6 +479,10 @@ public class TerminalIterpreter : MonoBehaviour
                     result = terminalState == TerminalState.WaitingForConfirmation || terminalState == TerminalState.WaitingForSudoPassword;
                     break;
 
+                case Commands.Ssh:
+                    result = terminalState == TerminalState.WaitingForConfirmation || terminalState == TerminalState.WaitingForPassword;
+                    break;
+
             }
         }
 
@@ -460,11 +499,11 @@ public class TerminalIterpreter : MonoBehaviour
         {
             if (argumentsAmmount == 0)
             {
-                gameState.GetPlayerInfo ().PlayerComputer.FileSystem.ChangeDirectory ("/");
+                terminalFileSystem.ChangeDirectory ("/");
             }
             else
             {
-                if (!gameState.GetPlayerInfo ().PlayerComputer.FileSystem.ChangeDirectory (arguments[1]))
+                if (!terminalFileSystem.ChangeDirectory (arguments[1]))
                 {
                     generateResponseForInput ("cd: " + arguments[1] + " No such file or directory");
                 }
@@ -477,20 +516,19 @@ public class TerminalIterpreter : MonoBehaviour
     protected void continouLsAction (string[] arguments, int argumentsAmmount)
     {
         List<string> childs = new List<string> ();
-        FileSystem playerFilesystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
 
         if (argumentsAmmount < 2)
         {
             if (argumentsAmmount == 0)
-                childs = playerFilesystem.ListChildOfCurrentDirectory ();
+                childs = terminalFileSystem.ListChildOfCurrentDirectory ();
             else
             {
                 if (SystemHelper.CheckIfPathHasCorrectSyntex (arguments[1], !arguments[1].StartsWith ("/")))
                 {
                     if (arguments[1].StartsWith ("/"))
                     {
-                        if (playerFilesystem.FindNode (arguments[1]) != null)
-                            childs = playerFilesystem.ListChildOfGivenPath (arguments[1]);
+                        if (terminalFileSystem.FindNode (arguments[1]) != null)
+                            childs = terminalFileSystem.ListChildOfGivenPath (arguments[1]);
                         else
                             generateResponseForInput ("ls: cannot show elements of ‘" + arguments[1] + "’: No such direcotry");
                     }
@@ -502,8 +540,8 @@ public class TerminalIterpreter : MonoBehaviour
                         else
                             fullPath = "/" + arguments[1];
 
-                        if (playerFilesystem.FindNode (fullPath) != null)
-                            childs = playerFilesystem.ListChildOfGivenPath (fullPath);
+                        if (terminalFileSystem.FindNode (fullPath) != null)
+                            childs = terminalFileSystem.ListChildOfGivenPath (fullPath);
                         else
                             generateResponseForInput ("ls: cannot show elements of ‘" + arguments[1] + "’: No such direcotry");
                     }
@@ -543,21 +581,20 @@ public class TerminalIterpreter : MonoBehaviour
         else
         {
             string newFilePath = arguments[1];
-            FileSystem playerFilesystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
 
             if (SystemHelper.CheckIfPathHasCorrectSyntex (newFilePath, !newFilePath.StartsWith ("/")))
             {
                 if (newFilePath.StartsWith ("/"))
                 {
-                    if (playerFilesystem.FindNode (newFilePath) == null)
-                        playerFilesystem.CreateNode (newFilePath, true);
+                    if (terminalFileSystem.FindNode (newFilePath) == null)
+                        terminalFileSystem.CreateNode (newFilePath, true);
                     else
                         generateResponseForInput ("mkdir: cannot create directory ‘" + newFilePath + "’: File exists");
                 }
                 else
                 {
-                    if (playerFilesystem.FindNode (SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () + "/" + newFilePath) == null)
-                        playerFilesystem.CreateNode (newFilePath, true, true);
+                    if (terminalFileSystem.FindNode (SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () + "/" + newFilePath) == null)
+                        terminalFileSystem.CreateNode (newFilePath, true, true);
                     else
                         generateResponseForInput ("mkdir: cannot create directory ‘" + newFilePath + "’: File exists");
                 }
@@ -580,16 +617,15 @@ public class TerminalIterpreter : MonoBehaviour
         else
         {
             string newFilePath = arguments[1];
-            FileSystem playerFilesystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
 
             if (SystemHelper.CheckIfPathHasCorrectSyntex (newFilePath, !newFilePath.StartsWith ("/")))
             {
                 if (newFilePath.StartsWith ("/"))
                 {
-                    if (playerFilesystem.FindNode (newFilePath) == null)
+                    if (terminalFileSystem.FindNode (newFilePath) == null)
                     {
-                        if (playerFilesystem.FindNode (SystemHelper.GetPathWithoutLastSegment (newFilePath)) != null)
-                            playerFilesystem.CreateNode (newFilePath, false);
+                        if (terminalFileSystem.FindNode (SystemHelper.GetPathWithoutLastSegment (newFilePath)) != null)
+                            terminalFileSystem.CreateNode (newFilePath, false);
                         else
                             generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: No such directory");
                     }
@@ -604,10 +640,10 @@ public class TerminalIterpreter : MonoBehaviour
                     else
                         fullPath = "/" + newFilePath;
 
-                    if (playerFilesystem.FindNode (fullPath) == null)
+                    if (terminalFileSystem.FindNode (fullPath) == null)
                     {
-                        if (playerFilesystem.FindNode (SystemHelper.GetPathWithoutLastSegment (fullPath)) != null)
-                            playerFilesystem.CreateNode (newFilePath, false, true);
+                        if (terminalFileSystem.FindNode (SystemHelper.GetPathWithoutLastSegment (fullPath)) != null)
+                            terminalFileSystem.CreateNode (newFilePath, false, true);
                         else
                             generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: No such directory");
                     }

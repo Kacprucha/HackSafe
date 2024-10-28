@@ -66,7 +66,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         if (!string.IsNullOrEmpty (gameData.PlayerName) && !string.IsNullOrEmpty (gameData.PlayerPasswored) && !string.IsNullOrEmpty (gameData.PlayerIP))
         {
             gameState = new GameState (gameData);
-            terminalIterpreter.UpdatePrefix (gameData.PlayerIP);
+            terminalIterpreter.UpdateFileSystem (gameData.PlayerIP);
             checkIfEmailIsNeededToBeSent ();
         }
         else
@@ -87,7 +87,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     {
         gameState = new GameState (username, password);
 
-        terminalIterpreter.UpdatePrefix (gameState.GetPlayerInfo ().PlayerComputer.IP);
+        terminalIterpreter.UpdateFileSystem (gameState.GetPlayerInfo ().PlayerComputer.IP);
 
         registerUserOverlay.gameObject.SetActive (false);
 

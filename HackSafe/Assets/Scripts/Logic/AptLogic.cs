@@ -86,7 +86,9 @@ public class AptLogic : ProgramLogic
 
     public void ContinoueOnUpdateAction (string[] arguments)
     {
-        if (arguments.Length == 1 && gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
+        Computer computer = terminalIterpreter.TerminalIP == gameState.GetPlayerInfo ().PlayerComputer.IP ? gameState.GetPlayerInfo ().PlayerComputer : gameState.FindComputerOfIP (terminalIterpreter.TerminalIP);
+
+        if (arguments.Length == 1 && computer.CheckIfGivenPasswordIsCorrect (arguments[0]))
         {
             updateAction ();
         }
@@ -113,7 +115,9 @@ public class AptLogic : ProgramLogic
 
     public void ContinoueOnInstallAction (string[] arguments)
     {
-        if (gameState.GetPlayerInfo ().PlayerComputer.CheckIfGivenPasswordIsCorrect (arguments[0]))
+        Computer computer = terminalIterpreter.TerminalIP == gameState.GetPlayerInfo ().PlayerComputer.IP ? gameState.GetPlayerInfo ().PlayerComputer : gameState.FindComputerOfIP (terminalIterpreter.TerminalIP);
+
+        if (computer.CheckIfGivenPasswordIsCorrect (arguments[0]))
         {
             bool allProgramsAllowed = false;
 
