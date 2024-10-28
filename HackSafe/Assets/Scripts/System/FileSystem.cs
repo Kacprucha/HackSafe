@@ -25,7 +25,7 @@ public class FileSystem
                 TreeNode parentNode = FindNode (serializedNode.ParentPath);
                 if (parentNode != null)
                 {
-                    var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, parentNode);
+                    var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode);
                     parentNode.AddChild (newNode);
                 }
             }
@@ -39,7 +39,7 @@ public class FileSystem
                     TreeNode parentNode = FindNode (serializedNode.ParentPath);
                     if (parentNode != null)
                     {
-                        var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, parentNode);
+                        var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode);
                         parentNode.AddChild (newNode);
                     }
                 }
@@ -96,7 +96,7 @@ public class FileSystem
             var next = current.FindChild (part);
             if (next == null)
             {
-                next = new TreeNode (part, isDirectory, current);
+                next = new TreeNode (part, isDirectory, "", current);
                 current.AddChild (next);
             }
             current = next;
