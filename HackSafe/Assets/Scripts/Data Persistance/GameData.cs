@@ -28,6 +28,7 @@ public class GameData
 public class SerializedNode
 {
     public string Name;
+    public string Content;
     public bool IsDirectory;
     public string ParentPath;
 }
