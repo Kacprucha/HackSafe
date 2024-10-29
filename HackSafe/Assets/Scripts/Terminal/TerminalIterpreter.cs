@@ -25,7 +25,8 @@ public enum Commands
     Install,
     BruteForce,
     Clear,
-    DictionaryAttack
+    DictionaryAttack,
+    Exit
 }
 
 public enum TerminalState
@@ -111,6 +112,10 @@ public class TerminalIterpreter : MonoBehaviour
             {
                 CleanTerminal ();
             }
+            else if ((Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) && Input.GetKeyDown (KeyCode.D)) 
+            {
+                closeSshConection ();
+            }
         }
     }
 
@@ -137,8 +142,6 @@ public class TerminalIterpreter : MonoBehaviour
             {
                 terminalFileSystem = fileSystem;
             }
-
-            CleanTerminal ();
         }
     }
 
@@ -484,6 +487,12 @@ public class TerminalIterpreter : MonoBehaviour
 
                 break;
 
+            case "exit":
+                currentCommand = Commands.Exit;
+                closeSshConection ();
+
+                break;
+
             default:
                 generateResponseForInput ("Command '" + commend + "' not found");
                 break;
@@ -687,5 +696,20 @@ public class TerminalIterpreter : MonoBehaviour
         }
 
         currentCommand = Commands.NotFound;
+    }
+
+    protected void closeSshConection ()
+    {
+        if (TerminalIP != gameState.GetPlayerInfo ().PlayerComputer.IP)
+        {
+            generateResponseForInput ("logout");
+            generateResponseForInput ($"Connection to {TerminalIP} closed.");
+
+            UpdateFileSystem (gameState.GetPlayerInfo ().PlayerComputer.IP);
+        }
+        else
+        {
+            CleanTerminal ();
+        }
     }
 }
