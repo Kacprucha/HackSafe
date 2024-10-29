@@ -49,6 +49,8 @@ public class TerminalIterpreter : MonoBehaviour
 
     public string TerminalIP { get { return ip; } }
 
+    public FileSystem TermianlFileSystem { get { return terminalFileSystem; } }
+
     public TerminalState TerminalState
     {
         get { return terminalState; }
@@ -81,6 +83,7 @@ public class TerminalIterpreter : MonoBehaviour
     protected AptLogic aptLogic;
     protected BruteForceLogic bruteForceLogic;
     protected DicionaryAttackLogic dicionaryAttackLogic;
+    protected SshLogic sshLogic;
 
     public delegate void InjectProgramLogicHandler (ProgramLogic programLogic);
     public event InjectProgramLogicHandler OnInjectPorgramLogic;
@@ -224,6 +227,14 @@ public class TerminalIterpreter : MonoBehaviour
                 OnInjectPorgramLogic (dicionaryAttackLogic);
             }
 
+            if (sshLogic == null)
+            {
+                GameObject gameObject = new GameObject ("SshElement");
+                gameObject.AddComponent<SshLogic> ();
+                gameObject.GetComponent<SshLogic> ().Inicialize (this, playerInputHandler);
+                sshLogic = gameObject.GetComponent<SshLogic> ();
+            }
+
         }
 
         if (terminalFileSystem == null)
@@ -365,6 +376,14 @@ public class TerminalIterpreter : MonoBehaviour
                     else if (terminalState == TerminalState.WaitingForConfirmation)
                         commend = "install confirm";
                     break;
+
+                case Commands.Ssh:
+                    if (terminalState == TerminalState.WaitingForPassword)
+                        commend = "ssh password";
+                    else if (terminalState == TerminalState.WaitingForConfirmation)
+                        commend = "ssh confirm";
+
+                    break;
             }
         }
 
@@ -416,7 +435,17 @@ public class TerminalIterpreter : MonoBehaviour
                 break;
 
             case "ssh":
-                currentCommand = Commands.Ssh;
+                sshLogic.ContinouSSHAction (arguments);
+                break;
+
+            case "ssh confirm":
+                sshLogic.SshAction (arguments, SshConectionStage.SshKeyGeneration);
+
+                break;
+
+            case "ssh password":
+                sshLogic.SshAction (arguments, SshConectionStage.SshPassword);
+
                 break;
 
             case "clear":

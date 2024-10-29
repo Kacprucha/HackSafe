@@ -72,7 +72,8 @@ public class FileSystem
             {
                 Name = node.Name,
                 IsDirectory = node.IsDirectory,
-                ParentPath = parentPath
+                ParentPath = parentPath,
+                Content = node.Content
             };
             savedNodes.Add (serializedNode);
         }
