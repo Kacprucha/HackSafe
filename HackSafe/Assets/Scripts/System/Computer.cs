@@ -103,6 +103,11 @@ public class Computer
         get { return isMainComputer; }
     }
 
+    public bool IsDataBased
+    {
+        get { return isDataBased; }
+    }
+
     protected string ip = "";
     protected FileSystem fileSystem;
 
@@ -111,20 +116,25 @@ public class Computer
     public LevelOfSecurity securityLevel = LevelOfSecurity.Low;
 
     protected string username = "";
+    protected List<string> users;
 
     protected bool isPlayer = false;
     protected bool isMainComputer = false;
+    protected bool isDataBased = false;
 
     public Computer (GameData data, int computerID = -1)
     {
         LoadData (data, computerID);
     }
 
-    public Computer (string username, int levelOfSeciurity, bool isPlayer, string password = null, string ip = null, bool isMain = false)
+    public Computer (string username, int levelOfSeciurity, bool isPlayer, string password = null, string ip = null, bool isMain = false, bool isDataBased = false)
     {
         Username = username;
+        users = new List<string> { Username.Replace (" ", ""), "admin" };
+
         this.isPlayer = isPlayer;
         this.isMainComputer = isMain;
+        this.isDataBased = isDataBased;
 
         if (password == null)
         {
@@ -163,8 +173,10 @@ public class Computer
             Username = computerData.Username;
             passwrod = computerData.Password;
             IP = computerData.IP;
+            users = computerData.Users;
             isPlayer = computerData.IsPlayer;
             isMainComputer = computerData.IsMainComputer;
+            isDataBased = computerData.IsDataBased;
             isPasswordCracted = computerData.IsPasswordCracted;
             securityLevel = (LevelOfSecurity)computerData.LevelOfSecurity;
 
@@ -189,8 +201,10 @@ public class Computer
             computerData.Username = Username;
             computerData.Password = Password;
             computerData.IP = IP;
+            computerData.Users = users;
             computerData.IsPlayer = isPlayer;
             computerData.IsMainComputer = isMainComputer;
+            computerData.IsDataBased = isDataBased;
             computerData.IsPasswordCracted = isPasswordCracted;
             computerData.LevelOfSecurity = (int)securityLevel;
 
@@ -199,8 +213,18 @@ public class Computer
         }
     }
 
+    public void InicializeUsers (List<string> users)
+    {
+        this.users = users;
+    }
+
     public bool CheckIfGivenPasswordIsCorrect (string givenPassword)
     {
         return givenPassword.Equals (passwrod);
+    }
+
+    public bool CheckIfUserExists (string username)
+    {
+        return users.Contains (username);
     }
 }

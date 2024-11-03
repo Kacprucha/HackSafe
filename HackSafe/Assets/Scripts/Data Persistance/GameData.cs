@@ -55,10 +55,12 @@ public class ComputerData
     public string Username;
     public string Password = null;
     public string IP = null;
+    public List<string> Users = new List<string> ();
     public bool IsPlayer = false;
     public bool IsPasswordCracted = false;
     public int LevelOfSecurity = 0;
     public bool IsMainComputer = false;
+    public bool IsDataBased = false;
 
     public List<SerializedNode> SystemNodes = new List<SerializedNode> ();
 }

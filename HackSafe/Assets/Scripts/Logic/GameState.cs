@@ -86,15 +86,22 @@ public class GameState
         {
             foreach (ComputerData computerData in loadedData.computers)
             {
-                Computer computer = new Computer (computerData.Username, computerData.LevelOfSecurity, computerData.IsPlayer, computerData.Password, computerData.IP, computerData.IsMainComputer);
+                Computer computer = new Computer (computerData.Username, computerData.LevelOfSecurity, computerData.IsPlayer, computerData.Password, computerData.IP, computerData.IsMainComputer, computerData.IsDataBased);
+
+                if (computerData.SystemNodes != null && computerData.SystemNodes.Count > 0)
+                    computer.FileSystem.LoadNodesFromList (computerData.SystemNodes);
+
+                if (computerData.Users != null && computerData.Users.Count > 0)
+                    computer.InicializeUsers (computerData.Users);
+
                 comapnysComputers.Add (computer);
             }
         }
         else
         {
-            comapnysComputers.Add (new Computer ("Main Server", 0, false, ""));
-            comapnysComputers.Add (new Computer ("Main Data Base", 0, false, ""));
-            comapnysComputers.Add (new Computer ("Dave phone", 1, false, "15920"));
+            comapnysComputers.Add (new Computer ("Main Server", 0, false, "", null, true));
+            comapnysComputers.Add (new Computer ("Main Data Base", 0, false, "", null, false, true));
+            comapnysComputers.Add (new Computer ("Dave phone", 1, false, "1592"));
             comapnysComputers.Add (new Computer ("Arasha PC", 2, false));
             comapnysComputers.Add (new Computer ("#$^)#$@#)^#!", 3, false));
         }

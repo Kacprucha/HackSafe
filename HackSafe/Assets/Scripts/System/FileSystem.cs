@@ -47,6 +47,22 @@ public class FileSystem
         }
     }
 
+    public void LoadNodesFromList (List<SerializedNode> nodes)
+    {
+        Root = new TreeNode ("/", true);
+        CurrentDirectory = Root;
+
+        foreach (SerializedNode serializedNode in nodes)
+        {
+            TreeNode parentNode = FindNode (serializedNode.ParentPath);
+            if (parentNode != null)
+            {
+                var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode);
+                parentNode.AddChild (newNode);
+            }
+        }
+    }
+
     public void SaveData (ref GameData data, int computerID = -1)
     {
         if (computerID == -1)
@@ -92,12 +108,14 @@ public class FileSystem
         if (fromCurrentDirectory)
             current = CurrentDirectory;
 
+        var lastPart = parts.LastOrDefault ();
+
         foreach (var part in parts)
         {
             var next = current.FindChild (part);
             if (next == null)
             {
-                next = new TreeNode (part, isDirectory, "", current);
+                next = new TreeNode (part, part == lastPart ? isDirectory : true, "", current);
                 current.AddChild (next);
             }
             current = next;

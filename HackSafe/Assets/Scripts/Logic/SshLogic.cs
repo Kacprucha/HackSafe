@@ -32,12 +32,12 @@ public class SshLogic : ProgramLogic
 
                 if (computer == null)
                 {
-                    terminalIterpreter.GneratePassiveTermialResponse ("ssh: cannot attack ‘" + ipAddress + "’: No such computer");
+                    terminalIterpreter.GneratePassiveTermialResponse ("ssh: cannot connect ‘" + ipAddress + "’: No such computer");
                 }
-                //else if (computer.FindUser(user) == null)
-                //{
-
-                //}
+                else if (!computer.CheckIfUserExists(user))
+                {
+                    terminalIterpreter.GneratePassiveTermialResponse ("ssh: cannot find ‘" + user + "’ user");
+                }
                 else
                 {
                     SshAction (arguments, SshConectionStage.SshConnection);
