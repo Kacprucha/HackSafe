@@ -13,6 +13,9 @@ public class DataBaseLogic
     private Dictionary <string, string> dbPaths = new Dictionary<string, string> ();
     private Dictionary<string, DataBaseData> dataBaseDatas = new Dictionary<string, DataBaseData> ();
 
+    public delegate void SQLErrorHandler (string message);
+    public event SQLErrorHandler OnSQLError;
+
     public void LoadDataBaseData ()
     {
         GameState gameState = GameState.instance;
@@ -109,7 +112,9 @@ public class DataBaseLogic
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError ("SQL Error: " + e.Message);
+                    Debug.Log ("SQL Error: " + e.Message);
+                    if (OnSQLError != null)
+                        OnSQLError ("SQL Error: " + e.Message);
                 }
             }
         }

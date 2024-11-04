@@ -14,6 +14,7 @@ public class DataBaseView : MonoBehaviour
 
     [SerializeField] InputField inputField;
     [SerializeField] Button subbmitButton;
+    [SerializeField] Text errorMessageLabel;
 
     protected string dataBaseIp;
     protected DataBaseLogic dataBaseLogic;
@@ -24,9 +25,11 @@ public class DataBaseView : MonoBehaviour
     void Start()
     {
         if (dataBaseLogic == null)
+        {
             dataBaseLogic = new DataBaseLogic ();
+            dataBaseLogic.OnSQLError += handleSQLError;
+        }
 
-        //inputField.onEndEdit.AddListener (handleInputOnEnter);
         if (subbmitButton != null)
             subbmitButton.onClick.AddListener (() => onSubmitButtonClicked ());
     }
@@ -51,6 +54,7 @@ public class DataBaseView : MonoBehaviour
         if (dataBaseLogic == null)
         {
             dataBaseLogic = new DataBaseLogic ();
+            dataBaseLogic.OnSQLError += handleSQLError;
         }
 
         if (dataBaseLogic.DataBaseDatas.Count == 0)
@@ -136,21 +140,35 @@ public class DataBaseView : MonoBehaviour
         if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter)) && dataBaseLogic != null)
         {
             List<List<string>> quoteResult = dataBaseLogic.ExecuteQuery (gameState.FindComputerOfIP (dataBaseIp).Username, inputField.text);
-            updateDataBaseView (quoteResult);
-            currentTabID = -1;
+
+            if (quoteResult.Count > 0)
+            {
+                updateDataBaseView (quoteResult);
+                currentTabID = -1;
+            }
 
             inputField.text = string.Empty;
             inputField.ActivateInputField ();
         }
     }
 
+    protected void handleSQLError (string error)
+    {
+        errorMessageLabel.text = error;
+    }
+
     protected void onSubmitButtonClicked ()
     {
         GameState gameState = GameState.instance;
+        errorMessageLabel.text = string.Empty;
 
         List<List<string>> quoteResult = dataBaseLogic.ExecuteQuery (gameState.FindComputerOfIP (dataBaseIp).Username, inputField.text);
-        updateDataBaseView (quoteResult);
-        currentTabID = -1;
+
+        if (quoteResult.Count > 0)
+        {
+            updateDataBaseView (quoteResult);
+            currentTabID = -1;
+        }
 
         inputField.text = string.Empty;
         inputField.ActivateInputField ();
