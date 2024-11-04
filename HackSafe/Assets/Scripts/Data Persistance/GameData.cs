@@ -50,6 +50,12 @@ public class _Dictionary <K, V>
 }
 
 [Serializable]
+public class ComputerList
+{
+    public List<ComputerData> computers;
+}
+
+[Serializable]
 public class ComputerData
 {
     public string Username;
@@ -63,4 +69,19 @@ public class ComputerData
     public bool IsDataBased = false;
 
     public List<SerializedNode> SystemNodes = new List<SerializedNode> ();
+}
+
+[Serializable]
+public class DataBaseData
+{
+    public List<DataSetData> DataSets;
+}
+
+[Serializable]
+public class DataSetData
+{
+    public string Name;
+    public List<List <string>> Rows = new List<List<string>> ();
+    public List<bool> FieldsVisibility = new List<bool> ();
+    public List<bool> RowsVisibility = new List<bool> ();
 }

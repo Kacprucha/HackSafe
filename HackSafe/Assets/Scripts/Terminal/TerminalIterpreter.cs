@@ -1,11 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 
 public enum Commands
 {
@@ -88,6 +84,9 @@ public class TerminalIterpreter : MonoBehaviour
 
     public delegate void InjectProgramLogicHandler (ProgramLogic programLogic);
     public event InjectProgramLogicHandler OnInjectPorgramLogic;
+
+    public delegate void InjectSshLogicHandler (SshLogic sshLogic);
+    public event InjectSshLogicHandler OnInjectSshLogic;
 
     void Start ()
     {
@@ -236,6 +235,7 @@ public class TerminalIterpreter : MonoBehaviour
                 gameObject.AddComponent<SshLogic> ();
                 gameObject.GetComponent<SshLogic> ().Inicialize (this, playerInputHandler);
                 sshLogic = gameObject.GetComponent<SshLogic> ();
+                OnInjectSshLogic (sshLogic);
             }
 
         }
@@ -702,6 +702,9 @@ public class TerminalIterpreter : MonoBehaviour
     {
         if (TerminalIP != gameState.GetPlayerInfo ().PlayerComputer.IP)
         {
+            if (gameState.FindComputerOfIP (TerminalIP).IsDataBased)
+                sshLogic.DisConnectFromdataBase ();
+
             generateResponseForInput ("logout");
             generateResponseForInput ($"Connection to {TerminalIP} closed.");
 

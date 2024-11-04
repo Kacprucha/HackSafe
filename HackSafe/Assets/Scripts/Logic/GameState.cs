@@ -68,6 +68,19 @@ public class GameState
         return null;
     }
 
+    public List<string> GetNamesOfDataBases ()
+    {
+        List<string> result = new List<string> ();
+
+        foreach (Computer computer in comapnysComputers)
+        {
+            if (computer.IsDataBased)
+                result.Add (computer.Username);
+        }
+
+        return result;
+    }
+
     private void loadCompanyComputerData ()
     {
         string fullPath = Application.persistentDataPath + "/computersData.json";
@@ -106,10 +119,4 @@ public class GameState
             comapnysComputers.Add (new Computer ("#$^)#$@#)^#!", 3, false));
         }
     }
-}
-
-[Serializable]
-public class ComputerList
-{
-    public List<ComputerData> computers;
 }

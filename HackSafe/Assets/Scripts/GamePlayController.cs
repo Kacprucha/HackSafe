@@ -11,6 +11,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     [SerializeField] EmialOverlay emailOverlay;
 
     [SerializeField] NetworkSymulatorView networkSymulatorView;
+    [SerializeField] DataBaseView dataBaseView;
     [SerializeField] SystemVariablesView systemVariablesView;
 
     [SerializeField] TerminalIterpreter terminalIterpreter;
@@ -33,6 +34,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         emailOverlay.OnSetEmailViewButtonClicked += actionOnReadingEmail;
 
         terminalIterpreter.OnInjectPorgramLogic += injectMethodsToProgramLogic;
+        terminalIterpreter.OnInjectSshLogic += injectMethodsToSshLogic;
     }
 
     void OnDisable ()
@@ -43,6 +45,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         emailOverlay.OnSetEmailViewButtonClicked -= actionOnReadingEmail;
 
         terminalIterpreter.OnInjectPorgramLogic -= injectMethodsToProgramLogic;
+        terminalIterpreter.OnInjectSshLogic -= injectMethodsToSshLogic;
 
         if (programLogicList.Count > 0)
         {
@@ -168,5 +171,11 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         programLogic.OnUpdateProgram += updateSystemVariables;
 
         programLogicList.Add (programLogic);
+    }
+
+    protected void injectMethodsToSshLogic (SshLogic sshLogic)
+    {
+        sshLogic.OnConnectWithdataBase += dataBaseView.Show;
+        sshLogic.OnDisconnectWithDataBase += dataBaseView.Hide;
     }
 }

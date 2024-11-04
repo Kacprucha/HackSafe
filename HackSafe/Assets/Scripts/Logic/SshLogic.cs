@@ -17,6 +17,12 @@ public class SshLogic : ProgramLogic
     protected string user;
     protected Computer computer;
 
+    public delegate void OpenDataBaseHandler (string ip);
+    public event OpenDataBaseHandler OnConnectWithdataBase;
+
+    public delegate void CloseDataBaseHandler ();
+    public event CloseDataBaseHandler OnDisconnectWithDataBase;
+
     public void ContinouSSHAction (string[] arguments)
     {
         if (arguments.Length - 1 == 1)
@@ -84,8 +90,7 @@ public class SshLogic : ProgramLogic
                     if (computer.IsPasswordCracted)
                     {
                         terminalIterpreter.GneratePassiveTermialResponse ("[hackSafe] passing hacked password");
-                        terminalIterpreter.UpdateFileSystem (computer.IP, computer.FileSystem);
-                        terminalIterpreter.GneratePassiveTermialResponse ($"Welcome to {computer.IP}!");
+                        connectionMade ();
 
                         terminalIterpreter.TerminalState = TerminalState.Normal;
                         terminalIterpreter.CurrentCommand = Commands.NotFound;
@@ -121,8 +126,7 @@ public class SshLogic : ProgramLogic
                     if (computer.IsPasswordCracted)
                     {
                         terminalIterpreter.GneratePassiveTermialResponse ("[hackSafe] passing hacked password");
-                        terminalIterpreter.UpdateFileSystem (computer.IP, computer.FileSystem);
-                        terminalIterpreter.GneratePassiveTermialResponse ($"Welcome to {computer.IP}!");
+                        connectionMade ();
 
                         terminalIterpreter.TerminalState = TerminalState.Normal;
                         terminalIterpreter.CurrentCommand = Commands.NotFound;
@@ -148,8 +152,7 @@ public class SshLogic : ProgramLogic
 
                 if (arguments.Length >= 1 && computer.Password == arguments[0])
                 {
-                    terminalIterpreter.UpdateFileSystem (computer.IP, computer.FileSystem);
-                    terminalIterpreter.GneratePassiveTermialResponse ($"Welcome to {computer.IP}!");
+                    connectionMade ();
                 }
                 else
                 {
@@ -162,6 +165,12 @@ public class SshLogic : ProgramLogic
 
                 break;
         }
+    }
+
+    public void DisConnectFromdataBase ()
+    {
+        if (OnDisconnectWithDataBase != null)
+            OnDisconnectWithDataBase ();
     }
 
     protected string generateFingerprint (string publicKey)
@@ -180,5 +189,16 @@ public class SshLogic : ProgramLogic
         }
 
         return result;
+    }
+
+    protected void connectionMade ()
+    {
+        terminalIterpreter.UpdateFileSystem (computer.IP, computer.FileSystem);
+        terminalIterpreter.GneratePassiveTermialResponse ($"Welcome to {computer.IP}!");
+
+        if (computer.IsDataBased && OnConnectWithdataBase != null)
+        {
+            OnConnectWithdataBase (computer.IP);
+        }
     }
 }
