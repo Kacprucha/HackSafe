@@ -431,6 +431,7 @@ public class TerminalIterpreter : MonoBehaviour
 
             case "cat":
                 currentCommand = Commands.Cat;
+                continouCatAction (arguments, argumentsAmmount);
                 break;
 
             case "spc":
@@ -692,6 +693,52 @@ public class TerminalIterpreter : MonoBehaviour
             else
             {
                 generateResponseForInput ("touch: cannot touch ‘" + newFilePath + "’: Incorrect syntex");
+            }
+        }
+
+        currentCommand = Commands.NotFound;
+    }
+
+    protected void continouCatAction (string[] arguments, int argumentsAmmount)
+    {
+        if (argumentsAmmount != 1)
+        {
+            generateResponseForInput ("cat: number of arguments has to be one!");
+        }
+        else
+        {
+            TreeNode file;
+
+            if (SystemHelper.CheckIfPathHasCorrectSyntex (arguments[1], !arguments[1].StartsWith ("/")))
+            {
+                if (arguments[1].StartsWith ("/"))
+                {
+                    file = terminalFileSystem.FindNode (arguments[1]);
+
+                    if (file != null && !file.IsDirectory)
+                    {
+                        generateResponseForInput (file.Content);
+                        StartCoroutine (RefreshLayout ());
+                    }
+                    else
+                        generateResponseForInput ("cat: " + arguments[1] + " no such file!");
+                }
+                else
+                {
+                    file = terminalFileSystem.FindNode (SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () + "/" + arguments[1]);
+
+                    if (file != null && !file.IsDirectory)
+                    {
+                        generateResponseForInput (file.Content);
+                        StartCoroutine (RefreshLayout ());
+                    }
+                    else
+                        generateResponseForInput ("cat: " + arguments[1] + " no such file!");
+                }
+            }
+            else
+            {
+                generateResponseForInput ("cat: ‘" + arguments[1] + "’: Incorrect syntex");
             }
         }
 
