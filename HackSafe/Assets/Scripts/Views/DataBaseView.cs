@@ -16,10 +16,14 @@ public class DataBaseView : MonoBehaviour
     [SerializeField] Button subbmitButton;
     [SerializeField] Text errorMessageLabel;
 
+    static Color normalColor = new Color (1, 1, 1, 1);
+    static Color selectedColor = new Color (0.6603774f, 0.6603774f, 0.6603774f, 1);
+
     protected string dataBaseIp;
     protected DataBaseLogic dataBaseLogic;
     protected int currentTabID = 0;
     protected List<GameObject> rows = new List<GameObject> ();
+    protected List<Graphic> tabBackgrounds = new List<Graphic> ();
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +41,16 @@ public class DataBaseView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (tabBackgrounds.Count > 0)
+        {
+            for (int i = 0; i < tabBackgrounds.Count; i++)
+            {
+                if (i == currentTabID)
+                    tabBackgrounds[i].color = selectedColor;
+                else
+                    tabBackgrounds[i].color = normalColor;
+            }
+        }
     }
 
     void OnDestroy ()
@@ -92,6 +105,7 @@ public class DataBaseView : MonoBehaviour
                 GameObject newTab = Instantiate (tableNamePrefab, nameTabContainer.transform);
                 newTab.GetComponent <Label> ().UpdateLabel (dataBaseData.DataSets[i].Name);
                 newTab.GetComponent<Button> ().onClick.AddListener (() => onTabButtonClicked (index));
+                tabBackgrounds.Add (newTab.GetComponent<Button> ().targetGraphic);
             }
         }
 
