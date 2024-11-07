@@ -70,7 +70,7 @@ public class SshLogic : ProgramLogic
         {
             case SshConectionStage.SshConnection:
 
-                terminalIterpreter.GneratePassiveTermialResponse ("Connecting to 192.168.1.10...");
+                terminalIterpreter.GneratePassiveTermialResponse ($"Connecting to {computer.IP}...");
 
                 bool keyExists = false;
                 TreeNode knownHostFile = terminalIterpreter.TermianlFileSystem.FindNode ("/.config/ssh/known_hosts.txt");
