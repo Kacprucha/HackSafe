@@ -161,6 +161,9 @@ public class BruteForceLogic : ProgramLogic
         if (testesCombination >= actualCombination)
         {
             terminalIterpreter.GneratePassiveTermialResponse ("bruteForce: password cracked");
+
+            addPasswordToFile (gameState.FindComputerOfIP (ip));
+
             gameState.FindComputerOfIP (ip).IsPasswordCracted = true;
             terminalIterpreter.ProgramIsRunning = false;
         }

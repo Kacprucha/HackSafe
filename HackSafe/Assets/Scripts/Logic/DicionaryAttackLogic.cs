@@ -115,6 +115,9 @@ public class DicionaryAttackLogic : ProgramLogic
         {
             curentTryedPassword.UpdateText ("Attempting password: " + computer.Password + " [SUCCESS]");
             terminalIterpreter.GneratePassiveTermialResponse ("dictionaryAttack: password cracked");
+
+            addPasswordToFile (computer);
+
             gameState.FindComputerOfIP (computer.IP).IsPasswordCracted = true;
             terminalIterpreter.ProgramIsRunning = false;
         }
@@ -163,4 +166,6 @@ public class DicionaryAttackLogic : ProgramLogic
                 break;
         }
     }
+
+    
 }

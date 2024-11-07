@@ -39,4 +39,16 @@ public class ProgramLogic : MonoBehaviour
     {
         OnUpdateProgram (name, cpu, ram, storage);
     }
+
+    protected void addPasswordToFile (Computer computer)
+    {
+        TreeNode knownPasswordsFile = terminalIterpreter.TermianlFileSystem.FindNode ("/.config/ssh/known_passwords.txt");
+
+        if (knownPasswordsFile == null)
+        {
+            knownPasswordsFile = terminalIterpreter.TermianlFileSystem.CreateNode ("/.config/ssh/known_passwords.txt", false);
+        }
+
+        knownPasswordsFile.Content += $"{computer.IP}\t{computer.Password}\n";
+    }
 }
