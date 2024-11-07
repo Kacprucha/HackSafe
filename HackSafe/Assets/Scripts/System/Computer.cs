@@ -161,6 +161,7 @@ public class Computer
             Username = data.PlayerName;
             Password = data.PlayerPasswored;
             IP = data.PlayerIP;
+            users = new List<string> { Username, "admin" };
             isPlayer = true;
             isMainComputer = false;
 

@@ -81,6 +81,7 @@ public class TerminalIterpreter : MonoBehaviour
     protected BruteForceLogic bruteForceLogic;
     protected DicionaryAttackLogic dicionaryAttackLogic;
     protected SshLogic sshLogic;
+    protected ScpLogic scpLogic;
 
     public delegate void InjectProgramLogicHandler (ProgramLogic programLogic);
     public event InjectProgramLogicHandler OnInjectPorgramLogic;
@@ -238,6 +239,14 @@ public class TerminalIterpreter : MonoBehaviour
                 OnInjectSshLogic (sshLogic);
             }
 
+            if (scpLogic == null)
+            {
+                GameObject gameObject = new GameObject ("ScpElement");
+                gameObject.AddComponent<ScpLogic> ();
+                gameObject.GetComponent<ScpLogic> ().Inicialize (this, playerInputHandler);
+                scpLogic = gameObject.GetComponent<ScpLogic> ();
+            }
+
         }
 
         if (terminalFileSystem == null)
@@ -387,6 +396,14 @@ public class TerminalIterpreter : MonoBehaviour
                         commend = "ssh confirm";
 
                     break;
+
+                case Commands.Scp:
+                    if (terminalState == TerminalState.WaitingForPassword)
+                        commend = "scp password";
+                    else if (terminalState == TerminalState.WaitingForConfirmation)
+                        commend = "scp confirm";
+
+                    break;
             }
         }
 
@@ -434,8 +451,19 @@ public class TerminalIterpreter : MonoBehaviour
                 continouCatAction (arguments, argumentsAmmount);
                 break;
 
-            case "spc":
+            case "scp":
                 currentCommand = Commands.Scp;
+                scpLogic.ContinouOnScpAction (arguments);
+                break;
+
+            case "scp confirm":
+                scpLogic.ScpAction (arguments, SshConectionStage.SshKeyGeneration);
+
+                break;
+
+            case "scp password":
+                scpLogic.ScpAction (arguments, SshConectionStage.SshPassword);
+
                 break;
 
             case "ssh":
@@ -519,9 +547,9 @@ public class TerminalIterpreter : MonoBehaviour
                     break;
 
                 case Commands.Ssh:
+                case Commands.Scp:
                     result = terminalState == TerminalState.WaitingForConfirmation || terminalState == TerminalState.WaitingForPassword;
                     break;
-
             }
         }
 
@@ -725,7 +753,7 @@ public class TerminalIterpreter : MonoBehaviour
                 }
                 else
                 {
-                    file = terminalFileSystem.FindNode (SystemHelper.GetCurrentDirectoryOfPlayerFileSystem () + "/" + arguments[1]);
+                    file = terminalFileSystem.FindNode (terminalFileSystem.GetPathOfCurrentDirectory () + "/" + arguments[1]);
 
                     if (file != null && !file.IsDirectory)
                     {
