@@ -49,6 +49,8 @@ public class EmialOverlay : DraggableOverlay
                         emailViewComponent.Inicialize (email);
                         emailViewComponent.OnMainComponentButtonClicked += emailViewButtonClicked;
                     }
+
+                    emailView.SetActive (true);
                 }
             }
         }
@@ -56,14 +58,15 @@ public class EmialOverlay : DraggableOverlay
 
     private void OnDisable ()
     {
-        foreach (EmailView emailView in emailViews)
+        List<EmailView> temp = new List<EmailView> ();
+        temp = emailViews.GetRange (0, emailViews.Count);
+
+        emailViews.Clear ();
+
+        foreach (EmailView emailView in temp)
         {
             emailView.OnMainComponentButtonClicked -= emailViewButtonClicked;
-        }
-
-        foreach (Transform child in scrollViewContent.transform)
-        {
-            Destroy (child.gameObject);
+            Destroy (emailView.gameObject);
         }
     }
 

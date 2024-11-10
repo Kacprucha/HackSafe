@@ -13,6 +13,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     [SerializeField] NetworkSymulatorView networkSymulatorView;
     [SerializeField] DataBaseView dataBaseView;
     [SerializeField] SystemVariablesView systemVariablesView;
+    [SerializeField] TasksListView tasksListView;
 
     [SerializeField] TerminalIterpreter terminalIterpreter;
 
@@ -33,6 +34,8 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked += actionOnReadingEmail;
 
+        tasksListView.OnQuestDone += onQuestTasksDone;
+
         terminalIterpreter.OnInjectPorgramLogic += injectMethodsToProgramLogic;
         terminalIterpreter.OnInjectSshLogic += injectMethodsToSshLogic;
     }
@@ -43,6 +46,8 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
         registerUserOverlay.OnSaveButtonClicked -= InicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked -= actionOnReadingEmail;
+
+        tasksListView.OnQuestDone -= onQuestTasksDone;
 
         terminalIterpreter.OnInjectPorgramLogic -= injectMethodsToProgramLogic;
         terminalIterpreter.OnInjectSshLogic -= injectMethodsToSshLogic;
@@ -69,8 +74,13 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         if (!string.IsNullOrEmpty (gameData.PlayerName) && !string.IsNullOrEmpty (gameData.PlayerPasswored) && !string.IsNullOrEmpty (gameData.PlayerIP))
         {
             gameState = new GameState (gameData);
+
             terminalIterpreter.UpdateFileSystem (gameData.PlayerIP);
+
             checkIfEmailIsNeededToBeSent ();
+
+            if (gameState.ActiveQuest != null)
+                tasksListView.CrateTaskElements (gameState.ActiveQuest.Tasks);
         }
         else
         {
@@ -111,7 +121,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
             if (player.RecivedEmails != null && player.RecivedEmails.Count == 0)
             {
-                StartCoroutine (sentFirstEmial ());
+                StartCoroutine (sentEmialAction (0));
             }
             else
             {
@@ -120,7 +130,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         }
     }
 
-    protected IEnumerator sentFirstEmial ()
+    protected IEnumerator sentEmialAction (int emailID)
     {
         yield return new WaitForSeconds (5);
 
@@ -130,7 +140,13 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         int minute = currentTime.Minute;
         string formattedDate = currentTime.ToString ("dd.MM.yyyy");
 
-        gameState.GetPlayerInfo ().RecivedEmails.Add (EmailMenager.GetEmailOfId (0, formattedDate, hour.ToString ("00") + ":" + minute.ToString ("00"), false));
+        Quest firstQuest = gameState.GetQuestOfId (emailID);
+        EmailData emailData = firstQuest.EmailData;
+
+        emailData.Day = formattedDate;
+        emailData.Time = hour.ToString ("00") + ":" + minute.ToString ("00");
+
+        gameState.GetPlayerInfo ().RecivedEmails.Add (EmailMenager.GetEmailFromeData (emailData));
 
         topPanel.SetMailNotification (true);
 
@@ -139,13 +155,24 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
     protected void actionOnReadingEmail (int emailId, bool emailRead)
     {
-        EmailMenager.CheckIfEmailNeedAnyAction (emailId, emailRead);
-
-        switch (emailId)
+        if (!emailRead)
         {
-            case 0:
-                networkSymulatorView.GenerateCommpanyLayOut ();
-                break;
+            Quest quest = gameState.GetQuestOfId (emailId);
+            quest.MakeActionAfterRecivingEmail ();
+
+            foreach (ActionsAfterRecivingEmail action in quest.AfterEmailActions)
+            {
+                switch (action)
+                {
+                    case ActionsAfterRecivingEmail.LoadNetworkView:
+                        networkSymulatorView.GenerateCommpanyLayOut ();
+                        break;
+                }
+            }
+
+            tasksListView.CrateTaskElements (quest.Tasks);
+
+            gameState.SetActiveQuest (quest);
         }
     }
 
@@ -177,5 +204,11 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     {
         sshLogic.OnConnectWithdataBase += dataBaseView.Show;
         sshLogic.OnDisconnectWithDataBase += dataBaseView.Hide;
+    }
+
+    protected void onQuestTasksDone (int questId)
+    {
+        if (gameState.GetQuestOfId (questId + 1) != null)
+            StartCoroutine (sentEmialAction (questId + 1));
     }
 }

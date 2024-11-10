@@ -10,6 +10,7 @@ public class PlayerInfo
     public List<Email> RecivedEmails { get; private set; }
     public Dictionary <TypeOfProgram, bool> ProgramesAllowedToDownload { get; private set; }
     public Dictionary<TypeOfProgram, bool> ProgramesDownloaded { get; private set; }
+    public int ActiveQuestID { get; set; }
 
     public PlayerInfo (GameData data)
     {
@@ -25,6 +26,8 @@ public class PlayerInfo
 
         RecivedEmails = new List<Email> ();
         inicializeProgramesAllowedToDownload ();
+
+        ActiveQuestID = -1;
     }
 
     public void LoadData (GameData data)
@@ -37,7 +40,7 @@ public class PlayerInfo
 
             foreach (EmailData email in data.RecivedEmails)
             {
-                RecivedEmails.Add (EmailMenager.GetEmailOfId (email.ID, email.Day, email.Time, email.Read));
+                RecivedEmails.Add (EmailMenager.GetEmailFromeData (email));
             }
         }
         else
@@ -54,6 +57,8 @@ public class PlayerInfo
         {
             inicializeProgramesAllowedToDownload ();
         }
+
+        ActiveQuestID = data.ActiveQuestID;
     }
 
     public void SaveData (ref GameData data)
@@ -68,9 +73,14 @@ public class PlayerInfo
             {
                 EmailData emailData = new EmailData ();
                 emailData.ID = email.Id;
+                emailData.Subject = email.Subject;
+                emailData.EmailAdress = email.EmailAdress;
+                emailData.Content = email.Content;
                 emailData.Day = email.Day;
                 emailData.Time = email.Time;
                 emailData.Read = email.EmailRead;
+                emailData.HasAttachment = email.OpenAttachemntButtonNecesery;
+                emailData.NeedSentButton = email.SentButtonNecesery;
 
                 data.RecivedEmails.Add (emailData);
             }
@@ -87,6 +97,8 @@ public class PlayerInfo
             data.ProgramesDownloaded.keys = ProgramesDownloaded.Keys.ToList ();
             data.ProgramesDownloaded.values = ProgramesDownloaded.Values.ToList ();
         }
+
+        data.ActiveQuestID = ActiveQuestID;
     }
 
     protected void inicializeProgramesAllowedToDownload ()

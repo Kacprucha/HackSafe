@@ -13,6 +13,7 @@ public class GameData
     public List<EmailData> RecivedEmails = new List<EmailData> ();
     public _Dictionary<TypeOfProgram, bool> AllowedProgrames = new _Dictionary<TypeOfProgram, bool> ();
     public _Dictionary<TypeOfProgram, bool> ProgramesDownloaded = new _Dictionary<TypeOfProgram, bool> ();
+    public int ActiveQuestID = -1;
 
     public List<ComputerData> CompanyComputers = new List<ComputerData> ();
 
@@ -37,9 +38,14 @@ public class SerializedNode
 public class EmailData
 {
     public int ID;
+    public string Subject;
+    public string EmailAdress;
+    public string Content;
     public string Day;
     public string Time;
-    public bool Read;
+    public bool Read = false;
+    public bool HasAttachment;
+    public bool NeedSentButton;
 }
 
 [Serializable]
@@ -84,4 +90,38 @@ public class DataSetData
     public List<List <string>> Rows = new List<List<string>> ();
     public List<bool> FieldsVisibility = new List<bool> ();
     public List<bool> RowsVisibility = new List<bool> ();
+}
+
+[Serializable]
+public class TaskData
+{
+    public string Name;
+    public string Description;
+    public int Type;
+    public SerializedNode File;
+    public string ComputerIP;
+    public int Program;
+    public string A_IP;
+    public string B_IP;
+}
+
+[SerializeField]
+public class QuestListData
+{
+    public List<QuestData> Quests;
+}
+
+[Serializable]
+public class QuestData
+{
+    public int FinalCondition;
+    public List<TaskData> Tasks = new List<TaskData> ();
+    public EmailData Email;
+
+    public List<int> ActionsAfterEmailRecived;
+    public List<int> ProgramesToAllow;
+    public List<ComputerData> ComputersToAdd;
+    public List<string> ComputersToDelate;
+    public SerializedNode File;
+    public string ComputerIP;
 }

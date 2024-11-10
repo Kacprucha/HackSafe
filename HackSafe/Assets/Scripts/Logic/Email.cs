@@ -25,8 +25,9 @@ public class Email
         EmailRead = value;
     }
 
-    public void Inicialize (string title, string email, string content, string day, string time, bool sentButton, bool atachmentButton = false, bool read = false)
+    public void Inicialize (int id, string title, string email, string content, string day, string time, bool sentButton, bool atachmentButton = false, bool read = false)
     {
+        this.Id = id;
         this.Subject = title;
         this.EmailAdress = email;
         this.Content = content;

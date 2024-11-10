@@ -208,5 +208,22 @@ public class FileSystem
     {
         return FindNode(path).Children.Select (child => child.Name).ToList ();
     }
+
+    public TreeNode FileExist (TreeNode root, string targetName, string targetContent)
+    {
+        TreeNode result = null;
+
+        if (root.Name == targetName && root.Content == targetContent)
+        {
+            result = root;
+        }
+
+        foreach (TreeNode child in root.Children)
+        {
+            result = FileExist (child, targetName, targetContent);
+        }
+
+        return result;
+    }
 }
 
