@@ -37,6 +37,11 @@ public class AptLogic : ProgramLogic
                                 programsToInstall.Add (TypeOfProgram.dictionaryAttack);
 
                                 break;
+
+                            case "manInTheMiddle":
+                                programsToInstall.Add (TypeOfProgram.manInTheMiddle);
+
+                                break;
                         }
                     }
                 }

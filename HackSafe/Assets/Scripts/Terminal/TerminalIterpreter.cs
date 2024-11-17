@@ -22,7 +22,8 @@ public enum Commands
     BruteForce,
     Clear,
     DictionaryAttack,
-    Exit
+    Exit,
+    ManInTheMiddle
 }
 
 public enum TerminalState
@@ -82,12 +83,16 @@ public class TerminalIterpreter : MonoBehaviour
     protected DicionaryAttackLogic dicionaryAttackLogic;
     protected SshLogic sshLogic;
     protected ScpLogic scpLogic;
+    protected ManInTheMiddleLogic manInTheMiddleLogic;
 
     public delegate void InjectProgramLogicHandler (ProgramLogic programLogic);
     public event InjectProgramLogicHandler OnInjectPorgramLogic;
 
     public delegate void InjectSshLogicHandler (SshLogic sshLogic);
     public event InjectSshLogicHandler OnInjectSshLogic;
+
+    public delegate void InjectManInTheMiddleHandler (ManInTheMiddleLogic manInTheMiddleLogic);
+    public event InjectManInTheMiddleHandler OnInjectManInTheMiddleLogic;
 
     void Start ()
     {
@@ -247,6 +252,14 @@ public class TerminalIterpreter : MonoBehaviour
                 scpLogic = gameObject.GetComponent<ScpLogic> ();
             }
 
+            if (manInTheMiddleLogic == null)
+            {
+                GameObject gameObject = new GameObject ("ManInTheMiddleElement");
+                gameObject.AddComponent<ManInTheMiddleLogic> ();
+                gameObject.GetComponent<ManInTheMiddleLogic> ().Inicialize (this, playerInputHandler);
+                manInTheMiddleLogic = gameObject.GetComponent<ManInTheMiddleLogic> ();
+                OnInjectManInTheMiddleLogic (manInTheMiddleLogic);
+            }
         }
 
         if (terminalFileSystem == null)
@@ -519,6 +532,11 @@ public class TerminalIterpreter : MonoBehaviour
             case "exit":
                 currentCommand = Commands.Exit;
                 closeSshConection ();
+
+                break;
+
+            case "manInTheMiddle":
+                manInTheMiddleLogic.ContinoueOnManInTheMiddleAction (arguments);
 
                 break;
 

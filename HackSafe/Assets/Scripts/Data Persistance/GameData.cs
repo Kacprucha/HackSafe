@@ -103,6 +103,8 @@ public class TaskData
     public int Program;
     public string A_IP;
     public string B_IP;
+    public List<string> Comunication;
+    public float TimeForTask = 0;
 }
 
 [SerializeField]

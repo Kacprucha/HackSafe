@@ -8,7 +8,8 @@ public enum TypeOfProgram
 {
     brutForse = 0,
     rainbowTables,
-    dictionaryAttack
+    dictionaryAttack,
+    manInTheMiddle
 }
 
 public static class TerminalMenager
@@ -190,6 +191,10 @@ public static class TerminalMenager
             case TypeOfProgram.dictionaryAttack:
                 result += 1.971f;
                 break;
+
+            case TypeOfProgram.manInTheMiddle:
+                result += 3.575f;
+                break;
         }
 
         return result;
@@ -214,6 +219,10 @@ public static class TerminalMenager
                 case TypeOfProgram.dictionaryAttack:
                     result += 1.971f;
                     break;
+
+                case TypeOfProgram.manInTheMiddle:
+                    result += 3.575f;
+                    break;
             }
         }
 
@@ -236,6 +245,10 @@ public static class TerminalMenager
 
             case TypeOfProgram.dictionaryAttack:
                 result += 3.027f;
+                break;
+
+            case TypeOfProgram.manInTheMiddle:
+                result += 4.2f;
                 break;
         }
 
@@ -261,6 +274,10 @@ public static class TerminalMenager
                 case TypeOfProgram.dictionaryAttack:
                     result += 3.027f;
                     break;
+
+                case TypeOfProgram.manInTheMiddle:
+                    result += 4.2f;
+                    break;
             }
         }
 
@@ -284,6 +301,10 @@ public static class TerminalMenager
             case TypeOfProgram.dictionaryAttack:
                 result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 dictionaryAttack 3.0-1";
                 break;
+
+            case TypeOfProgram.manInTheMiddle:
+                result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 ManInTheMiddleAttack 3.0-1";
+                break;
         }
 
         return result;
@@ -305,6 +326,10 @@ public static class TerminalMenager
 
             case TypeOfProgram.dictionaryAttack:
                 result = ".../5-dictionaryAttack_1.9-2_amd64.deb";
+                break;
+
+            case TypeOfProgram.manInTheMiddle:
+                result = ".../6-ManInTheMiddleAttack_4.2-4_amd64.deb";
                 break;
         }
 
