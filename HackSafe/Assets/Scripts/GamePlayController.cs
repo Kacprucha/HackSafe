@@ -9,6 +9,8 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
     [SerializeField] RegisterUserOverlay registerUserOverlay;
     [SerializeField] EmialOverlay emailOverlay;
+    [SerializeField] ManInTheMiddleOverlay manInTheMiddleOverlay;
+    [SerializeField] TimerOverlay timerOverlay;
 
     [SerializeField] NetworkSymulatorView networkSymulatorView;
     [SerializeField] DataBaseView dataBaseView;
@@ -17,9 +19,11 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
     [SerializeField] TerminalIterpreter terminalIterpreter;
 
-    List<ProgramLogic> programLogicList = new List<ProgramLogic> ();
+    protected List<ProgramLogic> programLogicList = new List<ProgramLogic> ();
 
     protected GameState gameState;
+
+    protected DraggableOverlay overlayUsingTimer;
 
     // Start is called before the first frame update
     void Start ()
@@ -33,11 +37,15 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
         registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked += actionOnReadingEmail;
+        manInTheMiddleOverlay.OnStartTimer += setUpTimer;
+        manInTheMiddleOverlay.OnFinishConectingToStream += onManInTheMiddleAttackSuccess;
+        timerOverlay.OnFinishCounting += onTimerFinish;
 
         tasksListView.OnQuestDone += onQuestTasksDone;
 
         terminalIterpreter.OnInjectPorgramLogic += injectMethodsToProgramLogic;
         terminalIterpreter.OnInjectSshLogic += injectMethodsToSshLogic;
+        terminalIterpreter.OnInjectManInTheMiddleLogic += injectMethodsToManInTheMiddleLogic;
     }
 
     void OnDisable ()
@@ -46,11 +54,15 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
         registerUserOverlay.OnSaveButtonClicked -= InicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked -= actionOnReadingEmail;
+        manInTheMiddleOverlay.OnStartTimer -= setUpTimer;
+        manInTheMiddleOverlay.OnFinishConectingToStream -= onManInTheMiddleAttackSuccess;
+        timerOverlay.OnFinishCounting -= onTimerFinish;
 
         tasksListView.OnQuestDone -= onQuestTasksDone;
 
         terminalIterpreter.OnInjectPorgramLogic -= injectMethodsToProgramLogic;
         terminalIterpreter.OnInjectSshLogic -= injectMethodsToSshLogic;
+        terminalIterpreter.OnInjectManInTheMiddleLogic -= injectMethodsToManInTheMiddleLogic;
 
         if (programLogicList.Count > 0)
         {
@@ -109,8 +121,15 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
     void ChangeVisibilityOfEmailOverlay ()
     {
-        emailOverlay.gameObject.SetActive (!emailOverlay.gameObject.activeSelf);
-        topPanel.SetMailNotification (false);
+        if (emailOverlay.gameObject.activeSelf)
+        {
+            emailOverlay.CloseOverlay ();
+        }
+        else
+        {
+            emailOverlay.ShowOverlay ();
+            topPanel.SetMailNotification (false);
+        }
     }
 
     protected void checkIfEmailIsNeededToBeSent ()
@@ -210,5 +229,35 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     {
         if (gameState.GetQuestOfId (questId + 1) != null)
             StartCoroutine (sentEmialAction (questId + 1));
+    }
+
+    protected void injectMethodsToManInTheMiddleLogic (ManInTheMiddleLogic manInTheMiddleLogic)
+    {
+        manInTheMiddleLogic.OnShowOverlay += manInTheMiddleOverlay.ShowOverlay;
+    }
+
+    protected void setUpTimer (DraggableOverlay overlay ,float time)
+    {
+        timerOverlay.ShowOverlay ();
+        timerOverlay.SetTimer (time);
+
+        overlayUsingTimer = overlay;
+    }
+
+    protected void onTimerFinish ()
+    {
+        if (overlayUsingTimer != null)
+        {
+            overlayUsingTimer.CloseOverlay ();
+            timerOverlay.CloseOverlay ();
+
+            overlayUsingTimer = null;
+            terminalIterpreter.GneratePassiveTermialResponse ("Your actions were noticed! The program was stopped!");
+        }
+    }
+
+    protected void onManInTheMiddleAttackSuccess ()
+    {
+        timerOverlay.CloseOverlay ();
     }
 }

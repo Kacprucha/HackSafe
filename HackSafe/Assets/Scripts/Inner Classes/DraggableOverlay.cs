@@ -12,12 +12,22 @@ public class DraggableOverlay : MonoBehaviour, /*IPointerDownHandler,*/ IBeginDr
 
     [SerializeField] Button closeButton;
 
-    public void Start ()
+    virtual public void Start ()
     {
         if (closeButton != null)
         {
             closeButton.onClick.AddListener (() => CloseButtonClicked ());
         }
+    }
+
+    virtual public void ShowOverlay ()
+    {
+        gameObject.SetActive (true);
+    }
+
+    virtual public void CloseOverlay ()
+    {
+        gameObject.SetActive (false);
     }
 
     void CloseButtonClicked ()

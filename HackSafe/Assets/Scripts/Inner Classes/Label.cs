@@ -23,4 +23,9 @@ public class Label : MonoBehaviour
     {
         label.text = text;
     }
+
+    public string GetText ()
+    {
+        return label.text;
+    }
 }
