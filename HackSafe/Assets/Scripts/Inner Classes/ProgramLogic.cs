@@ -18,7 +18,7 @@ public class ProgramLogic : MonoBehaviour
     public delegate void UpdateProgramHandler (string name, int cpu, int ram, int storage);
     public event UpdateProgramHandler OnUpdateProgram;
 
-    public void Inicialize (TerminalIterpreter terminalIterpreter, InputOperator playerInputHandler)
+    virtual public void Inicialize (TerminalIterpreter terminalIterpreter, InputOperator playerInputHandler)
     {
         gameState = GameState.instance;
         this.terminalIterpreter = terminalIterpreter;
