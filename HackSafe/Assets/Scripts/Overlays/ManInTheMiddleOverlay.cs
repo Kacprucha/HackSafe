@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 public enum KeyAsoscietedSite
@@ -75,8 +76,6 @@ public class ManInTheMiddleOverlay : DraggableOverlay
 
     protected ManInTheMiddleLogic manInTheMiddleLogic;
 
-    protected Task asociatedTask;
-
     protected bool aFormulaOkey = false;
     protected bool bFormulaOkey = false;
     protected bool keyGotSentToA = false;
@@ -92,8 +91,6 @@ public class ManInTheMiddleOverlay : DraggableOverlay
     override public void Start ()
     {
         base.Start ();
-
-        manInTheMiddleLogic = ManInTheMiddleLogic.Instance;
 
         if (keySentToB != null)
         {
@@ -129,6 +126,11 @@ public class ManInTheMiddleOverlay : DraggableOverlay
         {
             generateKeysButton.onClick.AddListener (onGenerateKeysButtonClicked);
         }
+
+        if (captureFileContainer != null)
+        {
+            captureFileContainer.GetComponent<CaptureFileView> ().OnFileSent += onSentFileToB;
+        }
     }
 
     // Update is called once per frame
@@ -136,9 +138,10 @@ public class ManInTheMiddleOverlay : DraggableOverlay
     {
         if (aFormulaOkey && bFormulaOkey && keyGotSentToA && keyGotSentToB)
         {
-            if (asociatedTask != null && !asociatedTask.IsDone)
+            if (manInTheMiddleLogic.AsociatedTask != null)
             {
-                asociatedTask.SetTaskDone ();
+                if (!manInTheMiddleLogic.AsociatedTask.IsDone)
+                    manInTheMiddleLogic.MarkTaKaskAsDone ();
 
                 if (OnFinishConectingToStream != null)
                     OnFinishConectingToStream ();
@@ -185,6 +188,8 @@ public class ManInTheMiddleOverlay : DraggableOverlay
 
     public void Inicialize (Computer compA, Computer compB)
     {
+        manInTheMiddleLogic = ManInTheMiddleLogic.Instance;
+
         computerA = compA;
         computerB = compB;
 
@@ -199,16 +204,15 @@ public class ManInTheMiddleOverlay : DraggableOverlay
 
         StartCoroutine (sendKey (computerA, GameState.instance.GetPlayerInfo ().PlayerComputer, arrowAToY));
 
-        asociatedTask = GameState.instance.ActiveQuest.Tasks.Find (
-                                                                    t => !t.IsDone &&
-                                                                    t.TaskType == TaskType.GetAccessToStrem &&
+        manInTheMiddleLogic.AsociatedTask = GameState.instance.ActiveQuest.Tasks.Find (
+                                                                    t => t.TaskType == TaskType.GetAccessToStrem &&
                                                                     t.AIP == compA.IP &&
                                                                     t.BIP == compB.IP
                                                                    );
 
-        if (asociatedTask?.TimeForTaks > 0)
+        if (manInTheMiddleLogic.AsociatedTask?.TimeForTaks > 0 && !manInTheMiddleLogic.AsociatedTask.IsDone)
         {
-            OnStartTimer (this, asociatedTask.TimeForTaks);
+            OnStartTimer (this, manInTheMiddleLogic.AsociatedTask.TimeForTaks);
         }
     }
 
@@ -452,24 +456,30 @@ public class ManInTheMiddleOverlay : DraggableOverlay
 
     protected void afterSuccesfullAtackActions ()
     {
-        if (asociatedTask != null)
+        if (manInTheMiddleLogic.AsociatedTask != null)
         {
-            if (asociatedTask.Comunication != null && asociatedTask.Comunication.Count > 0)
+            if (manInTheMiddleLogic.AsociatedTask.Comunication != null && manInTheMiddleLogic.AsociatedTask.Comunication.Count > 0)
             {
                 communicationContainer.SetActive (true);
                 keyGeneratorcontainer.SetActive (false);
                 buttonsContainer.SetActive (false);
 
-                communicationContainer.GetComponent<ComunicationStreamView> ().IniciateStream (computerA.Username, computerB.Username, asociatedTask.Comunication);
+                communicationContainer.GetComponent<ComunicationStreamView> ().IniciateStream (computerA.Username, computerB.Username, manInTheMiddleLogic.AsociatedTask.Comunication);
             }
-            else if (asociatedTask.TaskFile != null)
+            else if (manInTheMiddleLogic.AsociatedTask.TaskFile != null)
             {
                 captureFileContainer.SetActive (true);
                 keyGeneratorcontainer.SetActive (false);
                 buttonsContainer.SetActive (false);
 
-                captureFileContainer.GetComponent<CaptureFileView> ().Iniciate (asociatedTask.TaskFile);
+                captureFileContainer.GetComponent<CaptureFileView> ().Iniciate (manInTheMiddleLogic.AsociatedTask.TaskFile);
             }
         }
+    }
+
+    protected void onSentFileToB (TreeNode file)
+    {
+        computerB.FileSystem.CreateNode ($"/home/{computerB.Username.Replace (" ", "")}/download/{file.Name}", false).Content = file.Content;
+        systemMessages.text = $"File sent to {computerB.Username}! Attack end with succes!";
     }
 }

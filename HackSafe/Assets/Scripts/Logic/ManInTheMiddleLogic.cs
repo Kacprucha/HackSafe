@@ -5,6 +5,7 @@ using UnityEngine;
 public class ManInTheMiddleLogic : ProgramLogic
 {
     public static ManInTheMiddleLogic Instance { get; private set; }
+    public Task AsociatedTask;
 
     public delegate void showingOverlayHandler (Computer compA, Computer compB);
     public event showingOverlayHandler OnShowOverlay;
@@ -113,5 +114,11 @@ public class ManInTheMiddleLogic : ProgramLogic
         }
 
         return result;
+    }
+
+    public void MarkTaKaskAsDone ()
+    {
+        AsociatedTask.SetTaskDone ();
+        gameState.MareTaskAsDone (gameState.ActiveQuest.ID, AsociatedTask.ID);
     }
 }
