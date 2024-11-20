@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
@@ -17,6 +18,8 @@ public class GameState
     protected List<Computer> comapnysComputers;
     protected List<Quest> quests;
     protected Quest activeQuest;
+
+    protected Dictionary<int, List<int>> tasksThatNeedToBeMarkedAsDone = new Dictionary<int, List<int>> ();
 
     public GameState (GameData gameData) 
     {
@@ -46,6 +49,22 @@ public class GameState
 
         loadQuestData ();
         activeQuest = GetQuestOfId (player.ActiveQuestID);
+
+        if (data.TasksThatNeedToBeMarkedAsDone != null && data.TasksThatNeedToBeMarkedAsDone.keys.Count > 0)
+        {
+            tasksThatNeedToBeMarkedAsDone = data.TasksThatNeedToBeMarkedAsDone.keys.Zip (data.TasksThatNeedToBeMarkedAsDone.values, (k, v) => new { k, v }).ToDictionary (x => x.k, x => x.v);
+        }
+
+        if (tasksThatNeedToBeMarkedAsDone.ContainsKey (activeQuest.ID))
+        {
+            List<int> tasksID = tasksThatNeedToBeMarkedAsDone[activeQuest.ID];
+
+            foreach (int id in tasksID)
+            {
+                activeQuest.Tasks.Find (t => t.ID == id).SetTaskDone ();
+            }
+
+        }
     }
 
     public void SaveData (ref GameData data)
@@ -56,6 +75,12 @@ public class GameState
         foreach (Computer computer in comapnysComputers)
         {
             computer.SaveData (ref data);
+        }
+
+        if (tasksThatNeedToBeMarkedAsDone != null)
+        {
+            data.TasksThatNeedToBeMarkedAsDone.keys = tasksThatNeedToBeMarkedAsDone.Keys.ToList ();
+            data.TasksThatNeedToBeMarkedAsDone.values = tasksThatNeedToBeMarkedAsDone.Values.ToList ();
         }
     }
 
@@ -156,6 +181,21 @@ public class GameState
         }
     }
 
+    public void MareTaskAsDone (int questID, int taskID)
+    {
+        if (tasksThatNeedToBeMarkedAsDone.ContainsKey (questID))
+        {
+            List<int> temp = tasksThatNeedToBeMarkedAsDone[questID];
+            temp.Add (taskID);
+            tasksThatNeedToBeMarkedAsDone.Remove (questID);
+            tasksThatNeedToBeMarkedAsDone.Add (questID, temp);
+        }
+        else
+        {
+            tasksThatNeedToBeMarkedAsDone.Add (questID, new List<int> { taskID });
+        }
+    }
+
     private void loadQuestData ()
     {
         string fullPath = Application.persistentDataPath + "/questData.json";
@@ -231,9 +271,13 @@ public class GameState
                 if (questData.ComputersToDelate != null && questData.ComputersToDelate.Count > 0)
                     computersToDelate.AddRange (questData.ComputersToDelate);
 
-                TreeNode file = null;
-                if (questData.File != null)
-                    file = new TreeNode (questData.File.Name, true, questData.File.Content);
+                TreeNode fileToSent = null;
+                if (questData.FileToSent != null)
+                    fileToSent = new TreeNode (questData.FileToSent.Name, false, questData.FileToSent.Content);
+
+                TreeNode fileToRecive = null;
+                if (questData.FileToRecive != null)
+                    fileToRecive = new TreeNode (questData.FileToRecive.Name, false, questData.FileToRecive.Content, null, questData.FileToRecive.IsKeyFile, questData.FileToRecive.WasFileSigned);
 
                 Quest quest = new Quest (
                                         questID, 
@@ -244,7 +288,8 @@ public class GameState
                                         typeOfPrograms, 
                                         computers,
                                         computersToDelate,
-                                        file,
+                                        fileToSent,
+                                        fileToRecive,
                                         questData.ComputerIP
                                         );
 

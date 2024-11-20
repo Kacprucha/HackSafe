@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +17,8 @@ public enum TaskType
     CrackPassword,
     LogInToComputer,
     SentFile,
-    PutFileOnComuter
+    PutFileOnComuter,
+    SignFile,
 }
 
 [Serializable]
@@ -111,6 +114,14 @@ public class Task
 
                     case TaskType.PutFileOnComuter:
                         if (gameState.FindComputerOfIP (taskComputerIP).FileSystem.FileExist (gameState.FindComputerOfIP (taskComputerIP).FileSystem.Root, taskFile.Name, taskFile.Content) != null)
+                        {
+                            IsDone = true;
+                        }
+                        break;
+
+                    case TaskType.SignFile:
+                        FileSystem playerSystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
+                        if (playerSystem.SignedFileExist (playerSystem.Root, taskFile.Name, taskFile.Content) != null)
                         {
                             IsDone = true;
                         }

@@ -14,6 +14,7 @@ public class GameData
     public _Dictionary<TypeOfProgram, bool> AllowedProgrames = new _Dictionary<TypeOfProgram, bool> ();
     public _Dictionary<TypeOfProgram, bool> ProgramesDownloaded = new _Dictionary<TypeOfProgram, bool> ();
     public int ActiveQuestID = -1;
+    public _Dictionary<int, List<int>> TasksThatNeedToBeMarkedAsDone = new _Dictionary<int, List<int>> ();
 
     public List<ComputerData> CompanyComputers = new List<ComputerData> ();
 
@@ -31,6 +32,8 @@ public class SerializedNode
     public string Name;
     public string Content;
     public bool IsDirectory;
+    public bool IsKeyFile = false;
+    public bool WasFileSigned = false;
     public string ParentPath;
 }
 
@@ -124,6 +127,7 @@ public class QuestData
     public List<int> ProgramesToAllow;
     public List<ComputerData> ComputersToAdd;
     public List<string> ComputersToDelate;
-    public SerializedNode File;
+    public SerializedNode FileToSent;
+    public SerializedNode FileToRecive;
     public string ComputerIP;
 }

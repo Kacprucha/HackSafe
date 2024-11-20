@@ -9,7 +9,8 @@ public enum TypeOfProgram
     brutForse = 0,
     rainbowTables,
     dictionaryAttack,
-    manInTheMiddle
+    manInTheMiddle,
+    fakeSignature
 }
 
 public static class TerminalMenager
@@ -195,6 +196,10 @@ public static class TerminalMenager
             case TypeOfProgram.manInTheMiddle:
                 result += 3.575f;
                 break;
+
+            case TypeOfProgram.fakeSignature:
+                result += 2.134f;
+                break;
         }
 
         return result;
@@ -223,6 +228,10 @@ public static class TerminalMenager
                 case TypeOfProgram.manInTheMiddle:
                     result += 3.575f;
                     break;
+
+                case TypeOfProgram.fakeSignature:
+                    result += 2.134f;
+                    break;
             }
         }
 
@@ -249,6 +258,10 @@ public static class TerminalMenager
 
             case TypeOfProgram.manInTheMiddle:
                 result += 4.2f;
+                break;
+
+            case TypeOfProgram.fakeSignature:
+                result += 2.201f;
                 break;
         }
 
@@ -278,6 +291,10 @@ public static class TerminalMenager
                 case TypeOfProgram.manInTheMiddle:
                     result += 4.2f;
                     break;
+
+                case TypeOfProgram.fakeSignature:
+                    result += 2.201f;
+                    break;
             }
         }
 
@@ -303,7 +320,11 @@ public static class TerminalMenager
                 break;
 
             case TypeOfProgram.manInTheMiddle:
-                result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 ManInTheMiddleAttack 3.0-1";
+                result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 manInTheMiddleAttack 3.0-1";
+                break;
+
+            case TypeOfProgram.fakeSignature:
+                result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 fakeSignature 3.0-1";
                 break;
         }
 
@@ -330,6 +351,10 @@ public static class TerminalMenager
 
             case TypeOfProgram.manInTheMiddle:
                 result = ".../6-ManInTheMiddleAttack_4.2-4_amd64.deb";
+                break;
+
+            case TypeOfProgram.fakeSignature:
+                result = ".../7-fakeSignature_2.1-1_amd64.deb";
                 break;
         }
 

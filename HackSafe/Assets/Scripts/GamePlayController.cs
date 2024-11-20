@@ -8,9 +8,10 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     [SerializeField] TopPanel topPanel;
 
     [SerializeField] RegisterUserOverlay registerUserOverlay;
-    [SerializeField] EmialOverlay emailOverlay;
+    [SerializeField] EmailOverlay emailOverlay;
     [SerializeField] ManInTheMiddleOverlay manInTheMiddleOverlay;
     [SerializeField] TimerOverlay timerOverlay;
+    [SerializeField] FakeSignatureOverlay fakeSignatureOverlay;
 
     [SerializeField] NetworkSymulatorView networkSymulatorView;
     [SerializeField] DataBaseView dataBaseView;
@@ -46,6 +47,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         terminalIterpreter.OnInjectPorgramLogic += injectMethodsToProgramLogic;
         terminalIterpreter.OnInjectSshLogic += injectMethodsToSshLogic;
         terminalIterpreter.OnInjectManInTheMiddleLogic += injectMethodsToManInTheMiddleLogic;
+        terminalIterpreter.OnInjectFakeSignatureLogic += injectMethodsToFakeSignatureLogic;
     }
 
     void OnDisable ()
@@ -63,6 +65,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         terminalIterpreter.OnInjectPorgramLogic -= injectMethodsToProgramLogic;
         terminalIterpreter.OnInjectSshLogic -= injectMethodsToSshLogic;
         terminalIterpreter.OnInjectManInTheMiddleLogic -= injectMethodsToManInTheMiddleLogic;
+        terminalIterpreter.OnInjectFakeSignatureLogic -= injectMethodsToFakeSignatureLogic;
 
         if (programLogicList.Count > 0)
         {
@@ -234,6 +237,11 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     protected void injectMethodsToManInTheMiddleLogic (ManInTheMiddleLogic manInTheMiddleLogic)
     {
         manInTheMiddleLogic.OnShowOverlay += manInTheMiddleOverlay.ShowOverlay;
+    }
+
+    protected void injectMethodsToFakeSignatureLogic (FakeSignatureLogic fakeSignatureLogic)
+    {
+        fakeSignatureLogic.OnShowOverlay += fakeSignatureOverlay.ShowOverlay;
     }
 
     protected void setUpTimer (DraggableOverlay overlay ,float time)

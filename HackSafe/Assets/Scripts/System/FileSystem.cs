@@ -25,7 +25,7 @@ public class FileSystem
                 TreeNode parentNode = FindNode (serializedNode.ParentPath);
                 if (parentNode != null)
                 {
-                    var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode);
+                    var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode, serializedNode.IsKeyFile, serializedNode.WasFileSigned);
                     parentNode.AddChild (newNode);
                 }
             }
@@ -39,7 +39,7 @@ public class FileSystem
                     TreeNode parentNode = FindNode (serializedNode.ParentPath);
                     if (parentNode != null)
                     {
-                        var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode);
+                        var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode, serializedNode.IsKeyFile, serializedNode.WasFileSigned);
                         parentNode.AddChild (newNode);
                     }
                 }
@@ -57,7 +57,7 @@ public class FileSystem
             TreeNode parentNode = FindNode (serializedNode.ParentPath);
             if (parentNode != null)
             {
-                var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode);
+                var newNode = new TreeNode (serializedNode.Name, serializedNode.IsDirectory, serializedNode.Content, parentNode, serializedNode.IsKeyFile, serializedNode.WasFileSigned);
                 parentNode.AddChild (newNode);
             }
         }
@@ -88,6 +88,8 @@ public class FileSystem
             {
                 Name = node.Name,
                 IsDirectory = node.IsDirectory,
+                IsKeyFile = node.IsKeyFile,
+                WasFileSigned = node.WasFileSigned,
                 ParentPath = parentPath,
                 Content = node.Content
             };
@@ -221,6 +223,31 @@ public class FileSystem
         foreach (TreeNode child in root.Children)
         {
             result = FileExist (child, targetName, targetContent);
+            if (result != null)
+            {
+                return result;  // Return immediately if a match is found
+            }
+        }
+
+        return result;
+    }
+
+    public TreeNode SignedFileExist (TreeNode root, string targetName, string targetContent)
+    {
+        TreeNode result = null;
+
+        if (root.Name == targetName && root.Content == targetContent && root.WasFileSigned)
+        {
+            result = root;
+        }
+
+        foreach (TreeNode child in root.Children)
+        {
+            result = FileExist (child, targetName, targetContent);
+            if (result != null)
+            {
+                return result;  // Return immediately if a match is found
+            }
         }
 
         return result;

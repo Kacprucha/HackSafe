@@ -42,6 +42,11 @@ public class AptLogic : ProgramLogic
                                 programsToInstall.Add (TypeOfProgram.manInTheMiddle);
 
                                 break;
+
+                            case "fakeSignature":
+                                programsToInstall.Add (TypeOfProgram.fakeSignature);
+
+                                break;
                         }
                     }
                 }

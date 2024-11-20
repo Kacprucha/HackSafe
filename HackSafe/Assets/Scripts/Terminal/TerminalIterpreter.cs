@@ -84,6 +84,7 @@ public class TerminalIterpreter : MonoBehaviour
     protected SshLogic sshLogic;
     protected ScpLogic scpLogic;
     protected ManInTheMiddleLogic manInTheMiddleLogic;
+    protected FakeSignatureLogic fakeSignatureLogic;
 
     public delegate void InjectProgramLogicHandler (ProgramLogic programLogic);
     public event InjectProgramLogicHandler OnInjectPorgramLogic;
@@ -93,6 +94,9 @@ public class TerminalIterpreter : MonoBehaviour
 
     public delegate void InjectManInTheMiddleHandler (ManInTheMiddleLogic manInTheMiddleLogic);
     public event InjectManInTheMiddleHandler OnInjectManInTheMiddleLogic;
+
+    public delegate void InjectionFakeSignatureHandler (FakeSignatureLogic fakeSignatureLogic);
+    public event InjectionFakeSignatureHandler OnInjectFakeSignatureLogic;
 
     void Start ()
     {
@@ -259,6 +263,15 @@ public class TerminalIterpreter : MonoBehaviour
                 gameObject.GetComponent<ManInTheMiddleLogic> ().Inicialize (this, playerInputHandler);
                 manInTheMiddleLogic = gameObject.GetComponent<ManInTheMiddleLogic> ();
                 OnInjectManInTheMiddleLogic (manInTheMiddleLogic);
+            }
+
+            if (fakeSignatureLogic == null)
+            {
+                GameObject gameObject = new GameObject ("FakeSignatureElement");
+                gameObject.AddComponent<FakeSignatureLogic> ();
+                gameObject.GetComponent<FakeSignatureLogic> ().Inicialize (this, playerInputHandler);
+                fakeSignatureLogic = gameObject.GetComponent<FakeSignatureLogic> ();
+                OnInjectFakeSignatureLogic (fakeSignatureLogic);
             }
         }
 
@@ -538,6 +551,11 @@ public class TerminalIterpreter : MonoBehaviour
             case "manInTheMiddle":
                 manInTheMiddleLogic.ContinoueOnManInTheMiddleAction (arguments);
 
+                break;
+
+            case "fakeSignature":
+                fakeSignatureLogic.ContinoueOnFakeSignatureAction (arguments);
+                
                 break;
 
             default:
