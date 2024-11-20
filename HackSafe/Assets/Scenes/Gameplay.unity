@@ -13522,6 +13522,7 @@ GameObject:
   m_Component:
   - component: {fileID: 944215148}
   - component: {fileID: 944215149}
+  - component: {fileID: 944215150}
   m_Layer: 5
   m_Name: Notes Content
   m_TagString: Untagged
@@ -13577,6 +13578,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &944215150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944215147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31ae00d67c4d52c4faa2a8dc5e4bdcfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  systemNote: {fileID: 468322825}
 --- !u!1 &946125820
 GameObject:
   m_ObjectHideFlags: 0
@@ -29206,7 +29220,12 @@ MonoBehaviour:
     cat - displays file content
 
     ssh
-    - connect to device via ssh protocol'
+    - connect to device via ssh protocol
+
+    scp - copy files from remote mashines
+    via ssh
+
+    mkdir - crates directory'
 --- !u!222 &1912899337
 CanvasRenderer:
   m_ObjectHideFlags: 0

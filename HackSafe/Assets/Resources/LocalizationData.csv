@@ -1,3 +1,5 @@
 ﻿Key;English;Polish
-EmailTitle0;test tytle;test
-EmailContent0;test content;test
+brutForse;<i>bruteForce</i> - starts brute force programm;<i>bruteForce</i> - rozpoczyna atak typu brute force
+dictionaryAttack;<i>dictionaryAttack</i> - starts dictionary attack programm;<i>dictionaryAttack</i> - rozpoczyna atak słownikowy
+manInTheMiddle;<i>manInTheMiddle</i> - starts UI for man in the middle attack;<i>manInTheMiddle</i> - uruchamia UI dla ataku man in the middle
+fakeSignature;<i>fakeSignature</i> - starts UI for forgery of notary signature;<i>fakeSignature</i> - uruchamia UI dla podrobienia podpisu notarialnego
