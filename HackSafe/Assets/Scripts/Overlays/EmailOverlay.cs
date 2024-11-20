@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EmialOverlay : DraggableOverlay
+public class EmailOverlay : DraggableOverlay
 {
     [SerializeField] Button atachmentButton;
     [SerializeField] Button sentButton;
@@ -24,6 +24,11 @@ public class EmialOverlay : DraggableOverlay
     new void Start()
     {
         base.Start ();
+
+        if (atachmentButton != null)
+        {
+            atachmentButton.onClick.AddListener (onAtachmentButtonClicked);
+        }
     }
 
     private void OnEnable ()
@@ -98,6 +103,22 @@ public class EmialOverlay : DraggableOverlay
         if (OnSetEmailViewButtonClicked != null)
         {
             OnSetEmailViewButtonClicked (email.Id, email.EmailRead);
+        }
+    }
+
+    protected void onAtachmentButtonClicked ()
+    {
+        GameState gameState = GameState.instance;
+        FileSystem fileSystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
+
+        if (gameState != null && gameState.ActiveQuest.FileToSent != null)
+        {
+            if (fileSystem.FileExist (fileSystem.Root, gameState.ActiveQuest.FileToSent.Name, gameState.ActiveQuest.FileToSent.Content) == null)
+            {
+                fileSystem.CreateNode ($"/home/{gameState.GetPlayerInfo ().PlayerComputer.Username.Replace (" ", "")}/download/{gameState.ActiveQuest.FileToSent.Name}", false).Content = gameState.ActiveQuest.FileToSent.Content;
+
+                atachmentButton.gameObject.SetActive (false);
+            }
         }
     }
 }
