@@ -7,12 +7,12 @@ using Newtonsoft.Json;
 
 public class FileDataHandler
 {
-    static string dataDirPath = Application.persistentDataPath;
-    static string dataFileName = "save.game";
+    static public string DataDirPath = Application.persistentDataPath;
+    static public string DataFileName = "save.game";
 
     public GameData Load ()
     {
-        string fullPath = Path.Combine (dataDirPath, dataFileName);
+        string fullPath = Path.Combine (DataDirPath, DataFileName);
         GameData loadedData = null;
 
         if (File.Exists(fullPath))
@@ -41,7 +41,7 @@ public class FileDataHandler
 
     public void Save (GameData data)
     {
-        string fullPath = Path.Combine (dataDirPath, dataFileName);
+        string fullPath = Path.Combine (DataDirPath, DataFileName);
 
         try
         {
