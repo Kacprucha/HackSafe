@@ -166,6 +166,4 @@ public class DicionaryAttackLogic : ProgramLogic
                 break;
         }
     }
-
-    
 }

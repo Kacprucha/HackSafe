@@ -28,8 +28,8 @@ public class AptLogic : ProgramLogic
 
                                 break;
 
-                            case "rainbowTables":
-                                programsToInstall.Add (TypeOfProgram.rainbowTables);
+                            case "rainbowAttack":
+                                programsToInstall.Add (TypeOfProgram.rainbowAttack);
 
                                 break;
 

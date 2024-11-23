@@ -7,7 +7,7 @@ using UnityEngine;
 public enum TypeOfProgram
 {
     brutForse = 0,
-    rainbowTables,
+    rainbowAttack,
     dictionaryAttack,
     manInTheMiddle,
     fakeSignature
@@ -187,7 +187,7 @@ public static class TerminalMenager
                 result += 0.58f;
                 break;
 
-            case TypeOfProgram.rainbowTables:
+            case TypeOfProgram.rainbowAttack:
                 result += 3.103f;
                 break;
 
@@ -219,7 +219,7 @@ public static class TerminalMenager
                     result += 0.58f;
                     break;
 
-                case TypeOfProgram.rainbowTables:
+                case TypeOfProgram.rainbowAttack:
                     result += 3.103f;
                     break;
 
@@ -250,7 +250,7 @@ public static class TerminalMenager
                 result += 2.135f;
                 break;
 
-            case TypeOfProgram.rainbowTables:
+            case TypeOfProgram.rainbowAttack:
                 result += 2.413f;
                 break;
 
@@ -282,7 +282,7 @@ public static class TerminalMenager
                     result += 2.135f;
                     break;
 
-                case TypeOfProgram.rainbowTables:
+                case TypeOfProgram.rainbowAttack:
                     result += 2.413f;
                     break;
 
@@ -313,7 +313,7 @@ public static class TerminalMenager
                 result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 bruteForce 3.0-1";
                 break;
 
-            case TypeOfProgram.rainbowTables:
+            case TypeOfProgram.rainbowAttack:
                 result = "http://archive.ubuntu.com/ubuntu focal/universe amd64 rainbowTables 3.0-1";
                 break;
 
@@ -343,7 +343,7 @@ public static class TerminalMenager
                 result = "../3-bruteForce_3.0-1_amd64.deb";
                 break;
 
-            case TypeOfProgram.rainbowTables:
+            case TypeOfProgram.rainbowAttack:
                 result = ".../4-rainbowTables_2.5-1_amd64.deb";
                 break;
 

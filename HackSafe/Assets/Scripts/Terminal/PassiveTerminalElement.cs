@@ -51,11 +51,13 @@ public class PassiveTerminalElement : MonoBehaviour
 
         int lengthOfResponse = textToShow.text.Length;
 
+        if (basicHight == 0)
+            basicHight = parentRectTransform.sizeDelta.y;
+
+        parentRectTransform.sizeDelta = new Vector2 (parentRectTransform.sizeDelta.x, basicHight);
+
         while (isTextOverflowing (lengthOfResponse))
         {
-            if (basicHight == 0)
-                basicHight = parentRectTransform.sizeDelta.y;
-
             parentRectTransform.sizeDelta = new Vector2 (parentRectTransform.sizeDelta.x, parentRectTransform.sizeDelta.y + (basicHight / 2) + 5);
 
             lengthOfResponse -= MaxCharactersInResponse;

@@ -23,7 +23,8 @@ public enum Commands
     Clear,
     DictionaryAttack,
     Exit,
-    ManInTheMiddle
+    ManInTheMiddle,
+    RainbowAttack
 }
 
 public enum TerminalState
@@ -85,6 +86,7 @@ public class TerminalIterpreter : MonoBehaviour
     protected ScpLogic scpLogic;
     protected ManInTheMiddleLogic manInTheMiddleLogic;
     protected FakeSignatureLogic fakeSignatureLogic;
+    protected RainbowAttakcLogic rainbowAttakcLogic;
 
     public delegate void InjectProgramLogicHandler (ProgramLogic programLogic);
     public event InjectProgramLogicHandler OnInjectPorgramLogic;
@@ -281,6 +283,15 @@ public class TerminalIterpreter : MonoBehaviour
                 OnInjectFakeSignatureLogic (fakeSignatureLogic);
                 OnInjectPorgramLogic (fakeSignatureLogic);
             }
+
+            if (rainbowAttakcLogic == null)
+            {
+                GameObject gameObject = new GameObject ("RainbowAttackElement");
+                gameObject.AddComponent<RainbowAttakcLogic> ();
+                gameObject.GetComponent<RainbowAttakcLogic> ().Inicialize (this, playerInputHandler);
+                rainbowAttakcLogic = gameObject.GetComponent<RainbowAttakcLogic> ();
+                OnInjectPorgramLogic (rainbowAttakcLogic);
+            }
         }
 
         if (terminalFileSystem == null)
@@ -335,58 +346,6 @@ public class TerminalIterpreter : MonoBehaviour
         }
 
         return passiveTerminalElement;
-    }
-
-    private void findCommend (string input)
-    {
-        string commend = input.Split (' ')[0];
-
-        switch (commend)
-        {
-            case "cd":
-                currentCommand = Commands.Cd;
-                break;
-
-            case "ls":
-                currentCommand = Commands.Ls;
-                break;
-
-            case "pwd":
-                currentCommand = Commands.Pwd;
-                break;
-
-            case "cp":
-                currentCommand = Commands.Cp;
-                break;
-
-            case "mv":
-                currentCommand = Commands.Mv;
-                break;
-
-            case "rm":
-                currentCommand = Commands.Rm;
-                break;
-
-            case "mkdir":
-                currentCommand = Commands.Mkdir;
-                break;
-
-            case "touch":
-                currentCommand = Commands.Touch;
-                break;
-
-            case "cat":
-                currentCommand = Commands.Cat;
-                break;
-
-            case "spc":
-                currentCommand = Commands.Scp;
-                break;
-
-            case "ssh":
-                currentCommand = Commands.Ssh;
-                break;
-        }
     }
 
     private void findCommendAndAct (string input)
@@ -564,6 +523,10 @@ public class TerminalIterpreter : MonoBehaviour
             case "fakeSignature":
                 fakeSignatureLogic.ContinoueOnFakeSignatureAction (arguments);
                 
+                break;
+
+            case "rainbowAttack":
+                rainbowAttakcLogic.ContinoueOnRainbowTableAction (arguments);
                 break;
 
             default:
