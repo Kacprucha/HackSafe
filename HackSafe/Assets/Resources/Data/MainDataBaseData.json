@@ -1,0 +1,76 @@
+{	
+	"DataSets": [
+		{
+			"Name": "Employees",
+			"Rows": [
+				[
+					"employee_id",
+					"first_name",
+					"last_name",
+					"email",
+					"department",
+					"salary"
+				],
+				[
+					"1",
+					"'Dave'",
+					"'Smith'",
+					"'dave.smith@pc.com'",
+					"'IT'",
+					"'3000pln'"
+				],
+				[
+					"2",
+					"'Arasha'",
+					"'Blake'",
+					"'arasha.blake@pc.com'",
+					"'IT'",
+					"'3000pln'"
+				],
+				[
+					"3",
+					"'Piter'",
+					"'Pelican'",
+					"'piter.pelican@pc.com'",
+					"'Menager'",
+					"'7000pln'"
+				]
+			],
+			"FieldsVisibility": [
+				true, true, false, false, true, false
+			],
+			"RowsVisibility": [
+				true, true, false
+			]
+		},
+		{
+			"Name": "Clients",
+			"Rows": [
+				[
+					"client_id",
+					"client_name",
+					"email",
+					"contact_value"
+				],
+				[
+					"1",
+					"'Super shop'",
+					"'super.shop@emial.com'",
+					"'20 000pln'"
+				],
+				[
+					"2",
+					"'New news'",
+					"'new@news@email.com'",
+					"'70 000pln'"
+				]
+			],
+			"FieldsVisibility": [
+				true, true, false, false
+			],
+			"RowsVisibility": [
+				true, true
+			]
+		}
+	]
+}

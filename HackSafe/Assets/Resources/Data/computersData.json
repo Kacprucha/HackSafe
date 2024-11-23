@@ -1,0 +1,89 @@
+{	
+	"computers": [
+		{
+			"Username": "Main Server",
+			"Password": "",
+			"IsPasswordCracted": false,
+			"LevelOfSecurity": 0,
+			"IsMainComputer": true,
+			"IsDataBased": false,
+			"SystemNodes": [
+				{
+					"Name": "home",
+					"Content": "",
+					"IsDirectory": true,
+					"ParentPath": "/"
+				},
+				{
+					"Name": "MainServer",
+					"Content": "",
+					"IsDirectory": true,
+					"ParentPath": "/home"
+				},
+				{
+					"Name": "documents",
+					"Content": "",
+					"IsDirectory": true,
+					"ParentPath": "/home/MainServer"
+				},
+				{
+					"Name": "notary_public_key.pem",
+					"Content": "",
+					"IsDirectory": false,
+					"IsKeyFile": true,
+					"ParentPath": "/home/MainServer/documents"
+				},
+				{
+					"Name": ".config",
+					"Content": "",
+					"IsDirectory": true,
+					"ParentPath": "/"
+				},
+				{
+					"Name": "system",
+					"Content": "",
+					"IsDirectory": true,
+					"ParentPath": "/.config"
+				},
+				{
+					"Name": "users.txt",
+					"Content": "",
+					"IsDirectory": false,
+					"ParentPath": "/.config/system"
+				}
+			]
+		},
+		{
+			"Username": "Main Data Base",
+			"Password": "",
+			"IsPasswordCracted": false,
+			"LevelOfSecurity": 0,
+			"IsMainComputer": false,
+			"IsDataBased": true
+		},
+		{
+			"Username": "Dave Phone",
+			"Password": "1592",
+			"IP": "192.168.1.69",
+			"IsPasswordCracted": false,
+			"LevelOfSecurity": 1,
+			"IsMainComputer": false,
+			"IsDataBased": false
+		},
+		{
+			"Username": "Arasha PC",
+			"IP": "192.168.1.130",
+			"IsPasswordCracted": false,
+			"LevelOfSecurity": 2,
+			"IsMainComputer": false,
+			"IsDataBased": false
+		},
+		{
+			"Username": "#$^)#$@#)^#!",
+			"IsPasswordCracted": false,
+			"LevelOfSecurity": 3,
+			"IsMainComputer": false,
+			"IsDataBased": false
+		}
+	]
+}

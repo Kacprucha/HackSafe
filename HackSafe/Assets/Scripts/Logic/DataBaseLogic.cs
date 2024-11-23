@@ -24,7 +24,7 @@ public class DataBaseLogic
 
         foreach (string dbName in dbNames)
         {
-            string fullPath = $"{Application.persistentDataPath}/{dbName.Replace (" ", "")}Data.json";
+            string fullPath = $"{Application.dataPath}/Resources/Data/{dbName.Replace (" ", "")}Data.json";
             DataBaseData loadedData = null;
 
             if (File.Exists (fullPath))
@@ -44,7 +44,7 @@ public class DataBaseLogic
 
     public void AddDataBase (string dbName, DataBaseData dbData)
     {
-        dbPaths.Add (dbName, $"URI=file:{Application.persistentDataPath}/{dbName.Replace (" ", "")}.db");
+        dbPaths.Add (dbName, $"URI=file:{Application.dataPath}/Resources/Data/{dbName.Replace (" ", "")}.db");
         crateDataBase (dbName, dbData);
     }
 
