@@ -188,6 +188,8 @@ public class AptLogic : ProgramLogic
             terminalIterpreter.GneratePassiveTermialResponse ("apt install: instalation aborted");
             terminalIterpreter.TerminalState = TerminalState.Normal;
             terminalIterpreter.CurrentCommand = Commands.NotFound;
+
+            stopProgram ("apt");
         }
     }
 
@@ -201,6 +203,8 @@ public class AptLogic : ProgramLogic
         }
         else
         {
+            startProgram ("apt", 0, 5, programsToInstall.Count * 10);
+
             playerInputHandler.ChangeIteractibilityOfInputField (false);
             StartCoroutine (TerminalMenager.GenerateTermianlResponseForInstall (terminalIterpreter, programsToInstall, beforeAproveFaze));
 
@@ -212,5 +216,10 @@ public class AptLogic : ProgramLogic
             terminalIterpreter.TerminalState = TerminalState.Normal;
             terminalIterpreter.CurrentCommand = Commands.NotFound;
         }
+    }
+
+    public void StopProgram ()
+    {
+        stopProgram ("apt");
     }
 }

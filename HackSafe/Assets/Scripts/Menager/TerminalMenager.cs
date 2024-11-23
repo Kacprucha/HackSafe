@@ -132,6 +132,8 @@ public static class TerminalMenager
 
             terminalIterpreter.PlayerInputHandler.ChangeIteractibilityOfInputField (true);
             terminalIterpreter.PlayerInputHandler.ActiveInputField ();
+
+            terminalIterpreter.StopAptProgram ();
         }
     }
 

@@ -17,6 +17,15 @@ public class FakeSignatureOverlay : DraggableOverlay
         generateFileView.gameObject.SetActive (true);
         waitingView.gameObject.SetActive (false);
         savingFileView.gameObject.SetActive (false);
+
+        FakeSignatureLogic.Instance.StartProgram ();
+    }
+
+    public override void CloseOverlay ()
+    {
+        base.CloseOverlay ();
+
+        FakeSignatureLogic.Instance.StopProgram ();
     }
 
     private void OnEnable ()
@@ -39,6 +48,8 @@ public class FakeSignatureOverlay : DraggableOverlay
         generateFileView.OnSentFile -= showWaitingView;
         waitingView.OnFileRecived -= showSavingView;
         savingFileView.OnFileSaved -= fileSaved;
+
+        FakeSignatureLogic.Instance.StopProgram ();
     }
 
     protected void showWaitingView (TreeNode file)
@@ -46,6 +57,8 @@ public class FakeSignatureOverlay : DraggableOverlay
         fileToSign = file;
         generateFileView.gameObject.SetActive (false);
         waitingView.gameObject.SetActive (true);
+
+        FakeSignatureLogic.Instance.UpdateProgram (25, 20, 0);
     }
 
     protected void showSavingView ()
@@ -57,6 +70,15 @@ public class FakeSignatureOverlay : DraggableOverlay
 
     protected void fileSaved ()
     {
-        
+        StartCoroutine (usageForFileSaving ());
+    }
+
+    IEnumerator usageForFileSaving ()
+    {
+        FakeSignatureLogic.Instance.UpdateProgram (10, 10, 30);
+
+        yield return new WaitForSeconds (3f);
+
+        FakeSignatureLogic.Instance.UpdateProgram (10, 10, 0);
     }
 }

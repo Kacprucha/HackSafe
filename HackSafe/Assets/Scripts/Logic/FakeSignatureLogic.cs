@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class FakeSignatureLogic : ProgramLogic
 {
+    public static FakeSignatureLogic Instance { get; private set; }
+
     public delegate void showingOverlayHandler ();
     public event showingOverlayHandler OnShowOverlay;
+
+    public override void Inicialize (TerminalIterpreter terminalIterpreter, InputOperator playerInputHandler)
+    {
+        base.Inicialize (terminalIterpreter, playerInputHandler);
+
+        Instance = this;
+    }
 
     public void ContinoueOnFakeSignatureAction (string[] arguments)
     {
@@ -41,5 +50,20 @@ public class FakeSignatureLogic : ProgramLogic
         {
             terminalIterpreter.GneratePassiveTermialResponse ("Command 'fakeSignature' not found");
         }
+    }
+
+    public void StartProgram ()
+    {
+        startProgram (TypeOfProgram.fakeSignature.ToString (), 20, 10, 0);
+    }
+
+    public void UpdateProgram (int cpu, int ram, int disk)
+    {
+        updateProgram (TypeOfProgram.fakeSignature.ToString (), cpu, ram, disk);
+    }
+
+    public void StopProgram ()
+    {
+        stopProgram (TypeOfProgram.fakeSignature.ToString ());
     }
 }

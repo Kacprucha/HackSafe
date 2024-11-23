@@ -206,6 +206,12 @@ public class TerminalIterpreter : MonoBehaviour
         }
     }
 
+    public void StopAptProgram ()
+    {
+        if (aptLogic != null)
+            aptLogic.StopProgram ();
+    }
+
     protected void inicialize ()
     {
         if (gameState == null && GameState.instance != null)
@@ -263,6 +269,7 @@ public class TerminalIterpreter : MonoBehaviour
                 gameObject.GetComponent<ManInTheMiddleLogic> ().Inicialize (this, playerInputHandler);
                 manInTheMiddleLogic = gameObject.GetComponent<ManInTheMiddleLogic> ();
                 OnInjectManInTheMiddleLogic (manInTheMiddleLogic);
+                OnInjectPorgramLogic (manInTheMiddleLogic);
             }
 
             if (fakeSignatureLogic == null)
@@ -272,6 +279,7 @@ public class TerminalIterpreter : MonoBehaviour
                 gameObject.GetComponent<FakeSignatureLogic> ().Inicialize (this, playerInputHandler);
                 fakeSignatureLogic = gameObject.GetComponent<FakeSignatureLogic> ();
                 OnInjectFakeSignatureLogic (fakeSignatureLogic);
+                OnInjectPorgramLogic (fakeSignatureLogic);
             }
         }
 

@@ -121,4 +121,29 @@ public class ManInTheMiddleLogic : ProgramLogic
         AsociatedTask.SetTaskDone ();
         gameState.MareTaskAsDone (gameState.ActiveQuest.ID, AsociatedTask.ID);
     }
+
+    public void StartProgram ()
+    {
+        startProgram (TypeOfProgram.manInTheMiddle.ToString (), 30, 20, 0);
+    }
+
+    public IEnumerator UpdateProgram (bool isFileDowloading)
+    {
+        if (isFileDowloading)
+        {
+            updateProgram (TypeOfProgram.manInTheMiddle.ToString (), 10, 20, 30);
+            yield return new WaitForSeconds (2.3f);
+            updateProgram (TypeOfProgram.manInTheMiddle.ToString (), 10, 10, 0);
+
+        }
+        else
+        {
+            updateProgram (TypeOfProgram.manInTheMiddle.ToString (), 20, 30, 0);
+        }
+    }
+
+    public void StopProgram ()
+    {
+        stopProgram (TypeOfProgram.manInTheMiddle.ToString ());
+    }
 }

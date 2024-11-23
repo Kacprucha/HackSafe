@@ -146,6 +146,8 @@ public class ManInTheMiddleOverlay : DraggableOverlay
                 if (OnFinishConectingToStream != null)
                     OnFinishConectingToStream ();
 
+                manInTheMiddleLogic.UpdateProgram (manInTheMiddleLogic.AsociatedTask.Comunication != null && manInTheMiddleLogic.AsociatedTask.Comunication.Count > 0);
+
                 afterSuccesfullAtackActions ();
             }
         }
@@ -172,6 +174,8 @@ public class ManInTheMiddleOverlay : DraggableOverlay
             Transform child = dragableElementsContainer.transform.GetChild (i);
             Destroy (child.gameObject);
         }
+
+        manInTheMiddleLogic.StopProgram ();
     }
 
     public void ShowOverlay (Computer compA, Computer compB)
@@ -184,6 +188,13 @@ public class ManInTheMiddleOverlay : DraggableOverlay
         captureFileContainer.SetActive (false);
 
         Inicialize (compA, compB);
+    }
+
+    public override void CloseOverlay ()
+    {
+        base.CloseOverlay ();
+
+        manInTheMiddleLogic.StopProgram ();
     }
 
     public void Inicialize (Computer compA, Computer compB)
@@ -214,6 +225,8 @@ public class ManInTheMiddleOverlay : DraggableOverlay
         {
             OnStartTimer (this, manInTheMiddleLogic.AsociatedTask.TimeForTaks);
         }
+
+        manInTheMiddleLogic.StartProgram ();
     }
 
     protected void generateKies ()
@@ -441,10 +454,10 @@ public class ManInTheMiddleOverlay : DraggableOverlay
                 if (AKey.KeyName == null)
                 {
                     systemMessages.color = errorColor;
-                    systemMessages.text = $"{computerA.Username} close communication. Closing program in 10s!";
+                    systemMessages.text = $"{computerA.Username} close communication. Closing program in 5s!";
 
-                    yield return new WaitForSeconds (30f);
-                    base.CloseOverlay ();
+                    yield return new WaitForSeconds (5f);
+                    CloseOverlay ();
                 }
                 else
                 {
