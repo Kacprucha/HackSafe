@@ -6,12 +6,14 @@ using UnityEngine;
 public class GameplayController : MonoBehaviour, IDataPersistance
 {
     [SerializeField] TopPanel topPanel;
+    [SerializeField] BottomPanel bottomPanel;
 
     [SerializeField] RegisterUserOverlay registerUserOverlay;
     [SerializeField] EmailOverlay emailOverlay;
     [SerializeField] ManInTheMiddleOverlay manInTheMiddleOverlay;
     [SerializeField] TimerOverlay timerOverlay;
     [SerializeField] FakeSignatureOverlay fakeSignatureOverlay;
+    [SerializeField] GlosaryOverlay glosaryOverlay;
 
     [SerializeField] NetworkSymulatorView networkSymulatorView;
     [SerializeField] DataBaseView dataBaseView;
@@ -29,12 +31,13 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     // Start is called before the first frame update
     void Start ()
     {
-        
+
     }
 
     void OnEnable ()
     {
         topPanel.OnMailButtonClicked += ChangeVisibilityOfEmailOverlay;
+        bottomPanel.OnGlosaryButtonClicked += changeStateOfGlosaryOverlay;
 
         registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked += actionOnReadingEmail;
@@ -53,6 +56,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     void OnDisable ()
     {
         topPanel.OnMailButtonClicked -= ChangeVisibilityOfEmailOverlay;
+        bottomPanel.OnGlosaryButtonClicked -= changeStateOfGlosaryOverlay;
 
         registerUserOverlay.OnSaveButtonClicked -= InicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked -= actionOnReadingEmail;
@@ -81,7 +85,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     // Update is called once per frame
     void Update ()
     {
-        
+
     }
 
     public void LoadData (GameData gameData)
@@ -244,7 +248,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         fakeSignatureLogic.OnShowOverlay += fakeSignatureOverlay.ShowOverlay;
     }
 
-    protected void setUpTimer (DraggableOverlay overlay ,float time)
+    protected void setUpTimer (DraggableOverlay overlay, float time)
     {
         timerOverlay.ShowOverlay ();
         timerOverlay.SetTimer (time);
@@ -267,5 +271,17 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     protected void onManInTheMiddleAttackSuccess ()
     {
         timerOverlay.CloseOverlay ();
+    }
+
+    protected void changeStateOfGlosaryOverlay (bool visible)
+    {
+        if (!visible)
+        {
+            glosaryOverlay.ShowOverlay ();
+        }
+        else
+        {
+            glosaryOverlay.CloseOverlay ();
+        }
     }
 }

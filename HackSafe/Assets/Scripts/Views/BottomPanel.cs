@@ -7,12 +7,19 @@ public class BottomPanel : MonoBehaviour
 {
     [SerializeField] Button systemButton;
     [SerializeField] Button notesButton;
+    [SerializeField] Button glosaryButton;
 
     [SerializeField] GameObject systemButtonBackground;
     [SerializeField] GameObject notesButtonBackground;
 
     [SerializeField] GameObject systemPanel;
     [SerializeField] GameObject notesPanel;
+    [SerializeField] GameObject glosary;
+
+    public delegate void GlosaryButtonHandler (bool visible);
+    public event GlosaryButtonHandler OnGlosaryButtonClicked;
+
+    protected bool glosaryVisible = false;
 
     // Start is called before the first frame update
     void Start()
@@ -26,12 +33,17 @@ public class BottomPanel : MonoBehaviour
         {
             notesButton.onClick.AddListener (() => notesButtonClicked ());
         }
+
+        if (glosaryButton != null)
+        {
+            glosaryButton.onClick.AddListener (() => openGlosary ());
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        glosaryVisible = glosary.activeSelf;   
     }
 
     protected void systemButtonClicked ()
@@ -50,5 +62,13 @@ public class BottomPanel : MonoBehaviour
 
         systemPanel.SetActive (false);
         notesPanel.SetActive (true);
+    }
+
+    protected void openGlosary ()
+    {
+        if (OnGlosaryButtonClicked != null)
+        {
+            OnGlosaryButtonClicked (glosaryVisible);
+        }
     }
 }

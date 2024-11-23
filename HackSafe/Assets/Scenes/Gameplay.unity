@@ -6400,6 +6400,7 @@ GameObject:
   m_Component:
   - component: {fileID: 414978905}
   - component: {fileID: 414978906}
+  - component: {fileID: 414978907}
   m_Layer: 5
   m_Name: Glosary Overlay
   m_TagString: Untagged
@@ -6439,6 +6440,22 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &414978907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414978904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8644be87e9909dc4aa0672721089e01b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 984666830}
+  rectTransform: {fileID: 414978905}
+  canvasGroup: {fileID: 414978906}
+  closeButton: {fileID: 465526357}
 --- !u!1 &422425177
 GameObject:
   m_ObjectHideFlags: 0
@@ -7205,6 +7222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 466568171}
   - component: {fileID: 466568172}
+  - component: {fileID: 466568173}
   m_Layer: 5
   m_Name: 'Glossary Button '
   m_TagString: Untagged
@@ -7242,6 +7260,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 466568170}
   m_CullTransparentMesh: 1
+--- !u!114 &466568173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466568170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 668146740}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &467814631
 GameObject:
   m_ObjectHideFlags: 0
@@ -18277,10 +18339,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   systemButton: {fileID: 1849863011}
   notesButton: {fileID: 1264878102}
+  glosaryButton: {fileID: 466568173}
   systemButtonBackground: {fileID: 1364679199}
   notesButtonBackground: {fileID: 1953759109}
   systemPanel: {fileID: 620569185}
   notesPanel: {fileID: 944215147}
+  glosary: {fileID: 414978904}
 --- !u!1 &1103694890
 GameObject:
   m_ObjectHideFlags: 0
@@ -33670,11 +33734,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topPanel: {fileID: 1648587793}
+  bottomPanel: {fileID: 1102808848}
   registerUserOverlay: {fileID: 2019328714}
   emailOverlay: {fileID: 1429707232}
   manInTheMiddleOverlay: {fileID: 777230428}
   timerOverlay: {fileID: 316699994}
   fakeSignatureOverlay: {fileID: 2056483399}
+  glosaryOverlay: {fileID: 414978907}
   networkSymulatorView: {fileID: 1196655157}
   dataBaseView: {fileID: 1780655193}
   systemVariablesView: {fileID: 1102808847}
