@@ -41,8 +41,6 @@ public class NoteMenager : MonoBehaviour
 
     protected void populateLinuxNotes ()
     {
-        LocalizationManager localizationManager = LocalizationManager.Instance;
-
         PlayerInfo player = GameState.instance.GetPlayerInfo ();
         linuxNote.text = "";
         string baseName = "command";
@@ -50,7 +48,7 @@ public class NoteMenager : MonoBehaviour
         for (int i = 0; i < ammountOfLinuxNotes; i++)
         {
             string commandName = baseName + i.ToString ();
-            systemNote.text += localizationManager.GetLocalizedValue (commandName) + "\n";
+            linuxNote.text += LocalizationManager.Instance.GetLocalizedValue (commandName) + "\n";
         }
     }
 }
