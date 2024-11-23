@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class LocalizationManager : MonoBehaviour
 {
     public static LocalizationManager Instance { get; private set; }
 
-    public  static string[] Languages = { "English", "Polski" };
+    public static string[] Languages = { "English", "Polski" };
+    public static string LanguageKey = "language";
     static string pathForLolalizationFile = Path.Combine (Application.dataPath, "Resources/LocalizationData.csv");
 
     public string CurrentLanguage = "English";
@@ -23,6 +25,15 @@ public class LocalizationManager : MonoBehaviour
         else
         {
             Destroy (gameObject);
+        }
+
+        if (PlayerPrefs.HasKey (LanguageKey) && Languages.Contains (PlayerPrefs.GetString(LanguageKey)))
+        {
+            CurrentLanguage = PlayerPrefs.GetString (LanguageKey);
+        }
+        else
+        {
+            PlayerPrefs.SetString (LanguageKey, "English");
         }
 
         LoadLocalizedText ();
