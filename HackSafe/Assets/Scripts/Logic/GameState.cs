@@ -11,8 +11,8 @@ public class GameState
 {
     public static GameState instance { get; private set; }
 
-    static string QuestFilePath = "/Resources/Data/questData.json";
-    static string ComputerInfoFilePath = "/Resources/Data/computersData.json";
+    static string QuestFilePath = "Resources/Data/questData.json";
+    static string ComputerInfoFilePath = "Resources/Data/computersData.json";
 
     public List<Computer> ComapnysComputers { get { return comapnysComputers; } }
     public Quest ActiveQuest { get { return activeQuest; } }
