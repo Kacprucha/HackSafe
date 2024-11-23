@@ -14,6 +14,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     [SerializeField] TimerOverlay timerOverlay;
     [SerializeField] FakeSignatureOverlay fakeSignatureOverlay;
     [SerializeField] GlosaryOverlay glosaryOverlay;
+    [SerializeField] OptionsOverlay optionsOverlay;
 
     [SerializeField] NetworkSymulatorView networkSymulatorView;
     [SerializeField] DataBaseView dataBaseView;
@@ -37,6 +38,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     void OnEnable ()
     {
         topPanel.OnMailButtonClicked += ChangeVisibilityOfEmailOverlay;
+        topPanel.OnSettingsButtonClicked += ChangeVisibilityOfOptionsOverlay;
         bottomPanel.OnGlosaryButtonClicked += changeStateOfGlosaryOverlay;
 
         registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
@@ -56,6 +58,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     void OnDisable ()
     {
         topPanel.OnMailButtonClicked -= ChangeVisibilityOfEmailOverlay;
+        topPanel.OnSettingsButtonClicked -= ChangeVisibilityOfOptionsOverlay;
         bottomPanel.OnGlosaryButtonClicked -= changeStateOfGlosaryOverlay;
 
         registerUserOverlay.OnSaveButtonClicked -= InicializaPlayer;
@@ -136,6 +139,18 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         {
             emailOverlay.ShowOverlay ();
             topPanel.SetMailNotification (false);
+        }
+    }
+
+    void ChangeVisibilityOfOptionsOverlay ()
+    {
+        if (optionsOverlay.gameObject.activeSelf)
+        {
+            optionsOverlay.CloseOverlay ();
+        }
+        else
+        {
+            optionsOverlay.ShowOverlay ();
         }
     }
 

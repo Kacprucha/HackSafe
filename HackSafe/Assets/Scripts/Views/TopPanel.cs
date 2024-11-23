@@ -13,8 +13,11 @@ public class TopPanel : MonoBehaviour
 
     [SerializeField] GameObject mailNotification;
 
-    public delegate void MailButtonTopPanelOverlayHandler ();
-    public event MailButtonTopPanelOverlayHandler OnMailButtonClicked;
+    public delegate void MailButtonHandler ();
+    public event MailButtonHandler OnMailButtonClicked;
+
+    public delegate void SettingsButtonHandler ();
+    public event SettingsButtonHandler OnSettingsButtonClicked;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +25,11 @@ public class TopPanel : MonoBehaviour
         if (mailButton != null)
         {
             mailButton.onClick.AddListener (() => mailButtonClicked ());
+        }
+
+        if (settingsButton != null)
+        {
+            settingsButton.onClick.AddListener (() => settingsButtonClicked ());
         }
     }
 
@@ -38,6 +46,14 @@ public class TopPanel : MonoBehaviour
         if (OnMailButtonClicked != null)
         {
             OnMailButtonClicked ();
+        }
+    }
+
+    void settingsButtonClicked ()
+    {
+        if (OnSettingsButtonClicked != null) 
+        {
+            OnSettingsButtonClicked ();
         }
     }
 }
