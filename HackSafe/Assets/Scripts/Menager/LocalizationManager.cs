@@ -6,12 +6,12 @@ public class LocalizationManager : MonoBehaviour
 {
     public static LocalizationManager Instance { get; private set; }
 
-    //private Dictionary<string, Dictionary<string, string>> localizedText;
-    private Dictionary<string, string> localizedText;
-
-    public string currentLanguage = "English";
-
+    public  static string[] Languages = { "English", "Polski" };
     static string pathForLolalizationFile = Path.Combine (Application.dataPath, "Resources/LocalizationData.csv");
+
+    public string CurrentLanguage = "English";
+
+    private Dictionary<string, string> localizedText;
 
     private void Awake ()
     {
@@ -36,7 +36,7 @@ public class LocalizationManager : MonoBehaviour
         {
             string[] data = File.ReadAllLines (pathForLolalizationFile);
 
-            int languageIndex = getIndexOfLanguage (currentLanguage);
+            int languageIndex = getIndexOfLanguage (CurrentLanguage);
 
             for (int i = 1; i < data.Length; i++)
             {
@@ -58,13 +58,13 @@ public class LocalizationManager : MonoBehaviour
     {
         if (localizedText.ContainsKey (key))
         {
-            if (getIndexOfLanguage (currentLanguage) > 0)
+            if (getIndexOfLanguage (CurrentLanguage) > 0)
             {
                 return localizedText[key];
             }
             else
             {
-                Debug.LogWarning ("Language not found: " + currentLanguage);
+                Debug.LogWarning ("Language not found: " + CurrentLanguage);
                 return key;
             }
         }
@@ -77,7 +77,7 @@ public class LocalizationManager : MonoBehaviour
 
     public void SetLanguage (string language)
     {
-        currentLanguage = language;
+        CurrentLanguage = language;
         LoadLocalizedText ();
     }
 
@@ -91,7 +91,7 @@ public class LocalizationManager : MonoBehaviour
                 result = 1;
                 break;
 
-            case "Polish":
+            case "Polski":
                 result = 2;
                 break;
         }
