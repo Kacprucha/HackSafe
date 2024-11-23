@@ -13,6 +13,10 @@ public class SystemVariablesView : MonoBehaviour
     [SerializeField] Text RAMLabel;
     [SerializeField] Text StorageLabel;
 
+    [SerializeField] Text CPUProgramList;
+    [SerializeField] Text RAMProgramList;
+    [SerializeField] Text StorageProgramList;
+
     static int CPUUsage = 20;
     static int RAMUsage = 10;
     static int StorageUsage = 1;
@@ -40,12 +44,31 @@ public class SystemVariablesView : MonoBehaviour
             float RAM = RAMUsage;
             float Storage = StorageUsage;
 
+            CPUProgramList.text = "";
+            RAMProgramList.text = "";
+            StorageProgramList.text = "";
+
             List<int[]> tempProgrammeUsage = programsUsage.GetRange (0, programsUsage.Count);
-            foreach (int[] programmeUsage in tempProgrammeUsage)
+            for (int i = 0; i < tempProgrammeUsage.Count; i++)
             {
-                CPU += programmeUsage[0];
-                RAM += programmeUsage[1];
-                Storage += programmeUsage[2];
+                CPU += tempProgrammeUsage[i][0];
+                RAM += tempProgrammeUsage[i][1];
+                Storage += tempProgrammeUsage[i][2];
+
+                if (tempProgrammeUsage[i][0] > 0)
+                {
+                    CPUProgramList.text += programs[i] + ": " + tempProgrammeUsage[i][0].ToString () + "%\n";
+                }
+               
+                if (tempProgrammeUsage[i][1] > 0)
+                {
+                    RAMProgramList.text += programs[i] + ": " + tempProgrammeUsage[i][1].ToString () + "%\n";
+                }
+
+                if (tempProgrammeUsage[i][2] > 0)
+                {
+                    StorageProgramList.text += programs[i] + ": " + tempProgrammeUsage[i][2].ToString () + "%\n";
+                }
             }
 
             CPU += Random.Range (1, 4);
