@@ -30,6 +30,10 @@ from_key;From:;Od:
 letter_key;Letter:;List:
 openAttachment_btn_key;Open Attachment;Otwórz Załącznik
 sentFile_btn_key;Sent File;Wyślij Plik
+warningLabel_key;WARNING;OSTRZEŻENIE
+aprove_btn_key;Yes;Tak
+disaporve_btn_key;No;Nie
+exitSystemMEssage_key;Are you sure you want to exit HackSafe system?;Czy na pewno chcesz opuścić HackSafe system?
 taskName_3_1;name 1;nazwa 1
 taskContent_3_1;content 1;wartosc 1
 taskName_3_2;name 2;nazwa 2

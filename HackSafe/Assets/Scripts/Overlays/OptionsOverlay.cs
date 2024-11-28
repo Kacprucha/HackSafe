@@ -100,6 +100,7 @@ public class OptionsOverlay : DraggableOverlay
 
     protected void goBackToMaineMenu ()
     {
+        DataPersistanceMenager.Instance.SaveGame ();
         SceneManager.LoadScene ("MainMenu");
     }
 }

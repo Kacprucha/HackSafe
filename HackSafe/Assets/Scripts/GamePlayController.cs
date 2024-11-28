@@ -15,6 +15,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     [SerializeField] FakeSignatureOverlay fakeSignatureOverlay;
     [SerializeField] GlosaryOverlay glosaryOverlay;
     [SerializeField] OptionsOverlay optionsOverlay;
+    [SerializeField] PopupMessageOverlay popupMessageOverlay;
 
     [SerializeField] NetworkSymulatorView networkSymulatorView;
     [SerializeField] DataBaseView dataBaseView;
@@ -39,6 +40,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     {
         topPanel.OnMailButtonClicked += ChangeVisibilityOfEmailOverlay;
         topPanel.OnSettingsButtonClicked += ChangeVisibilityOfOptionsOverlay;
+        topPanel.OnExitButtonClicked += showPopupMessageOverlay;
         bottomPanel.OnGlosaryButtonClicked += changeStateOfGlosaryOverlay;
 
         registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
@@ -298,5 +300,10 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         {
             glosaryOverlay.CloseOverlay ();
         }
+    }
+
+    protected void showPopupMessageOverlay (string messageKey, Action aproveAction)
+    {
+        popupMessageOverlay.Inicialize (messageKey, aproveAction);
     }
 }

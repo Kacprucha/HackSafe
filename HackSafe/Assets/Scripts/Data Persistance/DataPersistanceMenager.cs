@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DataPersistanceMenager : MonoBehaviour
 {
-    public static DataPersistanceMenager instance { get; private set; }
+    public static DataPersistanceMenager Instance { get; private set; }
 
     private GameData gameData;
     private List<IDataPersistance> dataPersistancesObjects;
@@ -13,12 +13,12 @@ public class DataPersistanceMenager : MonoBehaviour
 
     public DataPersistanceMenager ()
     {
-        if (instance != null)
+        if (Instance != null)
         {
-            Debug.LogError ("More then one Data Persistance MEnager is in the scene!!!");
+            Debug.LogError ("More then one Data Persistance Menager is in the scene!!!");
         }
 
-        instance = this;
+        Instance = this;
     }
 
     private void Start ()
