@@ -3,8 +3,40 @@ brutForse;<i>bruteForce</i> - starts brute force programm;<i>bruteForce</i> - ro
 dictionaryAttack;<i>dictionaryAttack</i> - starts dictionary attack programm;<i>dictionaryAttack</i> - rozpoczyna atak słownikowy
 manInTheMiddle;<i>manInTheMiddle</i> - starts UI for man in the middle attack;<i>manInTheMiddle</i> - uruchamia UI dla ataku man in the middle
 fakeSignature;<i>fakeSignature</i> - starts UI for forgery of notary signature;<i>fakeSignature</i> - uruchamia UI dla podrobienia podpisu notarialnego
+rainbowAttack;<i>rainbowAttack</i> - starts raibow table attack programm;<i>rainbowAttack</i> - rozpoczyna atak z wykorzystaniem tablic tęczowych
 command0;cd - change directory;cd - zmień katalog
 command1;ls - list files;ls - wyświetl listę plików
 command2;ssh - connect to device via ssh protocol;ssh - połącz się z urządzeniem za pomocą protokołu ssh
 command3;scp - copy files from remote machines via ssh;scp - skopiuj pliki ze zdalnych maszyn za pomocą ssh
 command4;mkdir - create directory;mkdir - utwórz katalog
+continoue_key;Continoue game;Kontynuuj gre
+start_key;Start game;Rozpocznij gre
+tasks_key;Tasks;Zadania
+terminal_key;Terminal;Terminal
+system_key;System;System
+notes_key;Notes;Notatki
+glossary_key;Glossary;Glosariusz
+companyNameLabel_key;View of a {0} company network;"Widok sieci firmy ""{0}"""
+options_key;Options;Opcje
+language_key;Language;Język
+saveChanges_btn_key;Save changes;Zapisz zmiany
+warrningSaveLabel_key;Warning! After saving changes system will have to reload proceed with conscious!;Ostrzeżenie! Po zapisaniu zmian system będzie musiał zostać ponownie załadowany, kontynuuj świadomie!
+exitToMenu_btn_key;Exit to menu;Wyjdź do meni
+yourNotes_key;Your Notes;Twoje Notatki
+systemNotes_key;System Notes;Noty Systemowe
+linuxNotes_key;Linux Notes;Noty Linuxowe
+subject_key;Subject:;Tytuł:
+from_key;From:;Od:
+letter_key;Letter:;List:
+openAttachment_btn_key;Open Attachment;Otwórz Załącznik
+sentFile_btn_key;Sent File;Wyślij Plik
+taskName_3_1;name 1;nazwa 1
+taskContent_3_1;content 1;wartosc 1
+taskName_3_2;name 2;nazwa 2
+taskContent_3_2;content 2;wartosc 2
+taskName_3_3;name 3;nazwa 3
+taskContent_3_3;content 3;wartosc 3
+taskName_3_4;name 4;nazwa 4
+taskContent_3_4;content 4;wartosc 4
+taskName_3_5;name 5;nazwa 5
+taskContent_3_5;content 5;wartosc 5

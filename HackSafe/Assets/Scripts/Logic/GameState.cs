@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Purchasing;
 
 [Serializable]
 public class GameState
@@ -14,6 +14,7 @@ public class GameState
     static string QuestFilePath = "Resources/Data/questData.json";
     static string ComputerInfoFilePath = "Resources/Data/computersData.json";
 
+    public string CompanyName { get; private set; }
     public List<Computer> ComapnysComputers { get { return comapnysComputers; } }
     public Quest ActiveQuest { get { return activeQuest; } }
 
@@ -137,6 +138,7 @@ public class GameState
         activeQuest = quest;
         player.ActiveQuestID = quest.ID;
     }
+
     private void loadCompanyComputerData ()
     {
         string fullPath = Path.Combine (Application.dataPath, ComputerInfoFilePath);
@@ -151,9 +153,9 @@ public class GameState
 
         comapnysComputers = new List<Computer> ();
 
-        if (loadedData != null && loadedData.computers != null && loadedData.computers.Count > 0)
+        if (loadedData != null && loadedData.Computers != null && loadedData.Computers.Count > 0)
         {
-            foreach (ComputerData computerData in loadedData.computers)
+            foreach (ComputerData computerData in loadedData.Computers)
             {
                 Computer computer = new Computer (
                                                 computerData.Username, 
@@ -181,6 +183,15 @@ public class GameState
             comapnysComputers.Add (new Computer ("Dave phone", 1, false, "1592"));
             comapnysComputers.Add (new Computer ("Arasha PC", 2, false));
             comapnysComputers.Add (new Computer ("#$^)#$@#)^#!", 3, false));
+        }
+
+        if (loadedData.CompanyName != null && loadedData.CompanyName.NullIfEmpty () != null)
+        {
+            CompanyName = loadedData.CompanyName;
+        }
+        else
+        {
+            CompanyName = NetworkSymulatorView.DefoultNetworkTitle;
         }
     }
 

@@ -1,28 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NetworkSymulatorView : MonoBehaviour
 {
     [SerializeField] RectTransform networkSpace;
     [SerializeField] GameObject nodePrefab;
 
-    protected List<GameObject> elementsInNetworkSpace = new List<GameObject> ();
+    [SerializeField] Text networkTitle;
+
+    public static string DefoultNetworkTitle = "\"Potato\"";
 
     protected static float minRadius = 120f;
     protected static float maxRadius = 125f;
     protected static float minDistanceBetweenObjects = 50f;
 
+    public static string labelKey = "companyNameLabel_key";
+
+    protected List<GameObject> elementsInNetworkSpace = new List<GameObject> ();
+
     // Start is called before the first frame update
     void Start ()
     {
-
+        updateNetworkTitle ();
     }
 
     // Update is called once per frame
     void Update ()
     {
-
+        
     }
 
     public void GenerateCommpanyLayOut ()
@@ -74,6 +82,24 @@ public class NetworkSymulatorView : MonoBehaviour
 
             newNode.GetComponent<NetworkNodeView> ().Inicialize (computer, color);
             elementsInNetworkSpace.Add (newNode);
+
+            updateNetworkTitle ();
+        }
+    }
+
+    protected void updateNetworkTitle ()
+    {
+        if (GameState.instance != null)
+        {
+            GameState gameState = GameState.instance;
+            string networkNameText = LocalizationManager.Instance.GetLocalizedValue (labelKey);
+
+            string comapnyName = gameState.CompanyName;
+
+            if (comapnyName.NullIfEmpty () == null)
+                comapnyName = DefoultNetworkTitle;
+
+            networkTitle.text = string.Format (networkNameText, gameState.CompanyName);
         }
     }
 }

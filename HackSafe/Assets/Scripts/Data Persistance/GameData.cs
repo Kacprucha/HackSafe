@@ -61,7 +61,8 @@ public class _Dictionary <K, V>
 [Serializable]
 public class ComputerList
 {
-    public List<ComputerData> computers;
+    public string CompanyName;
+    public List<ComputerData> Computers;
 }
 
 [Serializable]

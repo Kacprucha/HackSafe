@@ -49,8 +49,8 @@ public class Task
     public Task (TaskData taskData, int id)
     {
         ID = id;
-        this.taskName = taskData.Name;
-        this.taskDescription = taskData.Description;
+        this.taskName = LocalizationManager.Instance.GetLocalizedValue (taskData.Name);
+        this.taskDescription = LocalizationManager.Instance.GetLocalizedValue (taskData.Description);
         this.timeForTaks = taskData.TimeForTask;
 
         this.TaskType = (TaskType)taskData.Type;

@@ -60,20 +60,20 @@
 			"FinalCondition": 4,
 			"Tasks": [
 				{
-					"Name": "Install manInTheMiddle",
-					"Description": "First you need to install manInTheMiddle program.",
+					"Name": "taskName_3_1",
+					"Description": "taskContent_3_1",
 					"Type": 2,
 					"Program": 3
 				},
 				{
-					"Name": "Install fakeSignature",
-					"Description": "First you need to install fakeSignature program.",
+					"Name": "taskName_3_2",
+					"Description": "taskContent_3_2",
 					"Type": 2,
 					"Program": 4
 				},
 				{
-					"Name": "Get controll of the stream",
-					"Description": "Make an man in the middle attack on Arasha and Dave devices",
+					"Name": "taskName_3_3",
+					"Description": "taskContent_3_3",
 					"Type": 4,
 					"A_IP": "192.168.1.130",
 					"B_IP": "192.168.1.69",
@@ -87,8 +87,8 @@
 					"TimeForTask": 120
 				},
 				{
-					"Name": "Signe new file",
-					"Description": "Use fakeSigne program to signe document you got. Use notary public key. It should be somwher public.",
+					"Name": "taskName_3_4",
+					"Description": "taskContent_3_4",
 					"Type": 9,
 					"File":
 						{
@@ -100,8 +100,8 @@
 						}
 				},
 				{
-					"Name": "Sent signed file to Dave",
-					"Description": "Using established conection sent newly signed file to Dave.",
+					"Name": "taskName_3_5",
+					"Description": "taskContent_3_5",
 					"Type": 8,
 					"File":
 						{
