@@ -1,46 +1,72 @@
-﻿Key;English;Polski
-brutForse;<i>bruteForce</i> - starts brute force programm;<i>bruteForce</i> - rozpoczyna atak typu brute force
-dictionaryAttack;<i>dictionaryAttack</i> - starts dictionary attack programm;<i>dictionaryAttack</i> - rozpoczyna atak słownikowy
-manInTheMiddle;<i>manInTheMiddle</i> - starts UI for man in the middle attack;<i>manInTheMiddle</i> - uruchamia UI dla ataku man in the middle
-fakeSignature;<i>fakeSignature</i> - starts UI for forgery of notary signature;<i>fakeSignature</i> - uruchamia UI dla podrobienia podpisu notarialnego
-rainbowAttack;<i>rainbowAttack</i> - starts raibow table attack programm;<i>rainbowAttack</i> - rozpoczyna atak z wykorzystaniem tablic tęczowych
-command0;cd - change directory;cd - zmień katalog
-command1;ls - list files;ls - wyświetl listę plików
-command2;ssh - connect to device via ssh protocol;ssh - połącz się z urządzeniem za pomocą protokołu ssh
-command3;scp - copy files from remote machines via ssh;scp - skopiuj pliki ze zdalnych maszyn za pomocą ssh
-command4;mkdir - create directory;mkdir - utwórz katalog
-continoue_key;Continoue game;Kontynuuj gre
-start_key;Start game;Rozpocznij gre
-tasks_key;Tasks;Zadania
-terminal_key;Terminal;Terminal
-system_key;System;System
-notes_key;Notes;Notatki
-glossary_key;Glossary;Glosariusz
-companyNameLabel_key;View of a {0} company network;"Widok sieci firmy ""{0}"""
-options_key;Options;Opcje
-language_key;Language;Język
-saveChanges_btn_key;Save changes;Zapisz zmiany
-warrningSaveLabel_key;Warning! After saving changes system will have to reload proceed with conscious!;Ostrzeżenie! Po zapisaniu zmian system będzie musiał zostać ponownie załadowany, kontynuuj świadomie!
-exitToMenu_btn_key;Exit to menu;Wyjdź do meni
-yourNotes_key;Your Notes;Twoje Notatki
-systemNotes_key;System Notes;Noty Systemowe
-linuxNotes_key;Linux Notes;Noty Linuxowe
-subject_key;Subject:;Tytuł:
-from_key;From:;Od:
-letter_key;Letter:;List:
-openAttachment_btn_key;Open Attachment;Otwórz Załącznik
-sentFile_btn_key;Sent File;Wyślij Plik
-warningLabel_key;WARNING;OSTRZEŻENIE
-aprove_btn_key;Yes;Tak
-disaporve_btn_key;No;Nie
-exitSystemMEssage_key;Are you sure you want to exit HackSafe system?;Czy na pewno chcesz opuścić HackSafe system?
-taskName_3_1;name 1;nazwa 1
-taskContent_3_1;content 1;wartosc 1
-taskName_3_2;name 2;nazwa 2
-taskContent_3_2;content 2;wartosc 2
-taskName_3_3;name 3;nazwa 3
-taskContent_3_3;content 3;wartosc 3
-taskName_3_4;name 4;nazwa 4
-taskContent_3_4;content 4;wartosc 4
-taskName_3_5;name 5;nazwa 5
-taskContent_3_5;content 5;wartosc 5
+﻿Key;English;Polski;;
+brutForse;<i>bruteForce</i> - starts brute force programm;<i>bruteForce</i> - rozpoczyna atak typu brute force;;
+dictionaryAttack;<i>dictionaryAttack</i> - starts dictionary attack programm;<i>dictionaryAttack</i> - rozpoczyna atak słownikowy;;
+manInTheMiddle;<i>manInTheMiddle</i> - starts UI for man in the middle attack;<i>manInTheMiddle</i> - uruchamia UI dla ataku man in the middle;;
+fakeSignature;<i>fakeSignature</i> - starts UI for forgery of notary signature;<i>fakeSignature</i> - uruchamia UI dla podrobienia podpisu notarialnego;;
+rainbowAttack;<i>rainbowAttack</i> - starts raibow table attack programm;<i>rainbowAttack</i> - rozpoczyna atak z wykorzystaniem tablic tęczowych;;
+command0;cd - change directory;cd - zmień katalog;;
+command1;ls - list files;ls - wyświetl listę plików;;
+command2;ssh - connect to device via ssh protocol;ssh - połącz się z urządzeniem za pomocą protokołu ssh;;
+command3;scp - copy files from remote machines via ssh;scp - skopiuj pliki ze zdalnych maszyn za pomocą ssh;;
+command4;mkdir - create directory;mkdir - utwórz katalog;;
+continoue_key;Continoue game;Kontynuuj gre;;
+start_key;Start game;Rozpocznij gre;;
+tasks_key;Tasks;Zadania;;
+terminal_key;Terminal;Terminal;;
+system_key;System;System;;
+notes_key;Notes;Notatki;;
+glossary_key;Glossary;Glosariusz;;
+companyNameLabel_key;View of a {0} company network;"Widok sieci firmy ""{0}""";;
+options_key;Options;Opcje;;
+language_key;Language;Język;;
+saveChanges_btn_key;Save changes;Zapisz zmiany;;
+warrningSaveLabel_key;Warning! After saving changes system will have to reload proceed with conscious!;Ostrzeżenie! Po zapisaniu zmian system będzie musiał zostać ponownie załadowany, kontynuuj świadomie!;;
+exitToMenu_btn_key;Exit to menu;Wyjdź do meni;;
+yourNotes_key;Your Notes;Twoje Notatki;;
+systemNotes_key;System Notes;Noty Systemowe;;
+linuxNotes_key;Linux Notes;Noty Linuxowe;;
+subject_key;Subject:;Tytuł:;;
+from_key;From:;Od:;;
+letter_key;Letter:;List:;;
+openAttachment_btn_key;Open Attachment;Otwórz Załącznik;;
+sentFile_btn_key;Sent File;Wyślij Plik;;
+warningLabel_key;WARNING;OSTRZEŻENIE;;
+aprove_btn_key;Yes;Tak;;
+disaporve_btn_key;No;Nie;;
+exitSystemMEssage_key;Are you sure you want to exit HackSafe system?;Czy na pewno chcesz opuścić HackSafe system?;;
+cdCommand_title;cd comment;Polecenie cd;;
+cdCommand_content_1;cd: The cd command will allow you to change directories. When you open a terminal you will be in your home directory. To move around the file system you will use cd. Examples: ;cd: Polecenie cd umożliwia zmianę katalogów. Po otwarciu terminala znajdziesz się w swoim katalogu domowym. Aby poruszać się po systemie plików, użyj polecenia cd. Przykłady:;;
+cdCommand_content_2;To navigate into the root directory, use $ cd / ;Aby przejść do katalogu głównego, użyj polecenia $ cd /;;
+cdCommand_content_3;To navigate to your home directory, use $ cd ;Aby przejść do katalogu domowego, użyj polecenia $ cd;;
+cdCommand_content_4;To navigate up one directory level, use $ cd .. ;Aby przejść o jeden poziom wyżej w katalogu, użyj polecenia $cd;;
+cdCommand_content_5;To navigate through multiple levels of directory at once, specify the full directory path that you want to go to. For example, use, $ cd /var/www to go directly to the /www subdirectory of /var/.;Aby przejść przez wiele poziomów katalogu jednocześnie, określ pełną ścieżkę do katalogu, do którego chcesz przejść. Na przykład użyj polecenia  $ cd /var/www, aby przejść bezpośrednio do podkatalogu /www w katalogu /var/.;;
+lsCommand_title;ls commend;Polecenie ls;;
+lsCommand_content;The ls command writes to standard output the contents of each specified Directory parameter or the name of each specified File parameter. If you do not specify a File or Directory parameter, the ls command displays the contents of the current directory.;Polecenie ls wyświetla na standardowym wyjściu zawartość każdego określonego w parametrach katalogu lub nazwę każdego określonego parametrem pliku. Jeżeli nie określono w parametrach pliku lub katalogu, polecenie ls wyświetla zawartość bieżącego katalogu.;;
+catCommand_title;cat commend;Polecenie cat;;
+catCommand_content_1;The cat command reads each File parameter in sequence and writes it to standard output. To display a file at the workstation, enter:;Polecenie cat odczytuje każdy parametr pliku w sekwencji i wypisuje go na standardowym wyjściu. Aby wyświetlić plik na stacji roboczej, wprowadź:;;
+catCommand_content_2;$ cat notes;$ cat notes;;
+catCommand_content_3;This command displays the data in the notes file.;To polecenie wyświetla dane w pliku notes.;;
+sshCommand_title;ssh commend;Polecenie ssh;;
+sshCommand_content_1;ssh (SSH client) is a program for logging into a remote machine and for executing commands on a remote machine. It is intended to provide secure encrypted communications between two untrusted hosts over an insecure network. X11 connections, arbitrary TCP ports and UNIX-domain sockets can also be forwarded over the secure channel.;ssh (SSH client) to program do logowania się do zdalnej maszyny i wykonywania poleceń na zdalnej maszynie. Jego celem jest zapewnienie bezpiecznej szyfrowanej komunikacji między dwoma niezaufanymi hostami przez niezabezpieczoną sieć. Połączenia X11, dowolne porty TCP i gniazda domeny UNIX mogą być również przekazywane przez bezpieczny kanał.;;
+sshCommand_content_2;ssh connects and logs into the specified destination, which is specified as user@host_ip. The user must prove their identity to the remote machine using password.;ssh łączy się i loguje do określonego miejsca docelowego, które jest określone jako user@host_ip. Użytkownik musi udowodnić swoją tożsamość zdalnej maszynie za pomocą hasła.;;
+scpCommand_title;scp command;Polecenie scp;;
+scpCommand_content_1;scp copies files between hosts on a network. It uses ssh for data transfer, and uses the same authentication and provides the same security as ssh. scp will ask for passwords or passphrases if they are needed for authentication.;scp kopiuje pliki między hostami w sieci. Używa ssh do przesyłania danych i używa tego samego uwierzytelniania i zapewnia takie samo bezpieczeństwo jak ssh. scp poprosi o hasła lub frazy-hasła, jeśli są potrzebne do uwierzytelnienia.;;
+scpCommand_content_2;Examples:;Przykłady:;;
+scpCommand_content_3;Copy the file foobar.txt from a remote host to the local host:;Skopiuj plik foobar.txt ze zdalnego hosta na lokalny:;;
+scpCommand_content_4;$ scp your_username@remotehost.edu:foobar.txt /some/local/directory;$ scp your_username@remotehost.edu:foobar.txt /some/local/directory;;
+scpCommand_content_5;"Copy the file \""foobar.txt\"" from the local host to a remote host:";Skopiuj plik foobar.txt z lokalnego hosta na zdalny host:;;
+scpCommand_content_6;$ scp foobar.txt your_username@remotehost.edu:/some/remote/directory;$ scp foobar.txt your_username@remotehost.edu:/some/remote/directory;;
+mkdirCommand_title;mkdir command;Polecenie mkdir;;
+mkdirCommand_content_1;The mkdir command creates one or more new directories specified by the Directory parameter.;Polecenie mkdir tworzy jeden lub więcej nowych katalogów określonych przez parametr Directory.;;
+mkdirCommand_content_2;To create a new directory called Test in the current working directory, enter:;Aby utworzyć nowy katalog o nazwie Test w bieżącym katalogu roboczym, należy wywołać polecenie:;;
+mkdirCommand_content_3;$ mkdir Test;$ mkdir Test;;
+taskName_3_1;name 1;nazwa 1;;
+taskContent_3_1;content 1;wartosc 1;;
+taskName_3_2;name 2;nazwa 2;;
+taskContent_3_2;content 2;wartosc 2;;
+taskName_3_3;name 3;nazwa 3;;
+taskContent_3_3;content 3;wartosc 3;;
+taskName_3_4;name 4;nazwa 4;;
+taskContent_3_4;content 4;wartosc 4;;
+taskName_3_5;name 5;nazwa 5;;
+taskContent_3_5;content 5;wartosc 5;;
