@@ -21,11 +21,16 @@ public class TopPanel : MonoBehaviour
     public delegate void SettingsButtonHandler ();
     public event SettingsButtonHandler OnSettingsButtonClicked;
 
+    public delegate void HomeButtonHandler ();
+    public event HomeButtonHandler OnHomeButtonClicked;
+
     public delegate void ExitButtonHandler (string messageKey, Action aproveAction);
     public event ExitButtonHandler OnExitButtonClicked;
 
     protected static string exitMessageKey = "exitSystemMEssage_key";
     protected Color savingColor = new Color (0.2313726f, 0.9254902f, 0.2705882f, 1);
+
+    protected bool mailButtonAnimating = false;
 
     // Start is called before the first frame update
     void Start()
@@ -49,13 +54,28 @@ public class TopPanel : MonoBehaviour
         {
             saveButton.onClick.AddListener (() => saveButtonClicked ());
         }
+
+        if (homeButton != null)
+        {
+            homeButton.onClick.AddListener (() => homeButtonClicked ());
+        }
     }
 
-    public void SetMailNotification (bool state)
+    private void Update ()
     {
-        if (mailNotification != null)
+        GameState gameState = GameState.instance;
+
+        if (gameState != null && gameState.GetPlayerInfo () != null)
         {
-            mailNotification.SetActive (state);
+            foreach (Email email in gameState.GetPlayerInfo ().RecivedEmails)
+            {
+                if (!email.EmailRead && !mailButtonAnimating)
+                {
+                    mailButtonAnimating = true;
+                    StartCoroutine (smoothColorTransition (mailButton.gameObject.GetComponent<Image> (), Color.red, Color.black, 1f, true));
+                    return;
+                }
+            }
         }
     }
 
@@ -91,13 +111,21 @@ public class TopPanel : MonoBehaviour
         StartCoroutine (smoothColorTransition (saveButton.gameObject.GetComponent<Image> (), savingColor, Color.black, 0.8f));
     }
 
+    void homeButtonClicked ()
+    {
+        if (OnHomeButtonClicked != null)
+        {
+            OnHomeButtonClicked ();
+        }
+    }
+
     protected void onExitButtonActionProceed ()
     {
         DataPersistanceMenager.Instance.SaveGame ();
         SceneManager.LoadScene ("MainMenu");
     }
 
-    protected IEnumerator smoothColorTransition (Image targetImage, Color fromColor, Color toColor, float transitionTime)
+    protected IEnumerator smoothColorTransition (Image targetImage, Color fromColor, Color toColor, float transitionTime, bool isItMailButton = false)
     {
         float elapsedTime = 0f;
 
@@ -109,5 +137,8 @@ public class TopPanel : MonoBehaviour
         }
 
         targetImage.color = toColor;
+
+        if (isItMailButton)
+            mailButtonAnimating = false;
     }
 }

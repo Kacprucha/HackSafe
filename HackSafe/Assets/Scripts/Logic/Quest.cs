@@ -92,17 +92,24 @@ public class Quest
     {
         bool result = false;
 
-        foreach (Task task in tasks)
+        if (tasks != null && tasks.Count > 0)
         {
-            if (task.IsDone)
+            foreach (Task task in tasks)
             {
-                result = true;
+                if (task.IsDone)
+                {
+                    result = true;
+                }
+                else
+                {
+                    result = false;
+                    break;
+                }
             }
-            else
-            {
-                result = false;
-                break;
-            }
+        }
+        else
+        {
+            result = true;
         }
 
         switch (finalCondition)

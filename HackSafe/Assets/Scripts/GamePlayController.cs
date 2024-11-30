@@ -16,6 +16,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     [SerializeField] GlosaryOverlay glosaryOverlay;
     [SerializeField] OptionsOverlay optionsOverlay;
     [SerializeField] PopupMessageOverlay popupMessageOverlay;
+    [SerializeField] TutorialOverlay tutorialOverlay;
 
     [SerializeField] NetworkSymulatorView networkSymulatorView;
     [SerializeField] DataBaseView dataBaseView;
@@ -38,16 +39,18 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
     void OnEnable ()
     {
-        topPanel.OnMailButtonClicked += ChangeVisibilityOfEmailOverlay;
-        topPanel.OnSettingsButtonClicked += ChangeVisibilityOfOptionsOverlay;
+        topPanel.OnMailButtonClicked += changeVisibilityOfEmailOverlay;
+        topPanel.OnSettingsButtonClicked += changeVisibilityOfOptionsOverlay;
         topPanel.OnExitButtonClicked += showPopupMessageOverlay;
+        topPanel.OnHomeButtonClicked += changeVisibilityOfOverlay;
         bottomPanel.OnGlosaryButtonClicked += changeStateOfGlosaryOverlay;
 
-        registerUserOverlay.OnSaveButtonClicked += InicializaPlayer;
+        registerUserOverlay.OnSaveButtonClicked += inicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked += actionOnReadingEmail;
         manInTheMiddleOverlay.OnStartTimer += setUpTimer;
         manInTheMiddleOverlay.OnFinishConectingToStream += onManInTheMiddleAttackSuccess;
         timerOverlay.OnFinishCounting += onTimerFinish;
+        tutorialOverlay.OnTutorialFirstClosed += onTutorialClosedForFirstTime;
 
         tasksListView.OnQuestDone += onQuestTasksDone;
 
@@ -59,15 +62,18 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
     void OnDisable ()
     {
-        topPanel.OnMailButtonClicked -= ChangeVisibilityOfEmailOverlay;
-        topPanel.OnSettingsButtonClicked -= ChangeVisibilityOfOptionsOverlay;
+        topPanel.OnMailButtonClicked -= changeVisibilityOfEmailOverlay;
+        topPanel.OnSettingsButtonClicked -= changeVisibilityOfOptionsOverlay;
+        topPanel.OnExitButtonClicked -= showPopupMessageOverlay;
+        topPanel.OnHomeButtonClicked -= changeVisibilityOfOverlay;
         bottomPanel.OnGlosaryButtonClicked -= changeStateOfGlosaryOverlay;
 
-        registerUserOverlay.OnSaveButtonClicked -= InicializaPlayer;
+        registerUserOverlay.OnSaveButtonClicked -= inicializaPlayer;
         emailOverlay.OnSetEmailViewButtonClicked -= actionOnReadingEmail;
         manInTheMiddleOverlay.OnStartTimer -= setUpTimer;
         manInTheMiddleOverlay.OnFinishConectingToStream -= onManInTheMiddleAttackSuccess;
         timerOverlay.OnFinishCounting -= onTimerFinish;
+        tutorialOverlay.OnTutorialFirstClosed -= onTutorialClosedForFirstTime;
 
         tasksListView.OnQuestDone -= onQuestTasksDone;
 
@@ -108,6 +114,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         }
         else
         {
+            PlayerPrefs.SetInt (TutorialOverlay.TutorialKey, 0);
             registerUserOverlay.gameObject.SetActive (true);
         }
     }
@@ -120,7 +127,7 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         }
     }
 
-    void InicializaPlayer (string username, string password)
+    protected void inicializaPlayer (string username, string password)
     {
         gameState = new GameState (username, password);
 
@@ -128,10 +135,10 @@ public class GameplayController : MonoBehaviour, IDataPersistance
 
         registerUserOverlay.gameObject.SetActive (false);
 
-        checkIfEmailIsNeededToBeSent ();
+        tutorialOverlay.ShowOverlay ();
     }
 
-    void ChangeVisibilityOfEmailOverlay ()
+    protected void changeVisibilityOfEmailOverlay ()
     {
         if (emailOverlay.gameObject.activeSelf)
         {
@@ -140,11 +147,10 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         else
         {
             emailOverlay.ShowOverlay ();
-            topPanel.SetMailNotification (false);
         }
     }
 
-    void ChangeVisibilityOfOptionsOverlay ()
+    protected void changeVisibilityOfOptionsOverlay ()
     {
         if (optionsOverlay.gameObject.activeSelf)
         {
@@ -183,15 +189,13 @@ public class GameplayController : MonoBehaviour, IDataPersistance
         int minute = currentTime.Minute;
         string formattedDate = currentTime.ToString ("dd.MM.yyyy");
 
-        Quest firstQuest = gameState.GetQuestOfId (emailID);
-        EmailData emailData = firstQuest.EmailData;
+        Quest quest = gameState.GetQuestOfId (emailID);
+        EmailData emailData = quest.EmailData;
 
         emailData.Day = formattedDate;
         emailData.Time = hour.ToString ("00") + ":" + minute.ToString ("00");
 
         gameState.GetPlayerInfo ().RecivedEmails.Add (EmailMenager.GetEmailFromeData (emailData));
-
-        topPanel.SetMailNotification (true);
 
         yield return new WaitForEndOfFrame ();
     }
@@ -305,5 +309,22 @@ public class GameplayController : MonoBehaviour, IDataPersistance
     protected void showPopupMessageOverlay (string messageKey, Action aproveAction)
     {
         popupMessageOverlay.Inicialize (messageKey, aproveAction);
+    }
+
+    protected void changeVisibilityOfOverlay ()
+    {
+        if (tutorialOverlay.gameObject.activeSelf)
+        {
+            tutorialOverlay.CloseOverlay ();
+        }
+        else
+        {
+            tutorialOverlay.ShowOverlay ();
+        }
+    }
+
+    protected void onTutorialClosedForFirstTime ()
+    {
+        checkIfEmailIsNeededToBeSent ();
     }
 }

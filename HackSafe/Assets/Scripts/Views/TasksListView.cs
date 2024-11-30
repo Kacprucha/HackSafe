@@ -12,7 +12,7 @@ public class TasksListView : MonoBehaviour
 
     protected List<TaskView> tasksViews = new List<TaskView> ();
     protected List<Task> tasksData = new List<Task> ();
-    protected bool questMArkedAsDone = false;
+    protected bool questMarkedAsDone = false;
 
     public delegate void QuestTasksDoneHandler (int questID);
     public event QuestTasksDoneHandler OnQuestDone;
@@ -26,28 +26,31 @@ public class TasksListView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (tasksData.Count > 0)
+        if (GameState.instance != null && GameState.instance.ActiveQuest != null)
         {
-            foreach (Task task in tasksData)
+            if (tasksData.Count > 0)
             {
-                task.CheckIfConditionsMet ();
-                if (task.IsDone)
+                foreach (Task task in tasksData)
                 {
-                    tasksViews[task.ID].MarkAsDone ();
+                    task.CheckIfConditionsMet ();
+                    if (task.IsDone)
+                    {
+                        tasksViews[task.ID].MarkAsDone ();
+                    }
                 }
             }
 
-            if (GameState.instance.ActiveQuest.ChceckIfQuestIsFinished () && !questMArkedAsDone && OnQuestDone != null)
+            if (GameState.instance.ActiveQuest.ChceckIfQuestIsFinished () && !questMarkedAsDone && OnQuestDone != null)
             {
                 OnQuestDone (GameState.instance.ActiveQuest.ID);
-                questMArkedAsDone = true;
+                questMarkedAsDone = true;
             }
         }
     }
 
     public void CrateTaskElements (List<Task> tasks)
     {
-        questMArkedAsDone = false;
+        questMarkedAsDone = false;
 
         if (this.tasksViews.Count > 0)
         {

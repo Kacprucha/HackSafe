@@ -10,7 +10,7 @@ public class DraggableOverlay : MonoBehaviour, /*IPointerDownHandler,*/ IBeginDr
     [SerializeField] RectTransform rectTransform;
     [SerializeField] CanvasGroup canvasGroup;
 
-    [SerializeField] Button closeButton;
+    [SerializeField] public Button closeButton;
 
     virtual public void Start ()
     {
