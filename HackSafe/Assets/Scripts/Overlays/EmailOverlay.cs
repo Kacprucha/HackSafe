@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,7 @@ public class EmailOverlay : DraggableOverlay
     [SerializeField] Text emailContentLetter;
 
     protected List<EmailView> emailViews = new List<EmailView>();
+    protected int numberOfEmailsWhenEnabled = 0;
 
     public delegate void SetEmailViewButtonHandler (int emialID, bool emailRead);
     public event SetEmailViewButtonHandler OnSetEmailViewButtonClicked;
@@ -32,6 +34,33 @@ public class EmailOverlay : DraggableOverlay
     }
 
     private void OnEnable ()
+    {
+        loadRecivedEmails ();
+        numberOfEmailsWhenEnabled = emailViews.Count;
+    }
+
+    private void OnDisable ()
+    {
+        destroyRecivedEmails ();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        GameState gameState = GameState.instance;
+
+        if (gameState != null && gameState.GetPlayerInfo () != null)
+        {
+            if (numberOfEmailsWhenEnabled > 0 && gameState.GetPlayerInfo ().RecivedEmails.Count > numberOfEmailsWhenEnabled)
+            {
+                destroyRecivedEmails ();
+                loadRecivedEmails ();
+                numberOfEmailsWhenEnabled = emailViews.Count;
+            }
+        }
+    }
+
+    protected void loadRecivedEmails ()
     {
         GameState gameState = GameState.instance;
 
@@ -61,7 +90,7 @@ public class EmailOverlay : DraggableOverlay
         }
     }
 
-    private void OnDisable ()
+    protected void destroyRecivedEmails ()
     {
         List<EmailView> temp = new List<EmailView> ();
         temp = emailViews.GetRange (0, emailViews.Count);
@@ -73,12 +102,6 @@ public class EmailOverlay : DraggableOverlay
             emailView.OnMainComponentButtonClicked -= emailViewButtonClicked;
             Destroy (emailView.gameObject);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     protected void emailViewButtonClicked (Email email)
