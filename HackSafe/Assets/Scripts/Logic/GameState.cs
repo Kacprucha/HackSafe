@@ -51,6 +51,8 @@ public class GameState
             comapnysComputers.Add (new Computer (data, i));
         }
 
+        CompanyName = data.CompanyName;
+
         loadQuestData ();
         activeQuest = GetQuestOfId (player.ActiveQuestID);
 
@@ -80,6 +82,8 @@ public class GameState
         {
             computer.SaveData (ref data);
         }
+
+        data.CompanyName = CompanyName;
 
         if (tasksThatNeedToBeMarkedAsDone != null)
         {

@@ -11,7 +11,7 @@ public class NetworkSymulatorView : MonoBehaviour
 
     [SerializeField] Text networkTitle;
 
-    public static string DefoultNetworkTitle = "\"Potato\"";
+    public static string DefoultNetworkTitle = "Potato";
 
     protected static float minRadius = 120f;
     protected static float maxRadius = 125f;
@@ -99,7 +99,7 @@ public class NetworkSymulatorView : MonoBehaviour
             if (comapnyName.NullIfEmpty () == null)
                 comapnyName = DefoultNetworkTitle;
 
-            networkTitle.text = string.Format (networkNameText, gameState.CompanyName);
+            networkTitle.text = string.Format (networkNameText, $"\"{gameState.CompanyName}\"");
         }
     }
 }

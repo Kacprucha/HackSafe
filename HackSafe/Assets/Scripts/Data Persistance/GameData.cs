@@ -16,6 +16,7 @@ public class GameData
     public int ActiveQuestID = -1;
     public _Dictionary<int, List<int>> TasksThatNeedToBeMarkedAsDone = new _Dictionary<int, List<int>> ();
 
+    public string CompanyName = NetworkSymulatorView.DefoultNetworkTitle;
     public List<ComputerData> CompanyComputers = new List<ComputerData> ();
 
     public GameData ()
