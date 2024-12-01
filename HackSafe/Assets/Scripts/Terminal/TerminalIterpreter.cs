@@ -153,6 +153,14 @@ public class TerminalIterpreter : MonoBehaviour
             {
                 terminalFileSystem = fileSystem;
             }
+
+            if (gameState != null && gameState.ActiveQuest != null && gameState.ActiveQuest.Tasks != null)
+            {
+                foreach (Task task in gameState.ActiveQuest.Tasks)
+                {
+                    task.CheckIfLogIntoRightComputer (ip);
+                }
+            }
         }
     }
 

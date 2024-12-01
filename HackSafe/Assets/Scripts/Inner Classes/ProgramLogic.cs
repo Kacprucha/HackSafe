@@ -32,12 +32,14 @@ public class ProgramLogic : MonoBehaviour
 
     protected void stopProgram (string name)
     {
-        OnStopPorgram (name);
+        if (OnStopPorgram != null)
+            OnStopPorgram (name);
     }
 
     protected void updateProgram (string name, int cpu, int ram, int storage)
     {
-        OnUpdateProgram (name, cpu, ram, storage);
+        if (OnUpdateProgram != null)
+            OnUpdateProgram (name, cpu, ram, storage);
     }
 
     protected void addPasswordToFile (Computer computer)
