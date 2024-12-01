@@ -73,7 +73,7 @@ public class TasksListView : MonoBehaviour
             taskContent.GetComponent<Text> ().text = task.TaskDescription;
 
             TaskView taskView = taskElement.GetComponent<TaskView> ();
-            taskView.Inicialize (task.ID, taskContent.GetComponent<Text> (), TaskList.GetComponent<RectTransform> (), task.TaskName);
+            taskView.Inicialize (task.ID, taskContent.GetComponent<Text> (), TaskList.GetComponent<RectTransform> (), task.TaskName, separator);
 
             separator.SetActive (true);
 

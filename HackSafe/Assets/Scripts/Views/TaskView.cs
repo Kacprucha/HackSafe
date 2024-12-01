@@ -13,6 +13,8 @@ public class TaskView : MonoBehaviour
     [SerializeField] Text Description;
     [SerializeField] RectTransform TasksContent;
 
+    [SerializeField] GameObject separator;
+
     protected int taskRelatedId;
     protected bool isRolledDown = false;
 
@@ -31,18 +33,25 @@ public class TaskView : MonoBehaviour
         
     }
 
-    public void Inicialize (int taskId, Text description, RectTransform tasksList, string title)
+    public void Inicialize (int taskId, Text description, RectTransform tasksList, string title, GameObject separator = null)
     {
         taskRelatedId = taskId;
         Description = description;
         TasksContent = tasksList;
 
         Title.text = title;
+
+        this.separator = separator;
     }
 
     public void PrepareForDestroy ()
     {
         Destroy (Description.gameObject);
+
+        if (separator != null)
+        {
+            Destroy (separator);
+        }
     }
 
     public void MarkAsDone ()
