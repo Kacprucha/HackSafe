@@ -117,10 +117,6 @@ public class Quest
             case TaskType.SentFile:
                 result = false;
                 break;
-
-            case TaskType.PutFileOnComuter:
-                result = false;
-                break;
         }
 
         return result;
