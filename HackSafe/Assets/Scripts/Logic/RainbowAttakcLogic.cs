@@ -104,6 +104,7 @@ public class RainbowAttakcLogic : ProgramLogic
         LevelOfSecurity levelOfSecurity = computer.SecurityLevel;
 
         string realHashedPassword = computeSHA256Hash (computer.Password);
+        UnityEngine.Debug.Log (realHashedPassword);
 
         setAttackDuration (levelOfSecurity);
 

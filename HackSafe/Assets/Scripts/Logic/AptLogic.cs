@@ -139,7 +139,7 @@ public class AptLogic : ProgramLogic
                 }
                 else
                 {
-                    terminalIterpreter.GneratePassiveTermialResponse ("apt install: you don't have access to install " + program + "or this programm does not exist");
+                    terminalIterpreter.GneratePassiveTermialResponse ("apt install: you don't have access to install " + program + " or this programm does not exist");
                     programsToInstall = new List<TypeOfProgram> ();
                     allProgramsAllowed = false;
                     break;
