@@ -243,7 +243,7 @@ public class FileSystem
 
         foreach (TreeNode child in root.Children)
         {
-            result = FileExist (child, targetName, targetContent);
+            result = SignedFileExist (child, targetName, targetContent);
             if (result != null)
             {
                 return result;  // Return immediately if a match is found
