@@ -81,6 +81,8 @@ public class ManInTheMiddleOverlay : DraggableOverlay
     protected bool keyGotSentToA = false;
     protected bool keyGotSentToB = false;
 
+    protected bool atackSuccesfulyDone = false;
+
     public delegate void StarTimerHandler (DraggableOverlay overlay, float time);
     public event StarTimerHandler OnStartTimer;
 
@@ -138,7 +140,7 @@ public class ManInTheMiddleOverlay : DraggableOverlay
     {
         if (aFormulaOkey && bFormulaOkey && keyGotSentToA && keyGotSentToB)
         {
-            if (manInTheMiddleLogic.AsociatedTask != null)
+            if (manInTheMiddleLogic.AsociatedTask != null && !atackSuccesfulyDone)
             {
                 if (!manInTheMiddleLogic.AsociatedTask.IsDone)
                     manInTheMiddleLogic.MarkTaKaskAsDone ();
@@ -149,6 +151,8 @@ public class ManInTheMiddleOverlay : DraggableOverlay
                 manInTheMiddleLogic.UpdateProgram (manInTheMiddleLogic.AsociatedTask.Comunication != null && manInTheMiddleLogic.AsociatedTask.Comunication.Count > 0);
 
                 afterSuccesfullAtackActions ();
+
+                atackSuccesfulyDone = true;
             }
         }
     }
@@ -168,6 +172,8 @@ public class ManInTheMiddleOverlay : DraggableOverlay
         bFormulaOkey = false;
         keyGotSentToA = false;
         keyGotSentToB = false;
+
+        atackSuccesfulyDone = false;
 
         for (int i = 1; i < dragableElementsContainer.transform.childCount; i++)
         {

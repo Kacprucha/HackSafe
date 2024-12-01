@@ -13717,7 +13717,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 38.493, y: 33.6}
+  m_AnchoredPosition: {x: 26.712, y: 33.6}
   m_SizeDelta: {x: 53.4239, y: 34.8852}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &635930914
@@ -13742,7 +13742,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 07571748f57a5d04eb865f7f16adf0dd, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -17233,7 +17233,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 15
   m_Viewport: {fileID: 972314415}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 2070023196}
@@ -17506,7 +17506,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 15
   m_Viewport: {fileID: 1275454812}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 109290612}
@@ -20148,7 +20148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   systemNote: {fileID: 468322825}
   linuxNote: {fileID: 1912899336}
-  ammountOfLinuxNotes: 4
+  ammountOfLinuxNotes: 5
 --- !u!1 &946125820
 GameObject:
   m_ObjectHideFlags: 0
@@ -36542,7 +36542,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -38.493, y: 33.6}
+  m_AnchoredPosition: {x: -26.712, y: 33.6}
   m_SizeDelta: {x: 53.4239, y: 34.8852}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1614584931
@@ -36567,7 +36567,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 07571748f57a5d04eb865f7f16adf0dd, type: 3}
   m_Type: 0
-  m_PreserveAspect: 1
+  m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -46577,6 +46577,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2120042203}
   - component: {fileID: 2120042204}
+  - component: {fileID: 2120042205}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -46630,6 +46631,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &2120042205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120042202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &2120228660
 GameObject:
   m_ObjectHideFlags: 0
