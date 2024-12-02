@@ -58,7 +58,7 @@ public class PassiveTerminalElement : MonoBehaviour
 
         while (isTextOverflowing (lengthOfResponse))
         {
-            parentRectTransform.sizeDelta = new Vector2 (parentRectTransform.sizeDelta.x, parentRectTransform.sizeDelta.y + (basicHight / 2) + 5);
+            parentRectTransform.sizeDelta = new Vector2 (parentRectTransform.sizeDelta.x, parentRectTransform.sizeDelta.y + (basicHight / 2) + 10);
 
             lengthOfResponse -= MaxCharactersInResponse;
         }
