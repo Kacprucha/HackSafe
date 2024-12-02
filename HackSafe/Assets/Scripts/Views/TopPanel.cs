@@ -27,7 +27,7 @@ public class TopPanel : MonoBehaviour
     public delegate void ExitButtonHandler (string messageKey, Action aproveAction);
     public event ExitButtonHandler OnExitButtonClicked;
 
-    protected static string exitMessageKey = "exitSystemMEssage_key";
+    protected static string exitMessageKey = "exitSystemMessage_key";
     protected Color savingColor = new Color (0.2313726f, 0.9254902f, 0.2705882f, 1);
 
     protected bool mailButtonAnimating = false;
@@ -81,7 +81,7 @@ public class TopPanel : MonoBehaviour
 
     void mailButtonClicked ()
     {
-        if (OnMailButtonClicked != null)
+        if (OnMailButtonClicked != null && GameState.instance != null && GameState.instance.GetPlayerInfo () != null)
         {
             OnMailButtonClicked ();
         }
@@ -89,7 +89,7 @@ public class TopPanel : MonoBehaviour
 
     void settingsButtonClicked ()
     {
-        if (OnSettingsButtonClicked != null) 
+        if (OnSettingsButtonClicked != null && GameState.instance != null && GameState.instance.GetPlayerInfo () != null) 
         {
             OnSettingsButtonClicked ();
         }
@@ -105,15 +105,18 @@ public class TopPanel : MonoBehaviour
 
     void saveButtonClicked ()
     {
-        DataPersistanceMenager.Instance.SaveGame ();
-        saveButton.gameObject.GetComponent<Image> ().color = savingColor;
+        if (GameState.instance != null && GameState.instance.GetPlayerInfo () != null)
+        {
+            DataPersistanceMenager.Instance.SaveGame ();
+            saveButton.gameObject.GetComponent<Image> ().color = savingColor;
 
-        StartCoroutine (smoothColorTransition (saveButton.gameObject.GetComponent<Image> (), savingColor, Color.black, 0.8f));
+            StartCoroutine (smoothColorTransition (saveButton.gameObject.GetComponent<Image> (), savingColor, Color.black, 0.8f));
+        }
     }
 
     void homeButtonClicked ()
     {
-        if (OnHomeButtonClicked != null)
+        if (OnHomeButtonClicked != null && GameState.instance != null && GameState.instance.GetPlayerInfo () != null)
         {
             OnHomeButtonClicked ();
         }
