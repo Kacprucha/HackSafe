@@ -115,7 +115,22 @@ public class EmailOverlay : DraggableOverlay
 
         if (atachmentButton != null)
         {
-            atachmentButton.gameObject.SetActive (email.OpenAttachemntButtonNecesery);
+            bool active = false;
+            if (email.OpenAttachemntButtonNecesery)
+            {
+                Quest quest = GameState.instance.GetQuestOfId (email.Id);
+                if (quest != null && quest.FileToSent != null)
+                {
+                    FileSystem playerFileSystem = GameState.instance.GetPlayerInfo ().PlayerComputer.FileSystem;
+
+                    if (playerFileSystem.FileExist (playerFileSystem.Root, quest.FileToSent.Name, quest.FileToSent.Content) == null)
+                    {
+                        active = true;
+                    }
+                }
+            }
+
+            atachmentButton.gameObject.SetActive (active);
         }
 
         if (sentButton != null)
