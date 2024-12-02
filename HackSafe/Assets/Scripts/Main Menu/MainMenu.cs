@@ -11,6 +11,11 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] Button startGameButton;
     [SerializeField] Button continoueGameButton;
+    [SerializeField] Button exitGameButton;
+
+    [SerializeField] PopupMessageOverlay popupMessageOverla;
+
+    protected static string exitMessageKey = "exitGameMessage_key";
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +28,11 @@ public class MainMenu : MonoBehaviour
         if (startGameButton != null)
         {
             continoueGameButton.onClick.AddListener (() => loadSceneForContinoue ());
+        }
+
+        if (exitGameButton != null)
+        {
+            exitGameButton.onClick.AddListener (() => showPopupMessageOverlay (exitMessageKey, exitGame));
         }
 
         continoueGameButton.gameObject.SetActive (checkIfSaveFileExists ());
@@ -51,7 +61,7 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene ("Loading");
     }
 
-    private bool checkIfSaveFileExists ()
+    protected bool checkIfSaveFileExists ()
     {
         bool result = false;
 
@@ -63,5 +73,15 @@ public class MainMenu : MonoBehaviour
         }
 
         return result;
+    }
+
+    protected void showPopupMessageOverlay (string messageKey, Action aproveAction)
+    {
+        popupMessageOverla.Inicialize (messageKey, aproveAction);
+    }
+
+    protected void exitGame ()
+    {
+        Application.Quit ();
     }
 }
