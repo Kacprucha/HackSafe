@@ -4,6 +4,7 @@
 		{
 			"Username": "Main Server",
 			"Password": "",
+			"IP": "192.168.1.10",
 			"IsPasswordCracted": false,
 			"LevelOfSecurity": 0,
 			"IsMainComputer": true,
@@ -48,7 +49,7 @@
 				},
 				{
 					"Name": "users.txt",
-					"Content": "",
+					"Content": "DavePhone:\t8cca04ee02b8915f60a6b72c1faf19923aa12aafb5af89bc4bfd403dc60a836b\nArashaPC:\t8731277f3a29037557322de1427dc1521bceac6527941809cb8282e1a1fccd44\nPiter:\t8731277f3a29037557322de1427dc1521bceac6527941809cb8282e1a1fccd44",
 					"IsDirectory": false,
 					"ParentPath": "/.config/system"
 				}
@@ -57,6 +58,7 @@
 		{
 			"Username": "Main Data Base",
 			"Password": "",
+			"IP": "192.168.1.11",
 			"IsPasswordCracted": false,
 			"LevelOfSecurity": 0,
 			"IsMainComputer": false,
@@ -73,6 +75,7 @@
 		},
 		{
 			"Username": "Arasha PC",
+			"Password": "workComputer",
 			"IP": "192.168.1.130",
 			"IsPasswordCracted": false,
 			"LevelOfSecurity": 2,
@@ -81,6 +84,12 @@
 		},
 		{
 			"Username": "#$^)#$@#)^#!",
+			"Password": "workComputer",
+			"IP": "192.168.1.149",
+			"Users": 
+			[
+				"Piter"
+			],
 			"IsPasswordCracted": false,
 			"LevelOfSecurity": 3,
 			"IsMainComputer": false,

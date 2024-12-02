@@ -1,0 +1,279 @@
+{	
+	"Quests": [
+		{
+			"FinalCondition": 0,
+			"Email": {
+				"ID": 0,
+				"Subject": "Welcome hacker!",
+				"EmailAdress": "potato@company.com",
+				"Content": "Welcome, \nwe are happy you joined our company as a white hacker. Shortly we will sent you an email that grants you access to our network and in which we will elaborate on your first task.\nWish you luck,\nJackob",
+				"HasAttachment": false,
+				"NeedSentButton": false
+			}
+		},
+		{
+			"FinalCondition": 6,
+			"Tasks": [
+				{
+					"Name": "taskName1_1",
+					"Description": "taskContent1_1",
+					"Type": 2,
+					"Program": 0
+				},
+				{
+					"Name": "taskName1_2",
+					"Description": "taskContent1_2",
+					"Type": 5,
+					"ComputerIP": "192.168.1.69"
+				},
+				{
+					"Name": "taskName1_3",
+					"Description": "taskContent1_3",
+					"Type": 6,
+					"ComputerIP": "192.168.1.69"
+				}
+			],
+			"Email": {
+				"ID": 1,
+				"Subject": "Your first job",
+				"EmailAdress": "potato@company.com",
+				"Content": "Hello again,\nyou will be working on a case of our security lucking sharpness. We suspect Dave because he is our intern at the time, so he will be your first target.\nTry hack into his device.\nWe granted you access to bruteForce program it should help do the job.\nGood luck,\nJackob",
+				"HasAttachment": false,
+				"NeedSentButton": false
+			},
+			"ActionsAfterEmailRecived": [
+				1, 4
+			],
+			"ProgramesToAllow": [
+				0
+			]
+		},
+		{
+			"FinalCondition": 5,
+			"Tasks": [
+				{
+					"Name": "taskName2_1",
+					"Description": "taskContent2_1",
+					"Type": 2,
+					"Program": 2
+				},
+				{
+					"Name": "taskName2_2",
+					"Description": "taskContent2_2",
+					"Type": 5,
+					"ComputerIP": "192.168.1.130"
+				},
+				{
+					"Name": "taskName2_3",
+					"Description": "taskContent2_3",
+					"Type": 6,
+					"ComputerIP": "192.168.1.130"
+				}
+			],
+			"Email": {
+				"ID": 2,
+				"Subject": "Next target!",
+				"EmailAdress": "potato@company.com",
+				"Content": "Hi,\nunfortunately as u may see Dave don't have much on his phone.\nTry now crack Arasha computer. It will be harder task so we grant you access to dictionaryAttack program.\nGood luck,\nJackob",
+				"HasAttachment": false,
+				"NeedSentButton": false
+			},
+			"ActionsAfterEmailRecived": [
+				1
+			],
+			"ProgramesToAllow": [
+				2
+			]
+		},
+		{
+			"FinalCondition": 4,
+			"Tasks": [
+				{
+					"Name": "taskName3_1",
+					"Description": "taskContent3_1",
+					"Type": 2,
+					"Program": 3
+				},
+				{
+					"Name": "taskName3_2",
+					"Description": "taskContent3_2",
+					"Type": 4,
+					"A_IP": "192.168.1.130",
+					"B_IP": "192.168.1.69",
+					"Comunication":
+						[
+							"What's up Dave?",
+                            "Nothing much just finishing reports",
+                            "O, dose big P writes to recently?",
+                            "Just to ask how was status on those reports, why you ask?",
+                            "So he didn't mention me?",
+                            "No, again why you asking?",
+                            "Oh, nothing he rumble something about password changes and I have not done this yet",
+                            "No no he didn't mention you. But I heard is easy on this security protocols",
+                            "Yes he is he is the best for that",
+                            "Okey have to go back to work, bey",
+                            "Bey"
+
+						],
+					"TimeForTask": 120
+				}
+			],
+			"Email": {
+				"ID": 3,
+				"Subject": "Diffrent aproach",
+				"EmailAdress": "potato@company.com",
+				"Content": "Hi,\nboth of them don't have anything on them to prove there are responsible for licks in security.\nMaybe try listen to messages between them. You can use manInTheMiddle program to do it. Just granted you access.\nMake sure to listen messages between Arasha to Dave. Dave can write many not important questions to Arasha we don't need that.\nGood luck,\nJackob",
+				"HasAttachment": false,
+				"NeedSentButton": false
+			},
+			"ActionsAfterEmailRecived": [
+				1
+			],
+			"ProgramesToAllow": [
+				3
+			]
+		},
+		{
+			"FinalCondition": 6,
+			"Tasks": [
+				{
+					"Name": "taskName4_1",
+					"Description": "taskContent4_1",
+					"Type": 6,
+					"ComputerIP": "192.168.1.11"
+
+				},
+				{
+					"Name": "taskName4_2",
+					"Description": "taskContent4_2",
+					"Type": 6,
+					"ComputerIP": "192.168.1.10"
+				}
+			],
+			"Email": {
+				"ID": 4,
+				"Subject": "Big P?",
+				"EmailAdress": "potato@company.com",
+				"Content": "Hi,\nso for the holes in our security is responsible big P!\nWe can't get you details on who is it but if you find it on your own it will prove that he done some major damage to our security system.\nExplore our public devices and I hope you don't find anything.\nGood luck,\nJackob",
+				"HasAttachment": false,
+				"NeedSentButton": false
+			}
+		},
+		{
+			"FinalCondition": 5,
+			"Tasks": [
+				{
+					"Name": "taskName5_1",
+					"Description": "taskContent5_1",
+					"Type": 2,
+					"Program": 3
+				},
+				{
+					"Name": "taskName5_2",
+					"Description": "taskContent5_2",
+					"Type": 5,
+					"ComputerIP": "192.168.1.149"
+				}
+			],
+			"Email": {
+				"ID": 5,
+				"Subject": "Braking",
+				"EmailAdress": "potato@company.com",
+				"Content": "Hi,\nso you found something, that's not good.\nWe want to compromise big P but for that we need you to hack into his device first.\nIt is well protected because our previous security specialist configure it. We grant you permission to rainbowAttack it could be an use hear.\nGood luck,\nJackob",
+				"HasAttachment": false,
+				"NeedSentButton": false
+			},
+			"ActionsAfterEmailRecived": [
+				1
+			],
+			"ProgramesToAllow": [
+				1
+			]
+		},
+		{
+			"FinalCondition": 8,
+			"Tasks": [
+				{
+					"Name": "taskName6_1",
+					"Description": "taskContent6_1",
+					"Type": 2,
+					"Program": 4
+				},
+				{
+					"Name": "taskName6_2",
+					"Description": "taskContent6_2",
+					"Type": 4,
+					"A_IP": "192.168.1.130",
+					"B_IP": "192.168.1.149",
+					"File":
+						{
+							"Name": "NewContract.pdf",
+							"Content": "Contract for Peter for new position fo regional menager.",
+							"IsDirectory": false,
+							"ParentPath": "/"
+						},
+					"TimeForTask": 120
+				},
+				{
+					"Name": "taskName6_3",
+					"Description": "taskContent6_3",
+					"Type": 9,
+					"File":
+						{
+							"Name": "NewContract.pdf",
+							"Content": "Termination papers for Peter Pelican happening imidetly.",
+							"IsDirectory": false,
+							"WasFileSigned": true,
+							"ParentPath": "/"
+						}
+				},
+				{
+					"Name": "taskName6_4",
+					"Description": "taskContent6_4",
+					"Type": 8,
+					"File":
+						{
+							"Name": "NewContract.pdf",
+							"Content": "Termination papers for Peter Pelican happening imidetly.",
+							"IsDirectory": false,
+							"WasFileSigned": true,
+							"ParentPath": "/"
+						},
+					"ComputerIP": "192.168.1.149"
+				}
+			],
+			"Email": {
+				"ID": 6,
+				"Subject": "Suprise delivery",
+				"EmailAdress": "potato@company.com",
+				"Content": "Hi,\nwe instruct HR to sent new contract for big P thru Arasha. Capture this file and sent to P a file that is in attachment to this mail.\nMake sure to fake the notary signature cause other way big P could be suspects about the file. The public notary key should be on our main server.\nGood luck,\nJackob",
+				"HasAttachment": true,
+				"NeedSentButton": false
+			},
+			"ActionsAfterEmailRecived": [
+				1
+			],
+			"ProgramesToAllow": [
+				4
+			],
+			"FileToSent":
+			{
+				"Name": "NewContract.pdf",
+				"Content": "Termination papers for Peter Pelican happening imidetly.",
+				"IsDirectory": false,
+				"ParentPath": "/"
+			}
+		},
+		{
+			"FinalCondition": 0,
+			"Email": {
+				"ID": 7,
+				"Subject": "Job well done",
+				"EmailAdress": "potato@company.com",
+				"Content": "Hi,\nthank you very much for your help. Without your skills we wouldn't be able to truck the licks in our security system.\nWe will surely be in touch with you for future evaluations.\nBest regards,\nJackob",
+				"HasAttachment": false,
+				"NeedSentButton": false
+			}
+		}
+	]
+}

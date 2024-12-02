@@ -11,8 +11,8 @@ public class GameState
 {
     public static GameState instance { get; private set; }
 
-    static string QuestFilePath = "Resources/Data/questData.json";
-    static string ComputerInfoFilePath = "Resources/Data/computersData.json";
+    static string QuestFilePath = "Data/questData.json";
+    static string ComputerInfoFilePath = "Data/computersData.json";
 
     public string CompanyName { get; private set; }
     public List<Computer> ComapnysComputers { get { return comapnysComputers; } }
@@ -145,7 +145,7 @@ public class GameState
 
     private void loadCompanyComputerData ()
     {
-        string fullPath = Path.Combine (Application.dataPath, ComputerInfoFilePath);
+        string fullPath = Path.Combine (Application.streamingAssetsPath, ComputerInfoFilePath);
         ComputerList loadedData = null;
 
         if (File.Exists (fullPath))
@@ -216,7 +216,7 @@ public class GameState
 
     private void loadQuestData ()
     {
-        string fullPath = Path.Combine(Application.dataPath , QuestFilePath);
+        string fullPath = Path.Combine (Application.streamingAssetsPath, QuestFilePath);
         QuestListData loadedData = null;
 
         if (File.Exists (fullPath))

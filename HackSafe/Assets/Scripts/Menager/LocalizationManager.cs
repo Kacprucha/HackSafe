@@ -9,7 +9,7 @@ public class LocalizationManager : MonoBehaviour
 
     public static string[] Languages = { "English", "Polski" };
     public static string LanguageKey = "language";
-    static string pathForLolalizationFile = Path.Combine (Application.dataPath, "Resources/LocalizationData.csv");
+    static string pathForLolalizationFile = Path.Combine (Application.streamingAssetsPath, "LocalizationData.csv");
 
     public string CurrentLanguage = "English";
 
