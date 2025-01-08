@@ -26,7 +26,7 @@ public class TasksListView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameState.instance != null && GameState.instance.ActiveQuest != null)
+        if (GameState.Instance != null && GameState.Instance.ActiveQuest != null)
         {
             if (tasksData.Count > 0)
             {
@@ -40,9 +40,9 @@ public class TasksListView : MonoBehaviour
                 }
             }
 
-            if (GameState.instance.ActiveQuest.ChceckIfQuestIsFinished () && !questMarkedAsDone && OnQuestDone != null)
+            if (GameState.Instance.ActiveQuest.ChceckIfQuestIsFinished () && !questMarkedAsDone && OnQuestDone != null)
             {
-                OnQuestDone (GameState.instance.ActiveQuest.ID);
+                OnQuestDone (GameState.Instance.ActiveQuest.ID);
                 questMarkedAsDone = true;
             }
         }

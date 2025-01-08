@@ -25,7 +25,7 @@ public static class EmailMenager
     public static Email GetEmailOfId (int id)
     { 
         Email result = new Email ();
-        result = GetEmailFromeData (GameState.instance.GetQuestOfId (id).EmailData);
+        result = GetEmailFromeData (GameState.Instance.GetQuestOfId (id).EmailData);
 
         return result;
     }
@@ -46,7 +46,7 @@ public static class EmailMenager
 
     public static void CheckIfEmailNeedAnyAction (int id, bool emailRead)
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
         PlayerInfo player = gameState.GetPlayerInfo ();
 
         switch (id)

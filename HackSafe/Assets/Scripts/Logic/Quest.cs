@@ -53,7 +53,7 @@ public class Quest
 
     public void MakeActionAfterRecivingEmail ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
         PlayerInfo playerInfo = gameState.GetPlayerInfo ();
 
         foreach (ActionsAfterRecivingEmail action in actionAfterRecivingEmail)

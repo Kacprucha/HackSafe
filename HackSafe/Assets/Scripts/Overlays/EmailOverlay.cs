@@ -47,7 +47,7 @@ public class EmailOverlay : DraggableOverlay
     // Update is called once per frame
     void Update()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         if (gameState != null && gameState.GetPlayerInfo () != null)
         {
@@ -62,7 +62,7 @@ public class EmailOverlay : DraggableOverlay
 
     protected void loadRecivedEmails ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         if (gameState != null && gameState.GetPlayerInfo () != null)
         {
@@ -118,10 +118,10 @@ public class EmailOverlay : DraggableOverlay
             bool active = false;
             if (email.OpenAttachemntButtonNecesery)
             {
-                Quest quest = GameState.instance.GetQuestOfId (email.Id);
+                Quest quest = GameState.Instance.GetQuestOfId (email.Id);
                 if (quest != null && quest.FileToSent != null)
                 {
-                    FileSystem playerFileSystem = GameState.instance.GetPlayerInfo ().PlayerComputer.FileSystem;
+                    FileSystem playerFileSystem = GameState.Instance.GetPlayerInfo ().PlayerComputer.FileSystem;
 
                     if (playerFileSystem.FileExist (playerFileSystem.Root, quest.FileToSent.Name, quest.FileToSent.Content) == null)
                     {
@@ -146,7 +146,7 @@ public class EmailOverlay : DraggableOverlay
 
     protected void onAtachmentButtonClicked ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
         FileSystem fileSystem = gameState.GetPlayerInfo ().PlayerComputer.FileSystem;
 
         if (gameState != null && gameState.ActiveQuest.FileToSent != null)

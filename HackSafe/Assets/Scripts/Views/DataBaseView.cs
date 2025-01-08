@@ -90,7 +90,7 @@ public class DataBaseView : MonoBehaviour
 
     public void InicializeView ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
         currentTabID = 0;
         rows.Clear ();
 
@@ -149,7 +149,7 @@ public class DataBaseView : MonoBehaviour
     }
     protected void handleInputOnEnter (string userInput)
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter)) && dataBaseLogic != null)
         {
@@ -173,7 +173,7 @@ public class DataBaseView : MonoBehaviour
 
     protected void onSubmitButtonClicked ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
         errorMessageLabel.text = string.Empty;
 
         List<List<string>> quoteResult = dataBaseLogic.ExecuteQuery (gameState.FindComputerOfIP (dataBaseIp).Username, inputField.text);
@@ -199,7 +199,7 @@ public class DataBaseView : MonoBehaviour
 
     protected void updateDataBaseView (int tableID)
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         foreach (GameObject row in rows)
         {
@@ -251,7 +251,7 @@ public class DataBaseView : MonoBehaviour
 
     protected void updateDataBaseView (List<List<string>> quteResults)
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         foreach (GameObject row in rows)
         {

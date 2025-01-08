@@ -39,7 +39,7 @@ public class SavingFileForFNSView : MonoBehaviour
 
     protected void saveButtonClicked ()
     {
-        FileSystem fileSystem = GameState.instance.GetPlayerInfo ().PlayerComputer.FileSystem;
+        FileSystem fileSystem = GameState.Instance.GetPlayerInfo ().PlayerComputer.FileSystem;
         string path = inputForPathWhereSave.text + "/" + baseFile.Name;
 
         if (path.NullIfEmpty () == null)

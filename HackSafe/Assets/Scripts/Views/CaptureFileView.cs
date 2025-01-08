@@ -32,7 +32,7 @@ public class CaptureFileView : MonoBehaviour
 
     public void Iniciate (TreeNode file)
     {
-        Computer playerComputer = GameState.instance.GetPlayerInfo ().PlayerComputer;
+        Computer playerComputer = GameState.Instance.GetPlayerInfo ().PlayerComputer;
 
         TreeNode newNode = playerComputer.FileSystem.CreateNode ($"/home/{playerComputer.Username.ToLower ()}/documents/{file.Name}", false);
         newNode.Content = file.Content;
@@ -44,7 +44,7 @@ public class CaptureFileView : MonoBehaviour
 
     protected void onSentButtonClicked ()
     {
-        FileSystem fileSystem = GameState.instance.GetPlayerInfo ().PlayerComputer.FileSystem;
+        FileSystem fileSystem = GameState.Instance.GetPlayerInfo ().PlayerComputer.FileSystem;
         string path = playerInputField.text;
 
         if (path.NullIfEmpty () == null)

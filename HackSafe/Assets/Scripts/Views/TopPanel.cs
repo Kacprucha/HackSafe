@@ -63,7 +63,7 @@ public class TopPanel : MonoBehaviour
 
     private void Update ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         if (gameState != null && gameState.GetPlayerInfo () != null)
         {
@@ -81,7 +81,7 @@ public class TopPanel : MonoBehaviour
 
     void mailButtonClicked ()
     {
-        if (OnMailButtonClicked != null && GameState.instance != null && GameState.instance.GetPlayerInfo () != null)
+        if (OnMailButtonClicked != null && GameState.Instance != null && GameState.Instance.GetPlayerInfo () != null)
         {
             OnMailButtonClicked ();
         }
@@ -89,7 +89,7 @@ public class TopPanel : MonoBehaviour
 
     void settingsButtonClicked ()
     {
-        if (OnSettingsButtonClicked != null && GameState.instance != null && GameState.instance.GetPlayerInfo () != null) 
+        if (OnSettingsButtonClicked != null && GameState.Instance != null && GameState.Instance.GetPlayerInfo () != null) 
         {
             OnSettingsButtonClicked ();
         }
@@ -105,7 +105,7 @@ public class TopPanel : MonoBehaviour
 
     void saveButtonClicked ()
     {
-        if (GameState.instance != null && GameState.instance.GetPlayerInfo () != null)
+        if (GameState.Instance != null && GameState.Instance.GetPlayerInfo () != null)
         {
             DataPersistanceMenager.Instance.SaveGame ();
             saveButton.gameObject.GetComponent<Image> ().color = savingColor;
@@ -116,7 +116,7 @@ public class TopPanel : MonoBehaviour
 
     void homeButtonClicked ()
     {
-        if (OnHomeButtonClicked != null && GameState.instance != null && GameState.instance.GetPlayerInfo () != null)
+        if (OnHomeButtonClicked != null && GameState.Instance != null && GameState.Instance.GetPlayerInfo () != null)
         {
             OnHomeButtonClicked ();
         }

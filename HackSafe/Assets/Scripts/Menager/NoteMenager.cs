@@ -27,7 +27,7 @@ public class NoteMenager : MonoBehaviour
     {
         LocalizationManager localizationManager = LocalizationManager.Instance;
 
-        PlayerInfo player = GameState.instance.GetPlayerInfo ();
+        PlayerInfo player = GameState.Instance.GetPlayerInfo ();
         systemNote.text = "";
 
         foreach (TypeOfProgram programe in Enum.GetValues (typeof (TypeOfProgram)))
@@ -41,7 +41,7 @@ public class NoteMenager : MonoBehaviour
 
     protected void populateLinuxNotes ()
     {
-        PlayerInfo player = GameState.instance.GetPlayerInfo ();
+        PlayerInfo player = GameState.Instance.GetPlayerInfo ();
         linuxNote.text = "";
         string baseName = "command";
 

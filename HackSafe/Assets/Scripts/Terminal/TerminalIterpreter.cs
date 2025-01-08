@@ -224,9 +224,9 @@ public class TerminalIterpreter : MonoBehaviour
 
     protected void inicialize ()
     {
-        if (gameState == null && GameState.instance != null)
+        if (gameState == null && GameState.Instance != null)
         {
-            gameState = GameState.instance;
+            gameState = GameState.Instance;
 
             if (bruteForceLogic == null)
             {

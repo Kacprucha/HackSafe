@@ -57,7 +57,7 @@ public class GenerateFileForFNSView : MonoBehaviour
 
     protected void generateFileClicked ()
     {
-        FileSystem fileSystem = GameState.instance.GetPlayerInfo ().PlayerComputer.FileSystem;
+        FileSystem fileSystem = GameState.Instance.GetPlayerInfo ().PlayerComputer.FileSystem;
 
         string pathToFile = inputForDocument.text;
         string pathToKeys = inputForKeys.text;

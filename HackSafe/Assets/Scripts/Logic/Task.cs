@@ -75,7 +75,7 @@ public class Task
 
     public void CheckIfConditionsMet ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
         if (gameState != null)
         {
             PlayerInfo player = gameState.GetPlayerInfo ();

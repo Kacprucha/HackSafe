@@ -141,7 +141,7 @@ public static class TerminalMenager
     {
         bool result = false;
 
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         if (gameState.GetPlayerInfo ().ProgramesAllowedToDownload.ContainsKey (typeOfPrpgram))
         {
@@ -155,7 +155,7 @@ public static class TerminalMenager
     {
         bool result = false;
 
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         if (gameState.GetPlayerInfo ().ProgramesDownloaded.ContainsKey (typeOfPrpgram))
         {

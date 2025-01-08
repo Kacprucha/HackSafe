@@ -20,7 +20,7 @@ public class ProgramLogic : MonoBehaviour
 
     virtual public void Inicialize (TerminalIterpreter terminalIterpreter, InputOperator playerInputHandler)
     {
-        gameState = GameState.instance;
+        gameState = GameState.Instance;
         this.terminalIterpreter = terminalIterpreter;
         this.playerInputHandler = playerInputHandler;
     }

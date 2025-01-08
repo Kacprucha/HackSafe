@@ -219,9 +219,9 @@ public class ManInTheMiddleOverlay : DraggableOverlay
 
         generateKies ();
 
-        StartCoroutine (sendKey (computerA, GameState.instance.GetPlayerInfo ().PlayerComputer, arrowAToY));
+        StartCoroutine (sendKey (computerA, GameState.Instance.GetPlayerInfo ().PlayerComputer, arrowAToY));
 
-        manInTheMiddleLogic.AsociatedTask = GameState.instance.ActiveQuest.Tasks.Find (
+        manInTheMiddleLogic.AsociatedTask = GameState.Instance.ActiveQuest.Tasks.Find (
                                                                     t => t.TaskType == TaskType.GetAccessToStrem &&
                                                                     t.AIP == compA.IP &&
                                                                     t.BIP == compB.IP
@@ -237,7 +237,7 @@ public class ManInTheMiddleOverlay : DraggableOverlay
 
     protected void generateKies ()
     {
-        Computer playerComputer = GameState.instance.GetPlayerInfo ().PlayerComputer;
+        Computer playerComputer = GameState.Instance.GetPlayerInfo ().PlayerComputer;
 
         string firstLetterOfA = computerA.Username.Substring (0, 1).ToUpper ();
         string firstLetterOfB = computerB.Username.Substring (0, 1).ToUpper ();
@@ -337,7 +337,7 @@ public class ManInTheMiddleOverlay : DraggableOverlay
             systemMessages.color = naturalColor;
             systemMessages.text = $"Sending key: {key.KeyName} to computer: {computer.Username}";
 
-            StartCoroutine (sendKey (GameState.instance.GetPlayerInfo ().PlayerComputer, computer, computer.IP == computerA.IP ? arrowYToA : arrowYToB));
+            StartCoroutine (sendKey (GameState.Instance.GetPlayerInfo ().PlayerComputer, computer, computer.IP == computerA.IP ? arrowYToA : arrowYToB));
         }
         else
         {
@@ -379,7 +379,7 @@ public class ManInTheMiddleOverlay : DraggableOverlay
         {
             generateKeysButton.interactable = false;
 
-            List<Key> keys = allKeys.FindAll (k => k.AssociatedComputerIP == computer.IP && k.CratorComputerIP == GameState.instance.GetPlayerInfo ().PlayerComputer.IP);
+            List<Key> keys = allKeys.FindAll (k => k.AssociatedComputerIP == computer.IP && k.CratorComputerIP == GameState.Instance.GetPlayerInfo ().PlayerComputer.IP);
             StartCoroutine (crateNewKeys (keys));
             areKeysGenerated[idex] = true;
         }
@@ -412,7 +412,7 @@ public class ManInTheMiddleOverlay : DraggableOverlay
 
     protected IEnumerator sendKey (Computer form, Computer to, GameObject asociatedArrow)
     {
-        if (form != GameState.instance.GetPlayerInfo ().PlayerComputer)
+        if (form != GameState.Instance.GetPlayerInfo ().PlayerComputer)
         {
             asociatedArrow.GetComponent<BlinkingElement> ().StartBlinking ();
 

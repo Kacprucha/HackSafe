@@ -35,7 +35,7 @@ public class NetworkSymulatorView : MonoBehaviour
 
     public void GenerateCommpanyLayOut ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         foreach (GameObject element in elementsInNetworkSpace)
         {
@@ -89,9 +89,9 @@ public class NetworkSymulatorView : MonoBehaviour
 
     protected void updateNetworkTitle ()
     {
-        if (GameState.instance != null)
+        if (GameState.Instance != null)
         {
-            GameState gameState = GameState.instance;
+            GameState gameState = GameState.Instance;
             string networkNameText = LocalizationManager.Instance.GetLocalizedValue (labelKey);
 
             string comapnyName = gameState.CompanyName;

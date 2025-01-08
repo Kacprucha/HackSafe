@@ -9,7 +9,7 @@ using UnityEngine;
 [Serializable]
 public class GameState
 {
-    public static GameState instance { get; private set; }
+    public static GameState Instance { get; private set; }
 
     static string QuestFilePath = "Data/questData.json";
     static string ComputerInfoFilePath = "Data/computersData.json";
@@ -27,18 +27,33 @@ public class GameState
 
     public GameState (GameData gameData) 
     {
-        LoadData (gameData);
-        instance = this;
+        if (GameState.Instance == null) 
+        {
+            LoadData (gameData);
+            Instance = this;
+        }
+        else 
+        {
+            Instance = GameState.Instance;
+            Instance.LoadData (gameData);
+        }
     }
 
     public GameState (string playerUsername, string playerPassword, string playerIP = null)
     {
-        player = new PlayerInfo (playerUsername, playerPassword, playerIP);
+        if (GameState.Instance == null) {
+            player = new PlayerInfo (playerUsername, playerPassword, playerIP);
 
-        loadCompanyComputerData ();
-        loadQuestData ();
+            loadCompanyComputerData ();
+            loadQuestData ();
 
-        instance = this;
+            Instance = this;
+        }
+        else 
+        {
+            Instance = GameState.Instance;
+            Instance.player = new PlayerInfo (playerUsername, playerPassword, playerIP);
+        }
     }
 
     public void LoadData (GameData data)

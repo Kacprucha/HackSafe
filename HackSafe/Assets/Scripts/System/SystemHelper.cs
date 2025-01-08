@@ -158,7 +158,7 @@ public static class SystemHelper
 
     public static string GetCurrentDirectoryOfPlayerFileSystem ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
         return gameState.GetPlayerInfo ().PlayerComputer.FileSystem.GetPathOfCurrentDirectory ();
     }
 
