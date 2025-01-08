@@ -109,6 +109,8 @@ public class SshLogic : ProgramLogic
                     terminalIterpreter.GneratePassiveTermialResponse ($"ED25519 key fingerprint is SHA256:{generateFingerprint (computer.Username)}");
                     terminalIterpreter.GneratePassiveTermialResponse ($"Are you sure you want to continue connecting (yes/no)?");
 
+                    StartCoroutine (terminalIterpreter.RefreshLayout ());
+
                     terminalIterpreter.TerminalState = TerminalState.WaitingForConfirmation;
                     terminalIterpreter.CurrentCommand = Commands.Ssh;
                 }
