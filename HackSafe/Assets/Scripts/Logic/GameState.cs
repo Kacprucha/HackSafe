@@ -76,7 +76,7 @@ public class GameState
             tasksThatNeedToBeMarkedAsDone = data.TasksThatNeedToBeMarkedAsDone.keys.Zip (data.TasksThatNeedToBeMarkedAsDone.values, (k, v) => new { k, v }).ToDictionary (x => x.k, x => x.v);
         }
 
-        if (tasksThatNeedToBeMarkedAsDone.ContainsKey (activeQuest.ID))
+        if (tasksThatNeedToBeMarkedAsDone != null && activeQuest != null && tasksThatNeedToBeMarkedAsDone.ContainsKey (activeQuest.ID))
         {
             List<int> tasksID = tasksThatNeedToBeMarkedAsDone[activeQuest.ID];
 
