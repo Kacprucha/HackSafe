@@ -18,13 +18,15 @@ public class DataBaseLogic
 
     public void LoadDataBaseData ()
     {
-        GameState gameState = GameState.instance;
+        GameState gameState = GameState.Instance;
 
         List<string> dbNames = gameState.GetNamesOfDataBases ();
 
         foreach (string dbName in dbNames)
         {
-            string fullPath = $"{Application.dataPath}/Resources/Data/{dbName.Replace (" ", "")}Data.json";
+            string dataBaseFilePath = $"Data/{dbName.Replace (" ", "")}Data.json";
+            string fullPath = Path.Combine (Application.streamingAssetsPath, dataBaseFilePath);
+
             DataBaseData loadedData = null;
 
             if (File.Exists (fullPath))
@@ -44,7 +46,8 @@ public class DataBaseLogic
 
     public void AddDataBase (string dbName, DataBaseData dbData)
     {
-        dbPaths.Add (dbName, $"URI=file:{Application.dataPath}/Resources/Data/{dbName.Replace (" ", "")}.db");
+        string dataBasePath = $"Data/{dbName.Replace (" ", "")}Data.db";
+        dbPaths.Add (dbName, $"URI=file:{Path.Combine (Application.streamingAssetsPath, dataBasePath)}");
         crateDataBase (dbName, dbData);
     }
 
