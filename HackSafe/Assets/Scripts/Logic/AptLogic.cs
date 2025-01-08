@@ -131,19 +131,39 @@ public class AptLogic : ProgramLogic
         {
             bool allProgramsAllowed = false;
 
-            foreach (TypeOfProgram program in programsToInstall)
+            if (programsToInstall.Count > 0)
             {
-                if (TerminalMenager.CheckIfPlayerCanDownloadProgram (program))
+                foreach (TypeOfProgram program in programsToInstall)
                 {
-                    allProgramsAllowed = true;
+                    if (TerminalMenager.CheckIfPlayerCanDownloadProgram (program))
+                    {
+                        allProgramsAllowed = true;
+                    }
+                    else
+                    {
+                        playerInputHandler.ChangeColourOfText (false);
+                        terminalIterpreter.GneratePassiveTermialResponse ("apt install: you don't have access to install " + program + " or this programm does not exist");
+
+                        programsToInstall = new List<TypeOfProgram> ();
+                        allProgramsAllowed = false;
+
+                        terminalIterpreter.TerminalState = TerminalState.Normal;
+                        terminalIterpreter.CurrentCommand = Commands.NotFound;
+
+                        break;
+                    }
                 }
-                else
-                {
-                    terminalIterpreter.GneratePassiveTermialResponse ("apt install: you don't have access to install " + program + " or this programm does not exist");
-                    programsToInstall = new List<TypeOfProgram> ();
-                    allProgramsAllowed = false;
-                    break;
-                }
+            }
+            else
+            {
+                playerInputHandler.ChangeColourOfText (false);
+                terminalIterpreter.GneratePassiveTermialResponse ("apt install: one or more programms you want to install does not exist");
+
+                programsToInstall = new List<TypeOfProgram> ();
+                allProgramsAllowed = false;
+
+                terminalIterpreter.TerminalState = TerminalState.Normal;
+                terminalIterpreter.CurrentCommand = Commands.NotFound;
             }
 
             if (allProgramsAllowed)
