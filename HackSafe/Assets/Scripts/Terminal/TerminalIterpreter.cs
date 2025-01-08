@@ -761,7 +761,6 @@ public class TerminalIterpreter : MonoBehaviour
                     if (file != null && !file.IsDirectory)
                     {
                         generateResponseForInput (file.Content);
-                        StartCoroutine (RefreshLayout ());
                     }
                     else
                         generateResponseForInput ("cat: " + arguments[1] + " no such file!");
@@ -783,6 +782,8 @@ public class TerminalIterpreter : MonoBehaviour
             {
                 generateResponseForInput ("cat: ‘" + arguments[1] + "’: Incorrect syntex");
             }
+
+            StartCoroutine (RefreshLayout ());
         }
 
         currentCommand = Commands.NotFound;
