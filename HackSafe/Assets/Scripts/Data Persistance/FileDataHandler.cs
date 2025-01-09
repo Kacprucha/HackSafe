@@ -10,6 +10,8 @@ public class FileDataHandler
     static public string DataDirPath = Application.persistentDataPath;
     static public string DataFileName = "save.game";
 
+    private readonly string encryptionCodeWord = "hackSafe";
+
     public GameData Load ()
     {
         string fullPath = Path.Combine (DataDirPath, DataFileName);
@@ -27,6 +29,8 @@ public class FileDataHandler
                         dataToLoad = reader.ReadToEnd ();
                     }
                 }
+
+                dataToLoad = encryptDecrypt (dataToLoad);
 
                 loadedData = JsonConvert.DeserializeObject<GameData> (dataToLoad);
             }
@@ -49,6 +53,8 @@ public class FileDataHandler
 
             string jsonData = JsonConvert.SerializeObject (data, Formatting.Indented);
 
+            jsonData = encryptDecrypt (jsonData);
+
             using (FileStream stream = new FileStream (fullPath, FileMode.Create))
             {
                 using (StreamWriter writer = new StreamWriter(stream))
@@ -61,5 +67,16 @@ public class FileDataHandler
         {
             Debug.LogError ("Error occured when trying to save data to file: " + fullPath + "\n" + e);
         }
+    }
+
+    private string encryptDecrypt (string input)
+    {
+        string output = "";
+
+        for (int i = 0; i < input.Length; i++)
+        {
+            output += (char) (input[i] ^ encryptionCodeWord[i % encryptionCodeWord.Length]);
+        }
+        return output;
     }
 }
