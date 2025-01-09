@@ -27,16 +27,8 @@ public class GameState
 
     public GameState (GameData gameData) 
     {
-        if (GameState.Instance == null) 
-        {
-            LoadData (gameData);
-            Instance = this;
-        }
-        else 
-        {
-            Instance = GameState.Instance;
-            Instance.LoadData (gameData);
-        }
+        LoadData (gameData);
+        Instance = this;
     }
 
     public GameState (string playerUsername, string playerPassword, string playerIP = null)
