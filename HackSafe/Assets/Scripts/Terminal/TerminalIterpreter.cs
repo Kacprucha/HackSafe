@@ -44,6 +44,8 @@ public class TerminalIterpreter : MonoBehaviour
 
     [SerializeField] Text prefix;
 
+    [SerializeField] Button terminalButton;
+
     public InputOperator PlayerInputHandler { get { return playerInputHandler; } }
 
     public string TerminalIP { get { return ip; } }
@@ -75,6 +77,10 @@ public class TerminalIterpreter : MonoBehaviour
     protected string ip;
 
     protected FIFOQueue<GameObject> queue = new FIFOQueue<GameObject> ();
+    protected FIFOQueue<string> historyOfPlayersComends = new FIFOQueue<string> ();
+    protected int currentPositionInHistory = 0;
+    protected bool proceedingHistroyAsction = false;
+
     protected Commands currentCommand = Commands.NotFound;
     protected TerminalState terminalState = TerminalState.Normal;
     protected bool programIsRunning = false;
@@ -106,6 +112,11 @@ public class TerminalIterpreter : MonoBehaviour
         {
             playerInputHandler.OnInputEntered += HandleInput;
         }
+
+        if (terminalButton != null)
+        {
+            terminalButton.onClick.AddListener (() => playerInputHandler.ActiveInputField ());
+        }
     }
 
     void Update ()
@@ -126,6 +137,14 @@ public class TerminalIterpreter : MonoBehaviour
             else if ((Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) && Input.GetKeyDown (KeyCode.D)) 
             {
                 closeSshConection ();
+            }
+            else if (Input.GetKey (KeyCode.UpArrow) && !proceedingHistroyAsction)
+            {
+                StartCoroutine (setMorePastCommand ());
+            }
+            else if (Input.GetKey (KeyCode.DownArrow) && !proceedingHistroyAsction)
+            {
+                StartCoroutine (setLessPastCommand ());
             }
         }
     }
@@ -179,6 +198,9 @@ public class TerminalIterpreter : MonoBehaviour
         inicialize ();
 
         Debug.Log ("User input: " + inputText);
+
+        historyOfPlayersComends.Push (inputText);
+        currentPositionInHistory = historyOfPlayersComends.Count - 1;
 
         GameObject newPlayerCommaned = Instantiate (playerCommandPrefab);
         newPlayerCommaned.GetComponent<PassiveTerminalElement> ().UpdateText (inputText, terminalState == TerminalState.WaitingForSudoPassword);
@@ -804,6 +826,49 @@ public class TerminalIterpreter : MonoBehaviour
         else
         {
             CleanTerminal ();
+        }
+    }
+
+    protected IEnumerator setMorePastCommand ()
+    {
+        if (!proceedingHistroyAsction)
+        {
+            proceedingHistroyAsction = true;
+
+            string[] history = historyOfPlayersComends.GetArryOfObjectsInQueue ();
+            playerInputHandler.InsertTextIntoInputField (history[currentPositionInHistory]);
+            Debug.Log (currentPositionInHistory.ToString () + " - " + history[currentPositionInHistory]);
+
+            currentPositionInHistory = currentPositionInHistory == 0 ? 0 : currentPositionInHistory - 1;
+
+            yield return new WaitForSeconds (0.2f);
+
+            proceedingHistroyAsction = false;
+        }
+    }
+
+    protected IEnumerator setLessPastCommand ()
+    {
+        if (!proceedingHistroyAsction)
+        {
+            proceedingHistroyAsction = true;
+
+            currentPositionInHistory++;
+
+            if (currentPositionInHistory == historyOfPlayersComends.Count)
+            {
+                playerInputHandler.InsertTextIntoInputField ("");
+                currentPositionInHistory--;
+            }
+            else
+            {
+                string[] history = historyOfPlayersComends.GetArryOfObjectsInQueue ();
+                playerInputHandler.InsertTextIntoInputField (history[currentPositionInHistory]);
+            }
+
+            yield return new WaitForSeconds (0.2f);
+
+            proceedingHistroyAsction = false;
         }
     }
 }

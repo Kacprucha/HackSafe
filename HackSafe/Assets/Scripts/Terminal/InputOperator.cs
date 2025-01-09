@@ -13,7 +13,7 @@ public class InputOperator : MonoBehaviour
 
     void Start ()
     {
-        inputField.onEndEdit.AddListener (HandleInputOnEnter);
+        inputField.onEndEdit.AddListener (handleInputOnEnter);
     }
 
     void Update ()
@@ -37,7 +37,12 @@ public class InputOperator : MonoBehaviour
         inputField.ActivateInputField ();
     }
 
-    void HandleInputOnEnter (string userInput)
+    public void InsertTextIntoInputField (string text)
+    {
+        inputField.text = text;
+    }
+
+    protected void handleInputOnEnter (string userInput)
     {
         if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown (KeyCode.KeypadEnter)) && OnInputEntered != null)
         {
