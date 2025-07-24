@@ -95,7 +95,15 @@ public class OptionsOverlay : DraggableOverlay
     {
         LocalizationManager.Instance.SetLanguage (languages[indexOfLanguage]);
         PlayerPrefs.SetString (LocalizationManager.LanguageKey, languages[indexOfLanguage]);
-        SceneManager.LoadScene ("Loading");
+
+        if (SceneManager.GetActiveScene ().name == "Gameplay") 
+        {
+            SceneManager.LoadScene ("Loading");
+        }
+        else
+        {
+            SceneManager.LoadScene ("MainMenu");
+        }
     }
 
     protected void goBackToMaineMenu ()

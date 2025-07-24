@@ -12,10 +12,12 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Button startGameButton;
     [SerializeField] Button continoueGameButton;
     [SerializeField] Button exitGameButton;
-
+    [SerializeField] Button settingButton;
+    
+    [SerializeField] OptionsOverlay settingsOverlay;
     [SerializeField] PopupMessageOverlay popupMessageOverla;
 
-    protected static string exitMessageKey = "exitGameMessage_key";
+    protected static string exitMessageKey = "exitSystemMessage_key";
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +35,11 @@ public class MainMenu : MonoBehaviour
         if (exitGameButton != null)
         {
             exitGameButton.onClick.AddListener (() => showPopupMessageOverlay (exitMessageKey, exitGame));
+        }
+
+        if (settingButton != null)
+        {
+            settingButton.onClick.AddListener (() => settingsOverlay.ShowOverlay ());
         }
 
         continoueGameButton.gameObject.SetActive (checkIfSaveFileExists ());
