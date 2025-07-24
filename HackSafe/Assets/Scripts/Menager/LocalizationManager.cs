@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 public class LocalizationManager : MonoBehaviour
@@ -45,7 +46,7 @@ public class LocalizationManager : MonoBehaviour
 
         if (File.Exists (pathForLolalizationFile))
         {
-            string[] data = File.ReadAllLines (pathForLolalizationFile);
+            string[] data = File.ReadAllLines (pathForLolalizationFile, Encoding.UTF8);
 
             int languageIndex = getIndexOfLanguage (CurrentLanguage);
 
